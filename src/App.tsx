@@ -1,8 +1,8 @@
 import React from "react"
-import Form from "./components/form"
+import Form from "./components/form.tsx"
 
 
-function App() {
+const App: React.FC = () => {
  
 
   return (
