@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import infoReducer, {InitialState} from "../src/slices/infoSlice";
+import infoReducer from "./formData/infoSlice";
 
-interface RootState {
-  info: InitialState,
-}
+// interface RootState {
+//   info: InitialState,
+// }
 
 export const store = configureStore({
   reducer:  {
