@@ -1,18 +1,19 @@
+import './style.css'
 import { useEffect, useRef, useState } from "react";
+import React from "react";
 import * as d3 from "d3";
 
-const App = () => {
+export default function Graph() {
 
     const [timeData, setTimeData] = React.useState<number[]>([500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120]);
     const [costData, setCostData] = React.useState<number[]>([180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200])
-    const [xData, setXData] = React.useState<number[]>([128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048]);
-    const xLabel = function (i) { return xData[i] }
-    const svgRef = useRef<HTMLInputElement | null>(null);
+    const [xData, setXData] = useState([128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048]);
+    const svgRef = useRef<SVGSVGElement | null>(null);
 
     useEffect(() => {
         // setting up svg
-        let width = 800;
-        let height = 600
+        let width: number = 800;
+        let height: number = 600;
         let heightLeft = Math.max(...timeData) + 50;
         let heightRight = Math.max(...costData) + 150;
 
@@ -31,7 +32,7 @@ const App = () => {
 
         //y-axes range
         const yScaleLeft = d3
-            .scaleLinear()
+            .scaleLinear() //<(value: number) => number | undefined>
             .domain([0, heightLeft])
             .range([height, 0]);
 
@@ -44,17 +45,18 @@ const App = () => {
         const invocationTime = d3
             .line()
             .x((d, i) => xScale(i))
-            .y(yScaleLeft)
+            .y((d: any) => yScaleLeft(d))
             .curve(d3.curveCardinal);
 
         const runtimeCost = d3
             .line()
             .x((d, i) => xScale(i))
-            .y(yScaleRight)
+            .y((d: any) => yScaleRight(d))
             .curve(d3.curveCardinal);
 
         // setting the axes
-        const xAxis = d3.axisBottom(xScale).tickFormat((i) => xLabel(i));
+        const xAxis = d3.axisBottom(xScale).tickFormat((i: any): any => xData[i]);
+        // const xAxis = d3.axisBottom(xScale).tickFormat(function(i: number): number { xData[i] });
         const yAxisLeft = d3.axisLeft(yScaleLeft).ticks(10);
         // var yAxisRight = d3.svg.axis().scale(y1)
         //   .orient("right").ticks(5).tickSize(-width);
@@ -69,7 +71,7 @@ const App = () => {
             .selectAll(".line")
             .data([timeData])
             .join("path")
-            .attr("d", (d) => invocationTime(d))
+            .attr("d", (d: any) => invocationTime(d))
             .attr("fill", "none")
             .attr("stroke", "blue");
 
@@ -77,7 +79,7 @@ const App = () => {
             .selectAll(".line")
             .data([costData])
             .join("path")
-            .attr("d", (d) => runtimeCost(d))
+            .attr("d", (d: any) => runtimeCost(d))
             .attr("fill", "none")
             .attr("stroke", "red");
 
@@ -118,11 +120,12 @@ const App = () => {
 
 
     return (
-        <div className="chartWrapper">
-            <h2>Line Charts</h2>
-            <svg className="svgWrap" ref={svgRef} style={{ margin: "100px", display: "block" }}></svg>
+        <div className="chartWrapper" >
+            <h2>Line Charts </h2>
+            <svg className="svgWrap" ref={svgRef} style={{ margin: "100px", display: "block" }
+            }></svg>
         </div>
     );
 };
 
-export default App;
+

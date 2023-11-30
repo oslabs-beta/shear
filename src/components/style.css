@@ -1,0 +1,12 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.svgWrap {
+  height: 800px !important;
+  width: 900px !important;
+  background-color: #70e084 !important;
+}
