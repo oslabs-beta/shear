@@ -9,7 +9,7 @@ router.get('/getLamdbaLogs',(req : Request , res:Response ):void =>{
 
 
 // Executing "step function workflow"
-router.get("/executeLambdaWorkflow",( req : Request, res:Response) : void =>{
+router.get("/executeLambdaWorkflow", ( req : Request, res:Response) : void =>{
     res.status(200)
 })
 
