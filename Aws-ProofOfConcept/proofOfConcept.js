@@ -35,9 +35,9 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
               };
               const updatedFunction = await lambdaClient.send(new UpdateFunctionConfigurationCommand(updateConfigParams));
               console.log('New version created:', updatedFunction.Version);
-              await wait(5000);
-              invokeSpecificVersion(updatedFunction.Version)
-              await wait(5000);
+              await wait(2000);
+              console.log(await invokeSpecificVersion(updatedFunction.Version))
+              await wait(2000);
           }
 
     } catch (error) {
@@ -61,7 +61,7 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
     try {
       const logEvents = await cloudwatchlogs.getLogEvents(params);
       // Process and view log events
-      console.log('Log Events:', logEvents.events);
+      //console.log('Log Events:', logEvents.events);
       console.log('final event: ' )
       console.log(logEvents.events[logEvents.events.length-1])
       return (extractBilledDuration(logEvents.events[logEvents.events.length-1].message));
@@ -109,7 +109,7 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
 async function getLogGroupsNew(funcName) {
     try {
       const logGroups = await cloudwatchlogs.describeLogGroups({logGroupNamePattern: funcName});
-      console.log('Log Groups:', logGroups.logGroups);
+      //console.log('Log Groups:', logGroups.logGroups);
       return logGroups.logGroups[0].logGroupName;
     } catch (error) {
       console.error('Error fetching log groups:', error);
