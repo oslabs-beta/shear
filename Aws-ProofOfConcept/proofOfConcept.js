@@ -5,14 +5,19 @@ import {
 
 import { LambdaClient, InvokeCommand, PublishVersionCommand, UpdateFunctionConfigurationCommand} from "@aws-sdk/client-lambda";
 
-
+import {fromUtf8} from '@aws-sdk/util-utf8-node'
 const lambdaClient = new LambdaClient({region: 'us-east-2'})
 const cloudwatchlogs = new CloudWatchLogs()
 
-const functionName = 'createFuncTestFunc';
-const functionARN = 'arn:aws:lambda:us-east-2:408324777629:function:createFuncTestFunc'
-const memoryArray = [132, 133, 134]
-
+const functionName = 'calculateClassicalPrimes';
+const functionARN = 'arn:aws:lambda:us-east-2:408324777629:function:calculateClassicalPrimes'
+const memoryArray = [128, 256, 512]
+const payloadObj = {
+  startRange: 1,
+  endRange: 2000,
+  xPrimes: 168
+}
+const payloadBlob = fromUtf8(JSON.stringify(payloadObj))
 
 async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
 
@@ -36,7 +41,9 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
               const updatedFunction = await lambdaClient.send(new UpdateFunctionConfigurationCommand(updateConfigParams));
               console.log('New version created:', updatedFunction.Version);
               await wait(2000);
-              console.log(await invokeSpecificVersion(updatedFunction.Version))
+              await invokeSpecificVersion(updatedFunction.Version)
+              await invokeSpecificVersion(updatedFunction.Version)
+              await invokeSpecificVersion(updatedFunction.Version)
               await wait(2000);
           }
 
@@ -62,21 +69,152 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
       const logEvents = await cloudwatchlogs.getLogEvents(params);
       // Process and view log events
       //console.log('Log Events:', logEvents.events);
-      console.log('final event: ' )
-      console.log(logEvents.events[logEvents.events.length-1])
-      return (extractBilledDuration(logEvents.events[logEvents.events.length-1].message));
+      //console.log('final event: ' )
+
+      //OK instead, we need to look over EVERY event, looking for ones whose message field starts with REPORT
+      //OK actually.... due to the time delay before log events become readable.... we might need to do this a little differently.
+      //solution:
+      //start with a log stream. look through it, looking for enough REPORT events. if there aren't enough, wait for 5 seconds, then resume the search starting from the index we ended at. if this takes more than 30 secs, bail and put null in the array.
+
+      // const results = outputObj;
+      // for (const element of logEvents.events) {
+      //   // console.log(element)
+      //   // console.log('is element')
+      //   if (element.message.startsWith('REPORT')) {
+      //     console.log(element.message)
+          
+      //     const memVal = extractMemorySize(element.message)
+      //     if (!results[memVal]) {
+      //       results[memVal] = [extractBilledDuration(element.message)]
+      //     }
+      //     else {
+      //       results[memVal].push(extractBilledDuration(element.message))
+      //     }
+      //   }
+      // }
+      // return results;
+      // // }
+      // // console.log(logEvents.events[logEvents.events.length-1])
+      // // return ([ extractMemorySize(logEvents.events[logEvents.events.length-1].message), extractBilledDuration(logEvents.events[logEvents.events.length-1].message)]);
+
+      // const results = outputObj;
+      // const numOfReportsDesired = memoryArray.length;
+      // let attempts = 0;
+      // let numOfReports = 0;
+       let logEventsEvents = logEvents.events;
+
+      // while (numOfReports < numOfReportsDesired && attempts < 5) {
+      //   for (const element of logEvents.events) {
+      //       // console.log(element)
+      //       // console.log('is element')
+      //       if (element.message.startsWith('REPORT')) {
+      //         console.log(element.message)
+      //         numOfReports++;
+      //         const memVal = extractMemorySize(element.message)
+      //         if (!results[memVal]) {
+      //           results[memVal] = [extractBilledDuration(element.message)]
+      //         }
+      //         else {
+      //           results[memVal].push(extractBilledDuration(element.message))
+      //         }
+      //       }
+      //     }
+      //   if (numOfReports < numOfReportsDesired) {
+      //     wait(5000)
+      //     console.log('insufficient events! waited 5')
+      //     logEventsEvents = logEventsEvents.slice(logEventsEvents.length)
+      //   }
+      //   attempts++;
+      // }
+
+
+    
+      //   for (const element of logEventsEvents) {
+      //       // console.log(element)
+      //       // console.log('is element')
+      //       if (element.message.startsWith('REPORT')) {
+      //         console.log(element.message)
+      //         numOfReports++;
+      //         const memVal = extractMemorySize(element.message)
+      //         if (!results[memVal]) {
+      //           results[memVal] = [extractBilledDuration(element.message)]
+      //         }
+      //         else {
+      //           results[memVal].push(extractBilledDuration(element.message))
+      //         }
+      //       }
+      //     }
+      //   if (numOfReports < numOfReportsDesired) {
+      //     wait(5000)
+      //     console.log('insufficient events! waited 5')
+      //     logEventsEvents = logEventsEvents.slice(logEventsEvents.length)
+      //   }
+      //   attempts++;
+      
+      // return results;
+      const outputArr = []
+      outputArr.push (await seekReportsRecursively(logEventsEvents, memoryArray.length, params))
+      return outputArr
     } catch (error) {
       console.error('Error fetching logs:', error);
     }
   }
   
+  async function seekReportsRecursively(events, soughtResults, params, resultsArr = [], attempts = 0) {
+    for (const element of events) {
+      if (element.message.startsWith('REPORT')) {
+        console.log('Report found!')
+        if (resultsArr.length == 0) {
+          resultsArr.push(extractMemorySize(element.message))
+          resultsArr.push([extractBilledDuration(element.message)])
+        }
+        else {
+          resultsArr[1].push(extractBilledDuration(element.message))
+        }
+
+      }
+    }
+  if (!resultsArr[1]&& attempts < 5) {
+    attempts++
+    const length = events.length;
+    const newEvents = await cloudwatchlogs.getLogEvents(params);
+    const newEventsEvents = newEvents.events;
+    console.log('insufficient events! waiting 5sec')
+    console.log('attempts: ', attempts)
+    await wait(5000)
+    resultsArr = await seekReportsRecursively(newEventsEvents.slice(length), soughtResults, params, resultsArr, attempts)
+  }
+  else if (!resultsArr[1] && attempts >= 5) {
+    console.log('error!')
+    console.log('resultsArr is: ' )
+    console.log(resultsArr)
+    return resultsArr;
+  }
+  else if (resultsArr[1].length >= soughtResults) return resultsArr
+  else if (resultsArr[1].length < soughtResults && attempts < 5) {
+    attempts++
+    const length = events.length;
+    const newEvents = await cloudwatchlogs.getLogEvents(params);
+    const newEventsEvents = newEvents.events;
+    console.log('insufficient events! waiting 5sec')
+    console.log('valid reports durations:')
+    console.log(resultsArr[1])
+    console.log('attempts: ', attempts)
+    await wait(5000)
+    resultsArr = await seekReportsRecursively(newEventsEvents.slice(length), soughtResults, params, resultsArr, attempts)
+  }
+  else if(attempts >= 5) {
+    console.log('max attempts reached! qq!')
+    return resultsArr
+  }
+  }
 
   async function invokeSpecificVersion(version) {
     try {
       const invokeParams = {
         FunctionName: functionARN,
         Qualifier: version, 
-       
+        Payload: payloadBlob
       };
   
       const data = await lambdaClient.send(new InvokeCommand(invokeParams));
@@ -130,11 +268,57 @@ async function getLogGroupsNew(funcName) {
     return null; // Return null if billed duration is not found
 }
 
+function extractMemorySize(message) {
+  const segments = message.split('\t');
+  let memorySize = null;
+
+  segments.forEach(segment => {
+    const [key, value] = segment.split(': ');
+
+    if (key.trim() === 'Memory Size') {
+      memorySize = value.replace(' MB', '').trim();
+    }
+  });
+
+  return parseInt(memorySize);
+}
+
+
+
 await createNewVersionsFromMemoryArrayAndInvoke(memoryArray);
 const logGroupName = await getLogGroupsNew(functionName);
 const logStreams = await getLogStreams(logGroupName);
-const outputArr = [];
+//const outputArr = [];
+const outputArr = []
+wait(3000)
 for (const element of logStreams) {
-    outputArr.push(await getFunctionLogs(logGroupName, element.logStreamName))
+  outputArr.push(await getFunctionLogs(logGroupName, element.logStreamName))
+  console.log('NEW LOG STREAM')
  }
- console.log(outputArr)
+ //console.log(getCurrentDateInISO8601())
+ //console.log(outputArr)
+ outputArr.forEach((element) => {
+
+console.log(element[0])
+ })
+//  console.log(outputArr.sort())
+
+//  const testArr = [ [ 256, 33 ], [ 128, 94 ], [ 512, 10 ] ];
+//  console.log(testArr.sort((a, b) => a[0] - b[0]))
+
+function getCurrentDateInISO8601() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+  const offset = -now.getTimezoneOffset() / 60; // Get timezone offset in hours
+  const offsetSign = offset >= 0 ? '+' : '-';
+  const offsetHours = String(Math.abs(Math.floor(offset))).padStart(2, '0');
+  const offsetMinutes = String((Math.abs(offset) * 60) % 60).padStart(2, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${offsetHours}:${offsetMinutes}`;
+}
