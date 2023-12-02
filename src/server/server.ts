@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 
-// Importing route
+// Importing main route file 
 app.use("/api", router);
 
 
