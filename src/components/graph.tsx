@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import './style.css'
 import { useEffect, useRef, useState } from "react";
 import React from "react";
@@ -9,6 +10,12 @@ export default function Graph() {
     const [costData, setCostData] = React.useState<number[]>([180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200])
     const [xData, setXData] = useState([128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048]);
     const svgRef = useRef<SVGSVGElement | null>(null);
+
+    function onSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        setCostData([450, 400, 310, 490, 240, 150, 170, 150, 135, 100, 120])
+        console.log(timeData)
+    }
 
     useEffect(() => {
         // setting up svg
@@ -68,7 +75,7 @@ export default function Graph() {
 
         // setting up the data for the svg
         svg
-            .selectAll(".line")
+            .selectAll(".invocationLine")
             .data([timeData])
             .join("path")
             .attr("d", (d: any) => invocationTime(d))
@@ -76,7 +83,7 @@ export default function Graph() {
             .attr("stroke", "blue");
 
         svg
-            .selectAll(".line")
+            .selectAll(".costDataLine")
             .data([costData])
             .join("path")
             .attr("d", (d: any) => runtimeCost(d))
@@ -124,6 +131,7 @@ export default function Graph() {
             <h2>Line Charts </h2>
             <svg className="svgWrap" ref={svgRef} style={{ margin: "100px", display: "block" }
             }></svg>
+            <button onClick={onSubmit}>click to change value</button>
         </div>
     );
 };

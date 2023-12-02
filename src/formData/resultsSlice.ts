@@ -12,7 +12,7 @@ export interface ResultValues {
   optimalTime: (string | number)[];
 }
 
-export const runOptimizer = createAsyncThunk<ResultValues[], FormValues>('data/data', async (formValues) => {
+export const runOptimizer = createAsyncThunk<ResultValues[], FormValues>('results/data', async (formValues) => {
   const response = await optimizerAPI.runOptimizerFunc(formValues);
   return response.data;
 });
@@ -33,10 +33,10 @@ const resultsSlice = createSlice({
         return action.payload;
       })
       .addCase(runOptimizer.pending, (state) => {
-       
+
       })
       .addCase(runOptimizer.rejected, (state) => {
-       
+
       });
   },
 });
