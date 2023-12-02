@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk, current } from "@reduxjs/toolkit";
-import { optimizerAPI} from "./infoAPI";
+import { optimizerAPI } from "./infoAPI";
 
 export interface FormValues {
   arn: string;
@@ -10,7 +10,7 @@ export interface FormValues {
 }
 
 export const loadData = createAsyncThunk('data/data', async(formData: FormValues) => {
-  const response = await infoApi.runOptimizer(formData);
+  const response = await optimizerAPI.runOptimizerFunc(formData);
   return response.data;
 })
 
