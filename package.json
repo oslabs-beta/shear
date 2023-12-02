@@ -13,8 +13,12 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
+<<<<<<< HEAD
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
+=======
+    "axios": "^1.6.2",
+>>>>>>> dev
     "d3": "^7.8.5",
     "express": "^4.18.2",
     "nodemon": "^3.0.1",
