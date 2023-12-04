@@ -13,16 +13,18 @@ export default function Graph() {
 
     function onSubmit(e: React.FormEvent) {
         e.preventDefault();
-        setCostData([450, 400, 310, 490, 240, 150, 170, 150, 135, 100, 120])
-        console.log(timeData)
+        d3.select("svg").selectAll("*").remove();
+        // svg.selectAll("*").remove()
+        setCostData([450, 400, 310, 490, 2400, 150, 1700, 150, 135, 1200, 120])
+        setXData([128, 256, 484, 512, 540, 738, 900, 1024, 1352, 1580, 2048])
     }
 
     useEffect(() => {
         // setting up svg
         let width: number = 800;
         let height: number = 600;
-        let heightLeft = Math.max(...timeData) + 50;
-        let heightRight = Math.max(...costData) + 150;
+        let heightLeft = 10 ** (Math.floor(Math.log10(Math.max(...timeData))) + 1);   //Math.max(...timeData) + 50;
+        let heightRight = 10 ** (Math.floor(Math.log10(Math.max(...costData))) + 1); //Math.max(...costData) + 150;
 
         const svg = d3
             .select(svgRef.current)
