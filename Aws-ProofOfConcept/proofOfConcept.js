@@ -12,6 +12,8 @@ const cloudwatchlogs = new CloudWatchLogs()
 const functionName = 'calculateClassicalPrimes';
 const functionARN = 'arn:aws:lambda:us-east-2:408324777629:function:calculateClassicalPrimes'
 const memoryArray = [128, 256, 512]
+const now2 = new Date();
+const now = now2.getTime();
 const payloadObj = {
   startRange: 1,
   endRange: 2000,
@@ -62,7 +64,9 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
     const params = {
       logGroupName: logGroupName,
       logStreamName: logStreamName,
-      startFromHead: true
+      startFromHead: true,
+      startTime: now
+
     };
   
     try {
@@ -102,7 +106,7 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
       // let attempts = 0;
       // let numOfReports = 0;
        let logEventsEvents = logEvents.events;
-
+      if (logEventsEvents.length == 1) return null;
       // while (numOfReports < numOfReportsDesired && attempts < 5) {
       //   for (const element of logEvents.events) {
       //       // console.log(element)
@@ -163,26 +167,32 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
   async function seekReportsRecursively(events, soughtResults, params, resultsArr = [], attempts = 0) {
     for (const element of events) {
       if (element.message.startsWith('REPORT')) {
-        console.log('Report found!')
+        //console.log('Report found!')
         if (resultsArr.length == 0) {
           resultsArr.push(extractMemorySize(element.message))
           resultsArr.push([extractBilledDuration(element.message)])
+          // console.log('new mem value:') 
+          // console.log(resultsArr[0])
+          // console.log(resultsArr[1])
         }
         else {
           resultsArr[1].push(extractBilledDuration(element.message))
+          // console.log('no new memval')
+          // console.log(resultsArr[1])
         }
 
       }
     }
   if (!resultsArr[1]&& attempts < 5) {
     attempts++
-    const length = events.length;
+    const length = events.length-1;
     const newEvents = await cloudwatchlogs.getLogEvents(params);
     const newEventsEvents = newEvents.events;
     console.log('insufficient events! waiting 5sec')
     console.log('attempts: ', attempts)
     await wait(5000)
     resultsArr = await seekReportsRecursively(newEventsEvents.slice(length), soughtResults, params, resultsArr, attempts)
+    return resultsArr
   }
   else if (!resultsArr[1] && attempts >= 5) {
     console.log('error!')
@@ -193,7 +203,7 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
   else if (resultsArr[1].length >= soughtResults) return resultsArr
   else if (resultsArr[1].length < soughtResults && attempts < 5) {
     attempts++
-    const length = events.length;
+    const length = events.length-1;
     const newEvents = await cloudwatchlogs.getLogEvents(params);
     const newEventsEvents = newEvents.events;
     console.log('insufficient events! waiting 5sec')
@@ -202,6 +212,7 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
     console.log('attempts: ', attempts)
     await wait(5000)
     resultsArr = await seekReportsRecursively(newEventsEvents.slice(length), soughtResults, params, resultsArr, attempts)
+    return resultsArr
   }
   else if(attempts >= 5) {
     console.log('max attempts reached! qq!')
@@ -218,6 +229,8 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
       };
   
       const data = await lambdaClient.send(new InvokeCommand(invokeParams));
+      console.log('data:')
+      console.log(data.$metadata.requestId)
       return data;
     } catch (error) {
       console.error('Error invoking specific version:', error);
@@ -230,7 +243,7 @@ async function createNewVersionsFromMemoryArrayAndInvoke(inputArr) {
     const params = {
       logGroupName: logGroupName,
       orderBy: 'LastEventTime',
-      limit: 3,
+      limit: 4,
       descending: true,
     };
   
@@ -286,39 +299,42 @@ function extractMemorySize(message) {
 
 
 await createNewVersionsFromMemoryArrayAndInvoke(memoryArray);
+await wait(5000)
 const logGroupName = await getLogGroupsNew(functionName);
 const logStreams = await getLogStreams(logGroupName);
-//const outputArr = [];
+
 const outputArr = []
-wait(3000)
 for (const element of logStreams) {
-  outputArr.push(await getFunctionLogs(logGroupName, element.logStreamName))
   console.log('NEW LOG STREAM')
+  console.log(element.logStreamName)
+  outputArr.push(await getFunctionLogs(logGroupName, element.logStreamName))
+  
  }
  //console.log(getCurrentDateInISO8601())
  //console.log(outputArr)
  outputArr.forEach((element) => {
-
+if (Array.isArray(element)) {
 console.log(element[0])
+}
  })
 //  console.log(outputArr.sort())
 
 //  const testArr = [ [ 256, 33 ], [ 128, 94 ], [ 512, 10 ] ];
 //  console.log(testArr.sort((a, b) => a[0] - b[0]))
 
-function getCurrentDateInISO8601() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-  const offset = -now.getTimezoneOffset() / 60; // Get timezone offset in hours
-  const offsetSign = offset >= 0 ? '+' : '-';
-  const offsetHours = String(Math.abs(Math.floor(offset))).padStart(2, '0');
-  const offsetMinutes = String((Math.abs(offset) * 60) % 60).padStart(2, '0');
+// function getCurrentDateInISO8601() {
+//   const now = new Date();
+//   const year = now.getFullYear();
+//   const month = String(now.getMonth() + 1).padStart(2, '0');
+//   const day = String(now.getDate()).padStart(2, '0');
+//   const hours = String(now.getHours()).padStart(2, '0');
+//   const minutes = String(now.getMinutes()).padStart(2, '0');
+//   const seconds = String(now.getSeconds()).padStart(2, '0');
+//   const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+//   const offset = -now.getTimezoneOffset() / 60; // Get timezone offset in hours
+//   const offsetSign = offset >= 0 ? '+' : '-';
+//   const offsetHours = String(Math.abs(Math.floor(offset))).padStart(2, '0');
+//   const offsetMinutes = String((Math.abs(offset) * 60) % 60).padStart(2, '0');
 
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${offsetHours}:${offsetMinutes}`;
-}
+//   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}${offsetSign}${offsetHours}:${offsetMinutes}`;
+// }
