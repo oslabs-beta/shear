@@ -1,10 +1,15 @@
 import React, { useRef, FormEvent } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
 import { arnInput, funcParamsInput, lowestPowerValueInput, highestPowerValueInput } from "../formData/infoSlice";
+import { runOptimizer } from "../formData/resultsSlice";
+
 
 
 
 const Form: React.FC = () => {
+  const resultsState = useSelector((state: RootState) => state.results)
+  const formState = useSelector((state: RootState) => state.info)
   const dispatch = useDispatch();
   const formRef = useRef<HTMLFormElement>(null);
   const arnRef = useRef<HTMLInputElement | null>(null);
@@ -12,6 +17,7 @@ const Form: React.FC = () => {
   const lowestPowerValRef = useRef<HTMLInputElement | null>(null);
   const highestPowerValRef = useRef<HTMLInputElement | null>(null);
 
+  //onSubmit changes the form state then invokes post request to backend -JK
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('submitted');
@@ -19,16 +25,21 @@ const Form: React.FC = () => {
     dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
     dispatch(lowestPowerValueInput(lowestPowerValRef.current?.value || ''));
     dispatch(highestPowerValueInput(highestPowerValRef.current?.value || ''));
+    dispatch(runOptimizer(formState))
+    
     if (formRef.current) {
       formRef.current.reset();
     }
   };
+ 
+
+
 
   return (
     <div>
       <form ref={formRef} onSubmit={onSubmit}>
         <label><strong>Paste ARN here</strong></label><br/>
-        <input type="password" ref={arnRef} placeholder="Paste Arn Here"/><br/>
+        <input type="text" ref={arnRef} placeholder="Paste Arn Here"/><br/>
         <label><strong>Separate your function parameters by commas</strong></label><br/>
         <input type="text" ref={funcParamsRef} placeholder="Input Function Parameters"/><br />
         <label><strong>Power Values</strong></label><br></br>
