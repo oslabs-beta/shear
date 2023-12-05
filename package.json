@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
@@ -21,6 +22,7 @@
     "cors": "^2.8.5",
     "d3": "^7.8.5",
     "express": "^4.18.2",
+    "framer-motion": "^10.16.12",
     "nodemon": "^3.0.1",
     "react": "^18.2.0",
     "react-d3-library": "^1.1.8",

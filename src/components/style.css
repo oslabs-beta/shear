@@ -5,8 +5,12 @@
   text-align: center;
 }
 
+h2 {
+  font-size: 24px;
+}
+
 .svgWrap {
-  height: 800px !important;
-  width: 900px !important;
-  background-color: #70e084 !important;
+  /* height: 800px !important; */
+  /* width: 900px !important; */
+  background-color: rgb(183, 232, 196) !important;
 }
