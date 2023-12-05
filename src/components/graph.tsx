@@ -133,7 +133,7 @@ export default function Graph() {
             <h2>Line Charts </h2>
             <svg className="svgWrap" ref={svgRef} style={{ margin: "100px", display: "block" }
             }></svg>
-            <button onClick={onSubmit}>click to change value</button>
+            <button variant="contained" onClick={onSubmit}>click to change value</button>
         </div>
     );
 };

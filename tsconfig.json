@@ -5,7 +5,6 @@
 //     "lib": ["ES2020", "DOM", "DOM.Iterable"],
 //     "module": "CommonJS",
 //     "skipLibCheck": true,
-
 //     /* Bundler mode */
 //     "moduleResolution": "NodeNext",
 //     "allowSyntheticDefaultImports": true,
@@ -14,18 +13,15 @@
 //     "esModuleInterop": true,
 //     "noEmit": false,
 //     "jsx": "react-jsx",
-
 //     /* Linting */
 //     "strict": true,
 //     "noUnusedLocals": true,
 //     "noUnusedParameters": true,
 //     "noFallthroughCasesInSwitch": true
 //   },
-
 //   "include": ["src"],
 //   "references": [{ "path": "./tsconfig.node.json" }]
 // }
-
 {
   "compilerOptions": {
     /* Language and Environment */
@@ -36,23 +32,19 @@
     "moduleResolution": "NodeNext" /* Specify how TypeScript looks up a file from a given module specifier. */,
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     // "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
-
     /* JavaScript Support */
     // "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
     // "checkJs": true,                                  /* Enable error reporting in type-checked JavaScript files. */
     // "maxNodeModuleJsDepth": 1,                        /* Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'. */
-
     /* Emit */
     "sourceMap": true /* Create source map files for emitted JavaScript files. */,
     // "inlineSourceMap": true,                          /* Include sourcemap files inside the emitted JavaScript. */
     // "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
     "outDir": "dist" /* Specify an output folder for all emitted files. */,
     // "removeComments": true,                           /* Disable emitting comments. */
-
     /* Interop Constraints */
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
-
     /* Type Checking */
     "strict": true /* Enable all strict type-checking options. */,
     // "noImplicitAny": true,                            /* Enable error reporting for expressions and declarations with an implied 'any' type. */
