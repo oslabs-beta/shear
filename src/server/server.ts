@@ -8,7 +8,14 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+//this allows cors because frontend vite port is at 5173 and backend server is at port 3000; - JK
 app.use(express.json());
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 // Importing main route file 
 app.use("/api", router);
@@ -18,4 +25,4 @@ app.use("/api", router);
 app.use(express.static(path.join(__dirname, '../../src/dist')));
 
 
-app.listen(PORT, () => console.log('listening on PORT', PORT));
+app.listen(PORT, () => console.log('CONNECTED: listening on PORT', PORT));
