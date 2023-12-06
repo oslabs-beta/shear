@@ -12,6 +12,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudwatch-logs": "^3.465.0",
+    "@aws-sdk/client-lambda": "^3.465.0",
+    "@aws-sdk/util-utf8-node": "^3.259.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
