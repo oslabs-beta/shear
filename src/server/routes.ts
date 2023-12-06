@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 
 export const router = express.Router();
+import lambdaController from './controllers/lambdaController.js'
 
 // Database routes, getting data
 
@@ -17,8 +18,8 @@ router.post('/getLambdaLogs',(req: Request, res: Response):void => {
 
 
 // Executing "step function workflow"
-router.get("/executeLambdaWorkflow", ( req : Request, res:Response) : void =>{
-    res.status(200);
+router.post("/executeLambdaWorkflow",  lambdaController.shear, ( req : Request, res:Response) : void =>{
+    res.status(200).json(res.locals.output)
 })
 
 
