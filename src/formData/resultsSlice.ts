@@ -37,10 +37,10 @@ const resultsSlice = createSlice({
         return action.payload;
       })
       .addCase(runOptimizer.pending, (state) => {
-       
+
       })
       .addCase(runOptimizer.rejected, (state) => {
-       
+
       });
   },
 });
