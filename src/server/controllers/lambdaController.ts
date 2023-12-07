@@ -11,10 +11,11 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
-
+    const region2 = getRegionFromARN(request.body.arn);
+    const regionObj = {region: region2}
     //setup for all the AWS work we're going to do.
-    const lambdaClient = new LambdaClient({ region: "us-east-2" });
-    const cloudwatchlogs = new CloudWatchLogs();
+    const lambdaClient = new LambdaClient(regionObj);
+    const cloudwatchlogs = new CloudWatchLogs(regionObj);
     
     const functionName = getFunctionARN(request.body.ARN);
     const functionARN = request.body.ARN;
@@ -307,5 +308,14 @@ function extractMemorySize(message) {
   });
 
   return parseInt(memorySize);
+}
+
+function getRegionFromARN(arn) {
+  const arnParts = arn.split(':');
+  if (arnParts.length >= 4) {
+      return arnParts[3];
+  } else {
+      return null;
+  }
 }
 export default lambdaController;
