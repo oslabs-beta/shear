@@ -13,8 +13,8 @@ const lambdaController = {
   async shear(request, response, next) {
 
     //setup for all the AWS work we're going to do.
-    const lambdaClient = new LambdaClient({ region: "us-east-2" });
-    const cloudwatchlogs = new CloudWatchLogs();
+    const lambdaClient = new LambdaClient({ region: "us-east-1" });
+    const cloudwatchlogs = new CloudWatchLogs({ region: "us-east-1"});
     
     const functionName = getFunctionARN(request.body.ARN);
     const functionARN = request.body.ARN;
