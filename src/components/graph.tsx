@@ -23,15 +23,18 @@ export default function Graph() {
         // setting up svg
         let width: number = 800;
         let height: number = 600;
-        let heightLeft = 10 ** (Math.floor(Math.log10(Math.max(...timeData))) + 1);   //Math.max(...timeData) + 50;
-        let heightRight = 10 ** (Math.floor(Math.log10(Math.max(...costData))) + 1); //Math.max(...costData) + 150;
+        let heightLeftMagnitude = (Math.floor(Math.log10(Math.max(...timeData))))
+        let heightLeft = 10 ** heightLeftMagnitude *
+            Math.ceil(Math.max(...timeData) / (10 ** heightLeftMagnitude))
+        let heightRightMagnitude = (Math.floor(Math.log10(Math.max(...costData))))
+        let heightRight = 10 ** heightRightMagnitude *
+            Math.ceil(Math.max(...costData) / (10 ** heightRightMagnitude))
 
         const svg = d3
             .select(svgRef.current)
             .attr("width", width)
             .attr("height", height)
             .style("overflow", "visible")
-            .style("background", "#c7cab6")
 
         // x-axis range
         const xScale = d3
@@ -131,9 +134,9 @@ export default function Graph() {
     return (
         <div className="chartWrapper" >
             <h2>Line Charts </h2>
-            <svg className="svgWrap" ref={svgRef} style={{ margin: "100px", display: "block" }
+            <svg className="svgWrap" ref={svgRef} style={{ margin: "50px", display: "block", width: "800px", height: "600px" }
             }></svg>
-            <button variant="contained" onClick={onSubmit}>click to change value</button>
+            <button onClick={onSubmit}>click to change value</button>
         </div>
     );
 };
