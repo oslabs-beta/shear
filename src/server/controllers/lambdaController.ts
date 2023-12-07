@@ -1,5 +1,5 @@
 import { CloudWatchLogs, DescribeLogStreamsCommand, DescribeLogGroupsCommand, GetLogEventsCommand, OrderBy} from "@aws-sdk/client-cloudwatch-logs";
-
+import dotenv from 'dotenv'; 
 import {
   LambdaClient,
   InvokeCommand,
@@ -7,19 +7,37 @@ import {
   UpdateFunctionConfigurationCommand,
 } from "@aws-sdk/client-lambda";
 
+dotenv.config();
+
 import { fromUtf8 } from "@aws-sdk/util-utf8-node";
+// import { ProvisionedConcurrencyStatusEnum } from "../../../node_modules/@aws-sdk/client-lambda/dist-types/models/models_0";
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
     const region2 = getRegionFromARN(request.body.ARN);
     const regionObj = {region: region2}
     //setup for all the AWS work we're going to do.
-    const lambdaClient = new LambdaClient(regionObj);
-    const cloudwatchlogs = new CloudWatchLogs(regionObj);
+    response.locals.ARN = request.body.ARN
+    const lambdaClient = new LambdaClient({
+      credentials: { 
+        accessKeyId: process.env.ACC_KEY, // Your access key ID
+        secretAccessKey: process.env.SEC_KEY, // Your secret access key
+      },
+      region: process.env.REGION, // Your AWS region
+    });
+
+    const cloudwatchlogs = new CloudWatchLogs({
+      credentials: { 
+        accessKeyId: process.env.ACC_KEY, // Your access key ID
+        secretAccessKey: process.env.SEC_KEY, // Your secret access key
+      },
+      region: process.env.REGION, // Your AWS region
+    });
     
     const functionName = getFunctionARN(request.body.ARN);
     const functionARN = request.body.ARN;
     const memoryArray = request.body.memoryArray;
+    response.locals.memoryArray = memoryArray
     const functionPayload = request.body.functionPayload;
     const payloadBlob = fromUtf8(JSON.stringify(functionPayload));
 
@@ -321,8 +339,15 @@ function getRegionFromARN(arn) {
 }
 function calculateMedianObject(arr) {
   const result = {};
-  console.log(arr)
-  arr.forEach(([key, values]) => {
+  console.log(arr,"THIS IS THE ARR")
+  const newArr = []
+  for (let i = 0; i<arr.length; i++){
+    if (arr[i]){
+      newArr.push(arr[i])
+    }
+  }
+  console.log('this is the new arr', newArr)
+  newArr.forEach(([key, values]) => {
     if (!values || result[key] !== undefined) return;
 
     // Remove the first value (cold-start outlier)
