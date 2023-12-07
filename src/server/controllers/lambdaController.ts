@@ -1,5 +1,5 @@
 import { CloudWatchLogs, DescribeLogStreamsCommand, DescribeLogGroupsCommand, GetLogEventsCommand, OrderBy} from "@aws-sdk/client-cloudwatch-logs";
-
+import CustomError from "../types.js";
 import {
   LambdaClient,
   InvokeCommand,
@@ -8,10 +8,27 @@ import {
 } from "@aws-sdk/client-lambda";
 
 import { fromUtf8 } from "@aws-sdk/util-utf8-node";
+
+
+
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
+    if (!request.body.ARN) {
+      const error : CustomError = new Error('Error reading ARN!');
+      error.status = 403; 
+      error.requestDetails = { body: request.body }; // Adding request details to the error object
+      return next(error);
+    }
+    const memoryArray = request.body.memoryArray;
+    if (!memoryArray || !Array.isArray(memoryArray) || memoryArray.length === 0) {
+      const error: CustomError = new Error('Error with memory array!');
+      error.status = 403; 
+      error.requestDetails = { body: request.body }; 
+      return next(error);
+    }
     const region2 = getRegionFromARN(request.body.ARN);
+    
     const regionObj = {region: region2}
     //setup for all the AWS work we're going to do.
     const lambdaClient = new LambdaClient(regionObj);
@@ -19,8 +36,10 @@ const lambdaController = {
     
     const functionName = getFunctionARN(request.body.ARN);
     const functionARN = request.body.ARN;
-    const memoryArray = request.body.memoryArray;
+    
     const functionPayload = request.body.functionPayload;
+
+    
     const payloadBlob = fromUtf8(JSON.stringify(functionPayload));
 
     async function createNewVersionsFromMemoryArrayAndInvoke(inputArr, arn) {
@@ -57,6 +76,10 @@ const lambdaController = {
           "Error creating new version and updating memory size from Array:",
           error
         );
+        const error1: CustomError = new Error('Error creating new versions.');
+      error1.status = 403; 
+      error1.requestDetails = { body: request.body }; 
+      return next(error1);
       }
     }
     async function invokeSpecificVersion(version, payload) {
@@ -72,7 +95,10 @@ const lambdaController = {
         // console.log(data.$metadata.requestId);
         return data;
       } catch (error) {
-        console.error("Error invoking specific version:", error);
+        const error1: CustomError = new Error('Error with invoking specific version.');
+      error1.status = 512; 
+      error1.requestDetails = { body: request.body }; 
+      return next(error);
       }
     }
     function wait(ms) {
@@ -87,7 +113,7 @@ const lambdaController = {
       const params = {
         logGroupName: logGroupName,
         orderBy: OrderBy.LastEventTime,
-        limit: 4,
+        limit: memoryArray.length+1,
         descending: true,
       };
 
@@ -100,7 +126,10 @@ const lambdaController = {
         
 
       } catch (error) {
-        console.error("Error fetching log streams:", error);
+        const error1: CustomError = new Error('Error with fetching log streams.');
+      error1.status = 512; 
+      error1.requestDetails = { body: request.body }; 
+      return next(error);
       }
     }
 
@@ -122,7 +151,10 @@ const lambdaController = {
         }
       }
        catch (error) {
-        console.error("Error fetching log groups:", error);
+        const error1: CustomError = new Error('Error with describing log streams.');
+      error1.status = 512; 
+      error1.requestDetails = { body: request.body }; 
+      return next(error);
       }
     }
 
@@ -163,6 +195,7 @@ const lambdaController = {
       events,
       soughtResults,
       params,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resultsArr: any = [],
       attempts = 0
     ) {
@@ -254,7 +287,10 @@ const lambdaController = {
       );
         }
         else {
-            console.log('No Log Stream Name - some kind of data issue')
+          const error1: CustomError = new Error('Error with reading logStream Name. This should not happen.');
+          error1.status = 512; 
+          error1.requestDetails = { body: request.body }; 
+          return next(error1);
         }
     }
 
@@ -263,11 +299,19 @@ const lambdaController = {
         console.log(element[0]);
       }
     });
-    const finalOutput = calculateMedianObject(outputArr);
-    response.locals.output = finalOutput;
+    const billedDurationOutput = calculateMedianObject(outputArr);
+    const costOutput = calculateCosts(billedDurationOutput);
+    const trueOutputObject = {
+      billedDurationOutput,
+      costOutput
+    }
+    response.locals.output = trueOutputObject;
 }
 else {
-    console.log('No log streams found - check Function Name')
+  const error1: CustomError = new Error('Error with reading logStream Name or logGroup name. This should not happen.');
+  error1.status = 512; 
+  error1.requestDetails = { body: request.body }; 
+  return next(error1);
 }
 
     return next();
@@ -321,9 +365,12 @@ function getRegionFromARN(arn) {
 }
 function calculateMedianObject(arr) {
   const result = {};
-  console.log(arr)
-  arr.forEach(([key, values]) => {
-    if (!values || result[key] !== undefined) return;
+
+  arr.forEach((item) => {
+    if (!Array.isArray(item) || item === null) return;
+
+    const [key, values] = item;
+    if (!Array.isArray(values)) return;
 
     // Remove the first value (cold-start outlier)
     const filteredValues = values.slice(1);
@@ -346,6 +393,28 @@ function calculateMedianObject(arr) {
 
   return result;
 }
+function calculateCosts(resultObj: { [key: number]: number }): { [key: number]: number } {
+  const newObj: { [key: number]: number } = {};
+
+  for (const key in resultObj) {
+    if (Object.prototype.hasOwnProperty.call(resultObj, key)) {
+      const originalValue = resultObj[key];
+      
+      const megabytesToGigabytes = Number(key) / 1024; // 1 GB = 1024 MB
+
+      
+      const millisecondsToSeconds = originalValue / 1000;
+
+      // Calculate the new value in gigabyte-seconds
+      //PER THOUSAND INVOCATIONS
+      const newValue = megabytesToGigabytes * millisecondsToSeconds * 0.0000166667*1000;
+      newObj[Number(key)] = newValue;
+    }
+  }
+
+  return newObj;
+}
+
 
 
 export default lambdaController;
