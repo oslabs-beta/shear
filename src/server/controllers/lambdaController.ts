@@ -11,7 +11,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
-    const region2 = getRegionFromARN(request.body.arn);
+    const region2 = getRegionFromARN(request.body.ARN);
     const regionObj = {region: region2}
     //setup for all the AWS work we're going to do.
     const lambdaClient = new LambdaClient(regionObj);
@@ -263,8 +263,8 @@ const lambdaController = {
         console.log(element[0]);
       }
     });
-
-    response.locals.output = outputArr;
+    const finalOutput = calculateMedianObject(outputArr);
+    response.locals.output = finalOutput;
 }
 else {
     console.log('No log streams found - check Function Name')
@@ -272,6 +272,7 @@ else {
 
     return next();
   },
+
 };
 
 function getFunctionARN(arn) {
@@ -318,4 +319,33 @@ function getRegionFromARN(arn) {
       return null;
   }
 }
+function calculateMedianObject(arr) {
+  const result = {};
+  console.log(arr)
+  arr.forEach(([key, values]) => {
+    if (!values || result[key] !== undefined) return;
+
+    // Remove the first value (cold-start outlier)
+    const filteredValues = values.slice(1);
+
+    // Sort the values
+    const sortedValues = filteredValues.sort((a, b) => a - b);
+
+    let median;
+    const length = sortedValues.length;
+    if (length === 0) {
+      median = null;
+    } else if (length % 2 === 0) {
+      median = (sortedValues[length / 2 - 1] + sortedValues[length / 2]) / 2;
+    } else {
+      median = sortedValues[Math.floor(length / 2)];
+    }
+
+    result[key] = median;
+  });
+
+  return result;
+}
+
+
 export default lambdaController;
