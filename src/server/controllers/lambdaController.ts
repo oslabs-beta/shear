@@ -264,7 +264,10 @@ const lambdaController = {
       }
     });
     const finalOutput = calculateMedianObject(outputArr);
-    response.locals.output = finalOutput;
+    response.locals.output = {
+      finalOutput,
+      outputArr
+    }
 }
 else {
     console.log('No log streams found - check Function Name')
@@ -322,6 +325,7 @@ function getRegionFromARN(arn) {
 function calculateMedianObject(arr) {
   const result = {};
   console.log(arr)
+  
   arr.forEach(([key, values]) => {
     if (!values || result[key] !== undefined) return;
 
