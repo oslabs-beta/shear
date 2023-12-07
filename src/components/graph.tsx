@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './style.css'
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from 'react-redux';
 import React from "react";
 import * as d3 from "d3";
 
