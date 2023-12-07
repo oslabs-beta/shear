@@ -16,6 +16,7 @@ const Form: React.FC = () => {
   const funcParamsRef = useRef<HTMLInputElement | null>(null);
   const lowestPowerValRef = useRef<HTMLInputElement | null>(null);
   const highestPowerValRef = useRef<HTMLInputElement | null>(null);
+  
 
   //onSubmit changes the form state then invokes post request to backend -JK
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -33,8 +34,6 @@ const Form: React.FC = () => {
   };
 
 
-
-
   return (
     <div>
       <form ref={formRef} onSubmit={onSubmit}>
@@ -47,47 +46,6 @@ const Form: React.FC = () => {
         <input type="text" ref={highestPowerValRef} placeholder="highest"></input><br></br>
         <button type="submit">Submit</button>
       </form>
-
-      {/* This is just design for now (no functionality) */}
-      <ChakraUI.Box position="relative" h="20%" w="60%" border="2px" padding="50px" borderRadius='lg' overflow='hidden' bg='yellow.100'>
-
-        <ChakraUI.Stack spacing={4}>
-
-          <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Amazon stuff</ChakraUI.Text>
-
-          <ChakraUI.InputGroup>
-            <ChakraUI.InputLeftAddon children='ARN' bg='gray.400' />
-            <ChakraUI.Input ref={arnRef} placeholder='arn:aws:iam::123456789012:user/johndoe' />
-          </ChakraUI.InputGroup>
-
-          {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
-          <ChakraUI.InputGroup >
-            <ChakraUI.InputLeftAddon children='Function Parameters' bg='gray.400' />
-            <ChakraUI.Input ref={funcParamsRef} placeholder='Separate your function parameters by commas' />
-          </ChakraUI.InputGroup>
-
-          <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Power Values</ChakraUI.Text>
-          {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
-          <ChakraUI.InputGroup>
-            <ChakraUI.InputLeftAddon children='Lowest' bg='gray.400' />
-            <ChakraUI.Input placeholder='128' />
-            <ChakraUI.InputRightAddon children='MB' bg='gray.400' />
-          </ChakraUI.InputGroup>
-          <ChakraUI.InputGroup >
-            <ChakraUI.InputLeftAddon children='Highest' bg='gray.400' />
-            <ChakraUI.Input placeholder='1024' />
-            <ChakraUI.InputRightAddon children='MB' bg='gray.400' />
-          </ChakraUI.InputGroup>
-        </ChakraUI.Stack>
-        <ChakraUI.Button
-          mt={4}
-          colorScheme='teal'
-          type='submit'
-        // needs an onclick
-        >
-          Submit
-        </ChakraUI.Button>
-      </ChakraUI.Box>
     </div>
   );
 };

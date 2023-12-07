@@ -18,6 +18,7 @@ export const runOptimizer = createAsyncThunk<ResultValues[], FormValues>('result
   return response.data;
 });
 
+
 export const getAllData = createAsyncThunk
 
 

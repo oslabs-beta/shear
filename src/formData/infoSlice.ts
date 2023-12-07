@@ -9,7 +9,7 @@ export interface FormValues {
   inputJson: Record<any, any>;
 }
 
-export const loadData = createAsyncThunk('data/data', async(formData: FormValues) => {
+export const loadData = createAsyncThunk('data/data', async (formData: FormValues) => {
   const response = await optimizerAPI.runOptimizerFunc(formData);
   return response.data;
 })
@@ -46,8 +46,13 @@ const infoSlice = createSlice({
       state.powerValues = [];
       state.powerValues.push(action.payload)
     },
+    powerValueInput(state, action: PayloadAction<number[]>) {
+      // Clear the power values before inputting a new power value
+      state.powerValues = [];
+      state.powerValues.splice(0, state.powerValues.length, ...action.payload);
+    },
   },
 });
 
-export const { arnInput, funcParamsInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
+export const { arnInput, funcParamsInput, lowestPowerValueInput, highestPowerValueInput, powerValueInput } = infoSlice.actions;
 export default infoSlice.reducer;
