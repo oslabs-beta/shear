@@ -21,9 +21,9 @@ const ChakraForm: React.FC = () => {
         e.preventDefault();
         console.log(arnRef.current?.value)
         console.log('submitted');
-        dispatch(arnInput(arnRef.current?.value || ''));
-        dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
-        dispatch(powerValueInput(memoryConfig));
+        // dispatch(arnInput(arnRef.current?.value || ''));
+        // dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
+        // dispatch(powerValueInput(memoryConfig));
         dispatch(runOptimizer(formState))
 
         if (formRef.current) {
@@ -52,11 +52,16 @@ const ChakraForm: React.FC = () => {
                         <ChakraUI.Input ref={arnRef} placeholder='arn:aws:iam::123456789012:user/johndoe' />
                     </ChakraUI.InputGroup>
 
-                    {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
-                    <ChakraUI.InputGroup >
-                        <ChakraUI.InputLeftAddon children='Function Parameters' bg='gray.400' />
-                        <ChakraUI.Input ref={funcParamsRef} placeholder='Separate your function parameters by commas' />
-                    </ChakraUI.InputGroup>
+                    {/* <ChakraUI.InputGroup >
+                        <ChakraUI.InputLeftAddon children='Function Parameters Keys' bg='gray.400' />
+                        <ChakraUI.Input ref={funcParamsRef} placeholder='Separate entries by commas' />
+                    </ChakraUI.InputGroup> */}
+                    <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Function Parameters</ChakraUI.Text>
+                    <ChakraUI.Textarea
+                        ref={funcParamsRef}
+                        placeholder='Please enter parameters and values in JSON format'
+                        size='sm'
+                    />
 
                     <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Memory Allocation</ChakraUI.Text>
                     {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
