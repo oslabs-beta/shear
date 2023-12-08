@@ -4,17 +4,15 @@ import { FormValues } from "./infoSlice";
 
 
 export interface ResultValues {
-  arn: string;
-  x: (string | number)[];
-  y: (string | number)[];
-  bestRunTimeCost: number | string;
-  fastestInvocationTime: number;
-  optimalTime: (string | number)[];
+  billedDurationOutput: Record<string, number>;
+  costOutput: Record<string, number>;
 }
 
 //function sends form data to backend to get spun up. Back end will need to send back the data from spinning the algo. -JK
-export const runOptimizer = createAsyncThunk<ResultValues[], FormValues>('results/data', async (formValues) => {
-  const response = await optimizerAPI.runOptimizerFunc(formValues);
+export const runOptimizer = createAsyncThunk<ResultValues, FormValues>('results/data', async () => {
+  const response = await optimizerAPI.runOptimizerFunc();
+  // console.log(response)
+  console.log(response.data)
   return response.data;
 });
 
@@ -22,9 +20,10 @@ export const getAllData = createAsyncThunk
 
 
 //current state of return data, Double check what we are expecting(discuss with backend)- JK
-const initialState: ResultValues[] = [
-
-];
+const initialState: ResultValues = {
+  billedDurationOutput: {},
+  costOutput: {},
+};
 
 const resultsSlice = createSlice({
   name: 'results',
@@ -33,11 +32,11 @@ const resultsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(runOptimizer.fulfilled, (state, action) => {
-
+        console.log(action.payload)
         return action.payload;
       })
-      .addCase(runOptimizer.pending, (state) => {
-
+      .addCase(runOptimizer.pending, (state, action) => {
+        // console.log(action.payload)
       })
       .addCase(runOptimizer.rejected, (state) => {
 
