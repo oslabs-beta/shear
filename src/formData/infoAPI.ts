@@ -5,5 +5,13 @@ import { FormValues } from "./infoSlice";
 axios.defaults.baseURL = "http://localhost:3000/api";
 
 export const optimizerAPI = {
-  runOptimizerFunc: (formValues: FormValues): Promise<AxiosResponse> => axios.post('getLambdaLogs', formValues),
+  runOptimizerFunc: (): Promise<AxiosResponse> => axios.post('executeLambdaWorkflow', {
+    "memoryArray" : [128, 256, 512, 680],
+    "ARN" : "arn:aws:lambda:us-east-1:424429271361:function:TESTFUNC",
+    "functionPayload": {
+      "startRange": 1,
+      "endRange": 200,
+      "xPrimes": 15
+    }
+    }),
 };
