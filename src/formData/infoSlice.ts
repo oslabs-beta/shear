@@ -8,6 +8,7 @@ export interface FormValues {
   functionPayload: Record<any, any>;
 }
 
+
 export const loadData = createAsyncThunk('data/data', async (formData: FormValues) => {
   const response = await optimizerAPI.runOptimizerFunc(formData);
   return response.data;
@@ -36,22 +37,20 @@ const infoSlice = createSlice({
       state.functionPayload = parsedPayLoad;
     },
     // highestPowerValueInput(state, action: PayloadAction<string>) {
-    //   // console.log(action.payload);
-    //   state.powerValues.push(action.payload);
+    //   state.memoryArray.push(action.payload);
     //   console.log(current(state));
     // },
     // lowestPowerValueInput(state, action: PayloadAction<string>) {
-    //   // Clear the power values before inputting a new power value
-    //   state.powerValues = [];
-    //   state.powerValues.push(action.payload)
+    //   state.memoryArray = [];
+    //   state.memoryArray.push(action.payload)
     // },
     powerValueInput(state, action: PayloadAction<number[]>) {
       // state.memoryArray = [];
       state.memoryArray.splice(0, state.memoryArray.length, ...action.payload);
-      console.log(current(state))
     },
   },
 });
 
+// export const { arnInput, funcParamsInput, powerValueInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
 export const { arnInput, funcParamsInput, powerValueInput } = infoSlice.actions;
 export default infoSlice.reducer;

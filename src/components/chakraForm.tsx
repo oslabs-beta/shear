@@ -19,12 +19,14 @@ const ChakraForm: React.FC = () => {
     //onSubmit changes the form state then invokes post request to backend -JK
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(arnRef.current?.value)
         console.log('submitted');
-        // dispatch(arnInput(arnRef.current?.value || ''));
-        // dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
-        // dispatch(powerValueInput(memoryConfig));
-        dispatch(runOptimizer())
+        dispatch(arnInput(arnRef.current?.value || ''));
+        dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
+        dispatch(powerValueInput(memoryConfig));
+        console.log("printing form state")
+        const clone = Object.assign({}, formState)
+        console.log(clone)
+        dispatch(runOptimizer({ hello: "world", what: "the" }))
 
         if (formRef.current) {
             formRef.current.reset();

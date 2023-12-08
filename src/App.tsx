@@ -17,7 +17,7 @@ const App: React.FC = () => {
       <ChakraForm />
       <Graph />
       {/* </div> */}
-      <Results/>
+      <Results />
     </ChakraProvider>
   )
 }

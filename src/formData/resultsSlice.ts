@@ -13,7 +13,7 @@ export const runOptimizer = createAsyncThunk<ResultValues, FormValues>('results/
   const response = await optimizerAPI.runOptimizerFunc();
   // console.log(response)
   console.log(response.data)
-  return response.data;
+  return response.data; 
 });
 
 
