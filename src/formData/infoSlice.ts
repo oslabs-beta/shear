@@ -53,7 +53,7 @@ const infoSlice = createSlice({
     powerValueInput(state, action: PayloadAction<number[]>) {
       // state.memoryArray = [];
       state.memoryArray.splice(0, state.memoryArray.length, ...action.payload);
-      console.log(current(state))
+      // console.log(current(state))
     },
   },
 });

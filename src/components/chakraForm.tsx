@@ -8,7 +8,6 @@ import './style.css'
 
 
 const ChakraForm: React.FC = () => {
-    const [ready, setReady] = useState(false)
     const resultsState = useSelector((state: RootState) => state.results)
     const formState = useSelector((state: RootState) => state.info)
     const dispatch = useDispatch();
@@ -16,12 +15,7 @@ const ChakraForm: React.FC = () => {
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryConfig: number[] = [];
-    useEffect(() => {setReady(true)}, [])
-    useEffect( () =>  {
-         if (ready) {
-            dispatch(runOptimizer(formState)) 
-         }}
-         , [formState, ready] )
+    useEffect( () =>  {dispatch(runOptimizer(formState)) }, [formState] )
     //onSubmit changes the form state then invokes post request to backend -JK
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -30,11 +24,11 @@ const ChakraForm: React.FC = () => {
         dispatch(arnInput(arnRef.current?.value || ''));
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
         dispatch(powerValueInput(memoryConfig));
-
+        console.log(formState)
         
-        // if (formRef.current) {
-        //     formRef.current.reset();
-        // }
+        if (formRef.current) {
+            formRef.current.reset();
+        }
     };
 
     const memorySelect = (num: number) => {
