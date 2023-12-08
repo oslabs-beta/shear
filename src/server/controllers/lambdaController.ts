@@ -303,7 +303,7 @@ const lambdaController = {
     const costOutput = calculateCosts(billedDurationOutput);
     const trueOutputObject = {
       billedDurationOutput,
-      costOutput,
+      costOutput
     }
     response.locals.output = trueOutputObject;
 }
