@@ -12,8 +12,8 @@ export interface ResultValues {
 export const runOptimizer = createAsyncThunk<ResultValues, FormValues>('results/data', async (Formdata) => {
   const response = await optimizerAPI.runOptimizerFunc(Formdata);
   // console.log(response)
-  console.log(response.data)
-  return response.data; 
+  // console.log(response.data)
+  return response.data;
 });
 
 

@@ -10,7 +10,7 @@ export const optimizerAPI = {
   runOptimizerFunc: (form: FormValues): Promise<AxiosResponse> => {
   
     const stringifiedFormData = JSON.stringify(form)
-    console.log(stringifiedFormData)
+    // console.log(stringifiedFormData)
     return axios.post('executeLambdaWorkflow', stringifiedFormData, {
       headers: {
         'Content-Type': 'application/json',
