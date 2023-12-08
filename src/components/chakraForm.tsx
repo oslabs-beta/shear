@@ -1,4 +1,4 @@
-import React, { useRef, FormEvent } from "react";
+import React, { useRef, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store.ts";
 import { arnInput, funcParamsInput, powerValueInput } from "../formData/infoSlice.ts";
@@ -8,6 +8,7 @@ import './style.css'
 
 
 const ChakraForm: React.FC = () => {
+    const [ready, setReady] = useState(false)
     const resultsState = useSelector((state: RootState) => state.results)
     const formState = useSelector((state: RootState) => state.info)
     const dispatch = useDispatch();
@@ -15,20 +16,25 @@ const ChakraForm: React.FC = () => {
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryConfig: number[] = [];
-
+    useEffect(() => {setReady(true)}, [])
+    useEffect( () =>  {
+         if (ready) {
+            dispatch(runOptimizer(formState)) 
+         }}
+         , [formState, ready] )
     //onSubmit changes the form state then invokes post request to backend -JK
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(arnRef.current?.value)
         console.log('submitted');
-        // dispatch(arnInput(arnRef.current?.value || ''));
-        // dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
-        // dispatch(powerValueInput(memoryConfig));
-        dispatch(runOptimizer())
+        dispatch(arnInput(arnRef.current?.value || ''));
+        dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
+        dispatch(powerValueInput(memoryConfig));
 
-        if (formRef.current) {
-            formRef.current.reset();
-        }
+        
+        // if (formRef.current) {
+        //     formRef.current.reset();
+        // }
     };
 
     const memorySelect = (num: number) => {
