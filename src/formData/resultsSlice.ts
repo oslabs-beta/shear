@@ -9,8 +9,8 @@ export interface ResultValues {
 }
 
 //function sends form data to backend to get spun up. Back end will need to send back the data from spinning the algo. -JK
-export const runOptimizer = createAsyncThunk<ResultValues, FormValues>('results/data', async () => {
-  const response = await optimizerAPI.runOptimizerFunc();
+export const runOptimizer = createAsyncThunk<ResultValues, FormValues>('results/data', async (Formdata) => {
+  const response = await optimizerAPI.runOptimizerFunc(Formdata);
   // console.log(response)
   console.log(response.data)
   return response.data; 

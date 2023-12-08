@@ -32,10 +32,15 @@ const infoSlice = createSlice({
     },
     funcParamsInput(state, action: PayloadAction<string>) {
       // const stringifiedPayLoad = JSON.stringify(action.payload)
+      // const parsedObj = {};
       const parsedPayLoad = JSON.parse(action.payload)
       // console.log(stringifiedPayLoad)
+    
+   
       state.functionPayload = parsedPayLoad;
     },
+
+ 
     // highestPowerValueInput(state, action: PayloadAction<string>) {
     //   state.memoryArray.push(action.payload);
     //   console.log(current(state));
