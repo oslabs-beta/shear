@@ -24,7 +24,7 @@ const ChakraForm: React.FC = () => {
         // dispatch(arnInput(arnRef.current?.value || ''));
         // dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
         // dispatch(powerValueInput(memoryConfig));
-        dispatch(runOptimizer(formState))
+        dispatch(runOptimizer())
 
         if (formRef.current) {
             formRef.current.reset();
