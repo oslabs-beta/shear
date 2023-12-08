@@ -1,8 +1,8 @@
 import React, { useRef, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store.ts";
-import { arnInput, funcParamsInput, powerValueInput, highestPowerValueInput } from "../formData/infoSlice.ts";
-import { runOptimizer } from "../formData/resultsSlice.ts";
+import { arnInput, funcParamsInput, powerValueInput } from "../formData/infoSlice.ts";
+import { runOptimizer } from "../formData/resultsSlice";
 import * as ChakraUI from '@chakra-ui/react'
 import './style.css'
 
@@ -15,10 +15,11 @@ const ChakraForm: React.FC = () => {
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryConfig: number[] = [];
-    let counter = 0;
+
     //onSubmit changes the form state then invokes post request to backend -JK
-    const onSend = (e) => {
+    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log(arnRef.current?.value)
         console.log('submitted');
         dispatch(arnInput(arnRef.current?.value || ''));
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
@@ -35,8 +36,6 @@ const ChakraForm: React.FC = () => {
         memoryConfig.push(num);
         console.log(memoryConfig)
     };
-
-
 
 
     return (
@@ -91,8 +90,8 @@ const ChakraForm: React.FC = () => {
                 <ChakraUI.Button
                     mt={4}
                     colorScheme='teal'
-                    onClick={onSend}
-                // needs an onclick
+                    type='submit'
+                    onClick={onSubmit}
                 >
                     Submit
                 </ChakraUI.Button>

@@ -36,23 +36,22 @@ const infoSlice = createSlice({
       state.funcParams = splitFuncParams;
       // console.log(state.funcParams);
     },
-    highestPowerValueInput(state, action: PayloadAction<string>) {
-      // console.log(action.payload);
-      state.powerValues.push(action.payload);
-      console.log(current(state));
-    },
-    lowestPowerValueInput(state, action: PayloadAction<string>) {
-      // Clear the power values before inputting a new power value
-      state.powerValues = [];
-      state.powerValues.push(action.payload)
-    },
+    // highestPowerValueInput(state, action: PayloadAction<string>) {
+    //   // console.log(action.payload);
+    //   state.powerValues.push(action.payload);
+    //   console.log(current(state));
+    // },
+    // lowestPowerValueInput(state, action: PayloadAction<string>) {
+    //   // Clear the power values before inputting a new power value
+    //   state.powerValues = [];
+    //   state.powerValues.push(action.payload)
+    // },
     powerValueInput(state, action: PayloadAction<number[]>) {
-      // Clear the power values before inputting a new power value
       state.powerValues = [];
       state.powerValues.splice(0, state.powerValues.length, ...action.payload);
     },
   },
 });
 
-export const { arnInput, funcParamsInput, lowestPowerValueInput, highestPowerValueInput, powerValueInput } = infoSlice.actions;
+export const { arnInput, funcParamsInput, powerValueInput } = infoSlice.actions;
 export default infoSlice.reducer;

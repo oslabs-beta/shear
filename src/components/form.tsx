@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { arnInput, funcParamsInput, lowestPowerValueInput, highestPowerValueInput } from "../formData/infoSlice";
 import { runOptimizer } from "../formData/resultsSlice";
-import * as ChakraUI from '@chakra-ui/react'
 import './style.css'
 
 
