@@ -40,23 +40,24 @@ export async function getLambdaLogs(req: Request, res: Response, next: NextFunct
 }
 
 export async function addLambdaLog (req: Request, res: Response, next: NextFunction): Promise<void> {
-    const {ARN, memoryArray, output } = res.locals;
+    const {ARN, memoryArray, output, cost } = res.locals;
     try
     { 
     
       const item = {
         funcName: ARN,
         memoryArr: memoryArray,
-        result: output
+        result: output,
+        constPerThousand: cost
     };
 
-      const q1 = {
+      const q = {
           TableName: "lambdaLogs",
           Item: marshall(item)
       };
 
-      const command1 = new PutItemCommand(q1);
-      const response1 = await client.send(command1);
+      const command = new PutItemCommand(q);
+      const response = await client.send(command);
       return next()
     }
       catch(e){
