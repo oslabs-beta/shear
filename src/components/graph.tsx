@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './style.css'
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from 'react-redux';
 import React from "react";
 import * as d3 from "d3";
 
@@ -136,6 +137,32 @@ export default function Graph() {
             <h2>Line Charts </h2>
             <svg className="svgWrap" ref={svgRef} style={{ margin: "50px", display: "block", width: "800px", height: "600px" }
             }></svg>
+             <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ marginRight: "10px" }}>
+          <span
+            style={{
+              display: "inline-block",
+              width: "10px",
+              height: "10px",
+              backgroundColor: "red",
+              marginRight: "5px",
+            }}
+          />
+          <span>Invocation Time</span>
+        </div>
+        <div>
+          <span
+            style={{
+              display: "inline-block",
+              width: "10px",
+              height: "10px",
+              backgroundColor: "blue",
+              marginRight: "5px",
+            }}
+          />
+          <span>Runtime Cost</span>
+        </div>
+      </div>
             <button onClick={onSubmit}>click to change value</button>
         </div>
     );
