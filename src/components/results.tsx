@@ -1,21 +1,27 @@
-import React, {useEffect, useRef} from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store.ts";
+import { RootState } from "../store";
 
 
-export const Results: React.FC = () => {
+interface ResultsProps {}
 
-  const finalOutputResultsState = useSelector((state: RootState) => state.results.finalOutput)
+export const Results: React.FC<ResultsProps> = () => {
+  const billedState = useSelector((state: RootState) => state.results.billedDurationOutput);
+  const costState = useSelector((state: RootState) => state.results.costOutput)
 
-  useEffect(() => {
+  const finalResults = Object.entries(billedState)
 
-  }, [finalOutputResultsState])
+  const mappedFinalResults = finalResults.map(([memory, fastestAvg]) => {
+    const costData = costState[memory]
+    return <p key={memory}>at this memory configuation {memory}MBS your billed duration output is {fastestAvg} MS with an average cost of  ${costData} PER 1000 INVOCATIONS</p>
+  })
+   
+    
+  
 
   return (
     <div>
-
+      {mappedFinalResults}
     </div>
-  )
-
-}
+  );
+};

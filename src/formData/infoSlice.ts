@@ -39,7 +39,7 @@ const infoSlice = createSlice({
     highestPowerValueInput(state, action: PayloadAction<string>) {
       // console.log(action.payload);
       state.powerValues.push(action.payload);
-      console.log(current(state));
+      // console.log(current(state));
     },
     lowestPowerValueInput(state, action: PayloadAction<string>) {
       // Clear the power values before inputting a new power value

@@ -32,7 +32,7 @@ const Form: React.FC = () => {
     }
   };
 
-  console.log(resultsState)
+  // console.log(resultsState)
 
 
 
