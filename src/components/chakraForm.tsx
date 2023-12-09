@@ -15,7 +15,11 @@ const ChakraForm: React.FC = () => {
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryConfig: number[] = [];
-    useEffect(() => { dispatch(runOptimizer(formState)) }, [formState])
+    useEffect(() => {
+        if (formState.ARN !== '') {
+            dispatch(runOptimizer(formState))
+        }
+    }, [formState])
     //onSubmit changes the form state then invokes post request to backend -JK
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
