@@ -12,10 +12,11 @@ const Form: React.FC = () => {
   const dispatch = useDispatch();
   const formRef = useRef<HTMLFormElement>(null);
   const arnRef = useRef<HTMLInputElement | null>(null);
+  console.log(formState)
   const funcParamsRef = useRef<HTMLInputElement | null>(null);
   const lowestPowerValRef = useRef<HTMLInputElement | null>(null);
   const highestPowerValRef = useRef<HTMLInputElement | null>(null);
-  
+
 
   //onSubmit changes the form state then invokes post request to backend -JK
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -25,7 +26,8 @@ const Form: React.FC = () => {
     dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
     dispatch(lowestPowerValueInput(lowestPowerValRef.current?.value || ''));
     dispatch(highestPowerValueInput(highestPowerValRef.current?.value || ''));
-    dispatch(runOptimizer(formState))
+    const testObj = formState
+    dispatch(runOptimizer(testObj))
 
     if (formRef.current) {
       formRef.current.reset();

@@ -15,17 +15,20 @@ const ChakraForm: React.FC = () => {
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryConfig: number[] = [];
-    useEffect( () =>  {dispatch(runOptimizer(formState)) }, [formState] )
+    useEffect(() => {
+        if (formState.ARN !== '') {
+            dispatch(runOptimizer(formState))
+        }
+    }, [formState])
     //onSubmit changes the form state then invokes post request to backend -JK
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(arnRef.current?.value)
         console.log('submitted');
         dispatch(arnInput(arnRef.current?.value || ''));
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
         dispatch(powerValueInput(memoryConfig));
         console.log(formState)
-        
+
         if (formRef.current) {
             formRef.current.reset();
         }
@@ -66,9 +69,6 @@ const ChakraForm: React.FC = () => {
                     <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Memory Allocation</ChakraUI.Text>
                     {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
                     <ChakraUI.Stack direction='row' spacing={4} align='center'>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(64)}>
-                            64 MB
-                        </ChakraUI.Button>
                         <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(128)}>
                             128 MB
                         </ChakraUI.Button>
@@ -89,6 +89,9 @@ const ChakraForm: React.FC = () => {
                         </ChakraUI.Button>
                         <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(1536)}>
                             1536 MB
+                        </ChakraUI.Button>
+                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(2048)}>
+                            2048 MB
                         </ChakraUI.Button>
                     </ChakraUI.Stack>
                 </ChakraUI.Stack>
