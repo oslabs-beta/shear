@@ -151,7 +151,7 @@ export default function Graph() {
                             display: "inline-block",
                             width: "10px",
                             height: "10px",
-                            backgroundColor: "red",
+                            backgroundColor: "blue",
                             marginRight: "5px",
                         }}
                     />
@@ -163,7 +163,7 @@ export default function Graph() {
                             display: "inline-block",
                             width: "10px",
                             height: "10px",
-                            backgroundColor: "blue",
+                            backgroundColor: "red",
                             marginRight: "5px",
                         }}
                     />

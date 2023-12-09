@@ -69,9 +69,6 @@ const ChakraForm: React.FC = () => {
                     <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Memory Allocation</ChakraUI.Text>
                     {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
                     <ChakraUI.Stack direction='row' spacing={4} align='center'>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(64)}>
-                            64 MB
-                        </ChakraUI.Button>
                         <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(128)}>
                             128 MB
                         </ChakraUI.Button>
@@ -92,6 +89,9 @@ const ChakraForm: React.FC = () => {
                         </ChakraUI.Button>
                         <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(1536)}>
                             1536 MB
+                        </ChakraUI.Button>
+                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(2048)}>
+                            2048 MB
                         </ChakraUI.Button>
                     </ChakraUI.Stack>
                 </ChakraUI.Stack>

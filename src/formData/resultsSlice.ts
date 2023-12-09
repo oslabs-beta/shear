@@ -22,20 +22,6 @@ export const runOptimizer = createAsyncThunk<ResultValues, FormValues>('results/
 
 export const getAllData = createAsyncThunk
 
-export interface GraphType {
-  CostData: (string | number)[];
-  TimeData: (string | number)[];
-  MemoryData: (string | number)[];
-}
-
-export const GraphData: GraphType = {
-  CostData: [180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200],
-  TimeData: [500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120],
-  MemoryData: [128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048],
-};
-
-
-
 //current state of return data, Double check what we are expecting(discuss with backend)- JK
 const initialState: ResultValues = {
   billedDurationOutput: {},
