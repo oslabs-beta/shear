@@ -1,24 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './style.css'
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux'
 import React from "react";
 import * as d3 from "d3";
+import { GraphData } from "../formData/resultsSlice.ts";
 
 export default function Graph() {
 
-    const [timeData, setTimeData] = React.useState<number[]>([500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120]);
-    const [costData, setCostData] = React.useState<number[]>([180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200])
-    const [xData, setXData] = useState([128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048]);
+    const timeData = GraphData.TimeData;
+    const costData = GraphData.CostData;
+    const xData = GraphData.MemoryData;
+
+    // const [timeData, setTimeData] = React.useState<number[]>([500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120]);
+    // const [costData, setCostData] = React.useState<number[]>([180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200])
+    // const [xData, setXData] = useState([128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048]);
     const svgRef = useRef<SVGSVGElement | null>(null);
 
-    function onSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        d3.select("svg").selectAll("*").remove();
-        // svg.selectAll("*").remove()
-        setCostData([450, 400, 310, 490, 2400, 150, 1700, 150, 135, 1200, 120])
-        setXData([128, 256, 484, 512, 540, 738, 900, 1024, 1352, 1580, 2048])
-    }
+    // function onSubmit(e: React.FormEvent) {
+    //     e.preventDefault();
+    //     d3.select("svg").selectAll("*").remove();
+    //     // svg.selectAll("*").remove()
+    //     setCostData([450, 400, 310, 490, 2400, 150, 1700, 150, 135, 1200, 120])
+    //     setXData([128, 256, 484, 512, 540, 738, 900, 1024, 1352, 1580, 2048])
+    // }
 
     useEffect(() => {
         // setting up svg
@@ -137,33 +142,33 @@ export default function Graph() {
             <h2>Line Charts </h2>
             <svg className="svgWrap" ref={svgRef} style={{ margin: "50px", display: "block", width: "800px", height: "600px" }
             }></svg>
-             <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ marginRight: "10px" }}>
-          <span
-            style={{
-              display: "inline-block",
-              width: "10px",
-              height: "10px",
-              backgroundColor: "red",
-              marginRight: "5px",
-            }}
-          />
-          <span>Invocation Time</span>
-        </div>
-        <div>
-          <span
-            style={{
-              display: "inline-block",
-              width: "10px",
-              height: "10px",
-              backgroundColor: "blue",
-              marginRight: "5px",
-            }}
-          />
-          <span>Runtime Cost</span>
-        </div>
-      </div>
-            <button onClick={onSubmit}>click to change value</button>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <div style={{ marginRight: "10px" }}>
+                    <span
+                        style={{
+                            display: "inline-block",
+                            width: "10px",
+                            height: "10px",
+                            backgroundColor: "red",
+                            marginRight: "5px",
+                        }}
+                    />
+                    <span>Invocation Time</span>
+                </div>
+                <div>
+                    <span
+                        style={{
+                            display: "inline-block",
+                            width: "10px",
+                            height: "10px",
+                            backgroundColor: "blue",
+                            marginRight: "5px",
+                        }}
+                    />
+                    <span>Runtime Cost</span>
+                </div>
+            </div>
+            {/* <button onClick={onSubmit}>click to change value</button> */}
         </div>
     );
 };
