@@ -2,15 +2,16 @@
 import './style.css'
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from "../store.ts";
 import React from "react";
 import * as d3 from "d3";
-import { GraphData } from "../formData/resultsSlice.ts";
+import { runOptimizer } from "../formData/resultsSlice";
 
 export default function Graph() {
-
-    const timeData = GraphData.TimeData;
-    const costData = GraphData.CostData;
-    const xData = GraphData.MemoryData;
+    const graphData = useSelector((state: RootState) => state.results)
+    const timeData = graphData.TimeData;
+    const costData = graphData.CostData;
+    const xData = graphData.MemoryData;
 
     // const [timeData, setTimeData] = React.useState<number[]>([500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120]);
     // const [costData, setCostData] = React.useState<number[]>([180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200])
@@ -135,7 +136,7 @@ export default function Graph() {
             .attr("y", 50)
             .style("text-anchor", "middle")
             .style("font-size", "1.2rem");
-    }, [timeData, costData, xData]);
+    }, [graphData]);
 
 
     return (

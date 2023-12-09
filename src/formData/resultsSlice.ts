@@ -6,6 +6,9 @@ import { FormValues } from "./infoSlice";
 export interface ResultValues {
   billedDurationOutput: Record<string, number>;
   costOutput: Record<string, number>;
+  CostData: (string | number)[];
+  TimeData: (string | number)[];
+  MemoryData: (string | number)[];
 }
 
 //function sends form data to backend to get spun up. Back end will need to send back the data from spinning the algo. -JK
@@ -37,6 +40,9 @@ export const GraphData: GraphType = {
 const initialState: ResultValues = {
   billedDurationOutput: {},
   costOutput: {},
+  CostData: [180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200],
+  TimeData: [500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120],
+  MemoryData: [128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048],
 };
 
 const resultsSlice = createSlice({
@@ -49,11 +55,11 @@ const resultsSlice = createSlice({
         // console.log("Result incoming")
         const rawResults = action.payload;
         const rawMemory = Object.keys(rawResults.billedDurationOutput).map((x) => parseInt(x));
-        GraphData.MemoryData.splice(0, GraphData.MemoryData.length, ...rawMemory);
-        GraphData.CostData.splice(0, GraphData.CostData.length, ...Object.values(rawResults.costOutput));
-        GraphData.TimeData.splice(0, GraphData.TimeData.length, ...Object.values(rawResults.billedDurationOutput));
-        console.log(GraphData)
-        return action.payload;
+        state.MemoryData.splice(0, state.MemoryData.length, ...rawMemory);
+        state.CostData.splice(0, state.CostData.length, ...Object.values(rawResults.costOutput));
+        state.TimeData.splice(0, state.TimeData.length, ...Object.values(rawResults.billedDurationOutput));
+        console.log(state)
+        // return action.payload;
       })
       .addCase(runOptimizer.pending, (state, action) => {
         // console.log(action.payload)
