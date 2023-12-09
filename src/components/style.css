@@ -3,6 +3,10 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: lightgrey;
+}
+.chakra-ui-light {
+  background-color: lightgrey;
 }
 
 h2 {

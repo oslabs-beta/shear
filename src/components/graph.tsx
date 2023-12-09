@@ -36,6 +36,7 @@ export default function Graph() {
         let heightRightMagnitude = (Math.floor(Math.log10(Math.max(...costData))))
         let heightRight = 10 ** heightRightMagnitude *
             Math.ceil(Math.max(...costData) / (10 ** heightRightMagnitude))
+        
 
         const svg = d3
             .select(svgRef.current)
@@ -93,6 +94,7 @@ export default function Graph() {
             .join("path")
             .attr("d", (d: any) => invocationTime(d))
             .attr("fill", "none")
+            .attr("stroke-width", "3")
             .attr("stroke", "blue");
 
         svg
@@ -101,6 +103,7 @@ export default function Graph() {
             .join("path")
             .attr("d", (d: any) => runtimeCost(d))
             .attr("fill", "none")
+            .attr("stroke-width", "3")
             .attr("stroke", "red");
 
         // axis labels
@@ -133,16 +136,17 @@ export default function Graph() {
             .attr("fill", "black")
             .text('Memory (MB)')
             .attr("x", width / 2)
-            .attr("y", 50)
+            .attr("y", 70)
             .style("text-anchor", "middle")
-            .style("font-size", "1.2rem");
+            .style("font-size", "1.2rem")
+            .style('margin', '10px');
     }, [graphData]);
 
 
     return (
         <div className="chartWrapper" >
-            <h2>Line Charts </h2>
-            <svg className="svgWrap" ref={svgRef} style={{ margin: "50px", display: "block", width: "800px", height: "600px" }
+            <h2 style={{marginTop: "10px"}}>Line Charts </h2>
+            <svg className="svgWrap" ref={svgRef} style={{ display: "block", width: "800px", height: "600px", margin: '20px auto'}
             }></svg>
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <div style={{ marginRight: "10px" }}>
@@ -153,6 +157,7 @@ export default function Graph() {
                             height: "10px",
                             backgroundColor: "blue",
                             marginRight: "5px",
+                            marginTop: "20px"
                         }}
                     />
                     <span>Invocation Time</span>
@@ -165,6 +170,7 @@ export default function Graph() {
                             height: "10px",
                             backgroundColor: "red",
                             marginRight: "5px",
+                            marginTop: "20px"
                         }}
                     />
                     <span>Runtime Cost</span>

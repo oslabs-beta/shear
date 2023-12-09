@@ -97,7 +97,7 @@ const ChakraForm: React.FC = () => {
                 </ChakraUI.Stack>
                 <ChakraUI.Button
                     mt={4}
-                    colorScheme='teal'
+                    colorScheme='blue'
                     type='submit'
                     onClick={onSubmit}
                 >
