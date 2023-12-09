@@ -52,7 +52,7 @@ const resultsSlice = createSlice({
         GraphData.MemoryData.splice(0, GraphData.MemoryData.length, ...rawMemory);
         GraphData.CostData.splice(0, GraphData.CostData.length, ...Object.values(rawResults.costOutput));
         GraphData.TimeData.splice(0, GraphData.TimeData.length, ...Object.values(rawResults.billedDurationOutput));
-        // console.log(GraphData)
+        console.log(GraphData)
         return action.payload;
       })
       .addCase(runOptimizer.pending, (state, action) => {

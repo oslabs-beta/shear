@@ -42,6 +42,7 @@ export default function Graph() {
             .attr("height", height)
             .style("overflow", "visible")
 
+        svg.selectAll("*").remove()
         // x-axis range
         const xScale = d3
             .scaleLinear()
