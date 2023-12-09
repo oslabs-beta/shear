@@ -44,11 +44,11 @@ const ChakraForm: React.FC = () => {
     return (
         <div>
             {/* This is just design for now (no functionality) */}
-            <ChakraUI.Box position="relative" h="20%" w="60%" border="2px" padding="50px" borderRadius='lg' overflow='hidden' bg='yellow.100'>
+            <ChakraUI.Box position="relative" h="20%" w="60%" border="2px" padding="50px" borderRadius='lg' overflow='hidden' bg='lightgrey' margin='0 auto'>
 
                 <ChakraUI.Stack spacing={4}>
 
-                    <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Amazon stuff</ChakraUI.Text>
+                    <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Amazon stuff</ChakraUI.Text>
 
                     <ChakraUI.InputGroup>
                         <ChakraUI.InputLeftAddon children='ARN' bg='gray.400' />
@@ -59,38 +59,38 @@ const ChakraForm: React.FC = () => {
                         <ChakraUI.InputLeftAddon children='Function Parameters Keys' bg='gray.400' />
                         <ChakraUI.Input ref={funcParamsRef} placeholder='Separate entries by commas' />
                     </ChakraUI.InputGroup> */}
-                    <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Function Parameters</ChakraUI.Text>
+                    <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Function Parameters</ChakraUI.Text>
                     <ChakraUI.Textarea
                         ref={funcParamsRef}
                         placeholder='Please enter parameters and values in JSON format'
                         size='sm'
                     />
 
-                    <ChakraUI.Text as='b' fontSize='24px' color='tomato'>Memory Allocation</ChakraUI.Text>
+                    <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Memory Allocation</ChakraUI.Text>
                     {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
                     <ChakraUI.Stack direction='row' spacing={4} align='center'>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(128)}>
+                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(128)}>
                             128 MB
                         </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(256)}>
+                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(256)}>
                             256 MB
                         </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(512)}>
+                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(512)}>
                             512 MB
                         </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(768)}>
+                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(768)}>
                             768 MB
                         </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(1024)}>
+                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(1024)}>
                             1024 MB
                         </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(1280)}>
+                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(1280)}>
                             1280 MB
                         </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(1536)}>
+                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(1536)}>
                             1536 MB
                         </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='teal' variant='outline' onClick={() => memorySelect(2048)}>
+                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(2048)}>
                             2048 MB
                         </ChakraUI.Button>
                     </ChakraUI.Stack>
