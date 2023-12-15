@@ -35,8 +35,6 @@ const infoSlice = createSlice({
       // const parsedObj = {};
       const parsedPayLoad = JSON.parse(action.payload)
       // console.log(stringifiedPayLoad)
-
-
       state.functionPayload = parsedPayLoad;
     },
 
@@ -49,13 +47,30 @@ const infoSlice = createSlice({
     //   state.memoryArray = [];
     //   state.memoryArray.push(action.payload)
     // },
-    powerValueInput(state, action: PayloadAction<number[]>) {
+    powerValueInput(state, action: PayloadAction<string[]>) {
       // state.memoryArray = [];
-      state.memoryArray.splice(0, state.memoryArray.length, ...action.payload);
+      
+      state.memoryArray = getMedians(action.payload)
+      console.log(state.memoryArray)
+    
+
+      // state.memoryArray.splice(0, state.memoryArray.length, );
       // console.log(current(state))
     },
   },
 });
+
+//function for getting 5 settings from the lower, med, upper median from the inputted values. - jk
+function getMedians(array: string[]) : number[] {
+  const arrayOfVals: number[] = array.map(Number)
+  const min = arrayOfVals[0]
+  const max = arrayOfVals[1]
+  const median = Math.ceil((min + max)/2)
+  const lowerMedian = Math.ceil((min + median)/2)
+  const upperMedian = Math.ceil((median + max)/2)
+  const result: number[] = [...arrayOfVals, median, lowerMedian, upperMedian]
+  return result.sort((a,b)=> a - b)
+}
 
 // export const { arnInput, funcParamsInput, powerValueInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
 export const { arnInput, funcParamsInput, powerValueInput } = infoSlice.actions;
