@@ -1,4 +1,4 @@
-import React, { useRef, FormEvent, useEffect, useState } from "react";
+import React, { useRef, FormEvent, useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store.ts";
 import { arnInput, funcParamsInput, powerValueInput } from "../formData/infoSlice.ts";
@@ -11,33 +11,31 @@ const ChakraForm: React.FC = () => {
     const resultsState = useSelector((state: RootState) => state.results)
     const formState = useSelector((state: RootState) => state.info)
     const dispatch = useDispatch();
-    const formRef = useRef<HTMLFormElement>(null);
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
-    const memoryConfig: number[] = [];
+    const memoryRef = useRef<string[]>([])
     useEffect(() => {
         if (formState.ARN !== '') {
             dispatch(runOptimizer(formState))
         }
     }, [formState])
+
+    const onChangeMinVal = (e: ChangeEvent<HTMLInputElement>) => {
+        memoryRef.current[0] = e.target.value
+    }
+    const onChangeMaxVal = (e: ChangeEvent<HTMLInputElement>) => {
+        memoryRef.current[1] = e.target.value
+    }
     //onSubmit changes the form state then invokes post request to backend -JK
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log('submitted');
         dispatch(arnInput(arnRef.current?.value || ''));
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
-        dispatch(powerValueInput(memoryConfig));
-        console.log(formState)
+        dispatch(powerValueInput(memoryRef.current));
+        
 
-        if (formRef.current) {
-            formRef.current.reset();
-        }
-    };
-
-    const memorySelect = (num: number) => {
-        console.log('memory selection');
-        memoryConfig.push(num);
-        console.log(memoryConfig)
+       
     };
 
 
@@ -68,33 +66,18 @@ const ChakraForm: React.FC = () => {
 
                     <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Memory Allocation</ChakraUI.Text>
                     {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
-                    <ChakraUI.Stack direction='row' spacing={4} align='center'>
-                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(128)}>
-                            128 MB
-                        </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(256)}>
-                            256 MB
-                        </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(512)}>
-                            512 MB
-                        </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(768)}>
-                            768 MB
-                        </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(1024)}>
-                            1024 MB
-                        </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(1280)}>
-                            1280 MB
-                        </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(1536)}>
-                            1536 MB
-                        </ChakraUI.Button>
-                        <ChakraUI.Button colorScheme='blue' variant='outline' onClick={() => memorySelect(2048)}>
-                            2048 MB
-                        </ChakraUI.Button>
-                    </ChakraUI.Stack>
+                    <ChakraUI.HStack>
+                    <ChakraUI.InputGroup>
+                        <ChakraUI.InputLeftAddon children='Min' bg='gray.400' />
+                        <ChakraUI.Input type="text" onChange={onChangeMinVal} placeholder='128' />
+                    </ChakraUI.InputGroup>
+                    <ChakraUI.InputGroup>
+                        <ChakraUI.InputLeftAddon children='Max' bg='gray.400' />
+                        <ChakraUI.Input type="text"onChange={onChangeMaxVal} placeholder='4096' />
+                    </ChakraUI.InputGroup>
+                    </ChakraUI.HStack>
                 </ChakraUI.Stack>
+                
                 <ChakraUI.Button
                     mt={4}
                     colorScheme='blue'
