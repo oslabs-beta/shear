@@ -2,52 +2,76 @@ import { createSlice, PayloadAction, createAsyncThunk, current } from "@reduxjs/
 import { optimizerAPI } from "./infoAPI";
 
 export interface FormValues {
-  arn: string;
-  funcParams: (string | number)[];
-  powerValues: (string | number)[];
+  ARN: string;
+  memoryArray: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  inputJson: Record<any, any>;
+  functionPayload: Record<any, any>;
 }
 
-export const loadData = createAsyncThunk('data/data', async(formData: FormValues) => {
+
+export const loadData = createAsyncThunk('data/data', async (formData: FormValues) => {
   const response = await optimizerAPI.runOptimizerFunc(formData);
   return response.data;
 })
 
 const formValues: FormValues = {
-  arn: '',
-  funcParams: [],
-  powerValues: [],
-  inputJson: {},
+  ARN: '',
+  memoryArray: [],
+  functionPayload: {},
 };
 
+// `"startRange": 1000000, "endRange": 20000000, "xPrimes": 40"`
 
 const infoSlice = createSlice({
   name: 'info',
   initialState: formValues,
   reducers: {
     arnInput(state, action: PayloadAction<string>) {
-      state.arn = action.payload;
+      state.ARN = action.payload;
       // console.log(state.arn);
     },
     funcParamsInput(state, action: PayloadAction<string>) {
-      const funcParams = action.payload.replace(/\s/g, '');
-      const splitFuncParams = funcParams.split(',');
-      state.funcParams = splitFuncParams;
-      // console.log(state.funcParams);
+      // const stringifiedPayLoad = JSON.stringify(action.payload)
+      // const parsedObj = {};
+      const parsedPayLoad = JSON.parse(action.payload)
+      // console.log(stringifiedPayLoad)
+      state.functionPayload = parsedPayLoad;
     },
-    highestPowerValueInput(state, action: PayloadAction<string>) {
-      // console.log(action.payload);
-      state.powerValues.push(action.payload);
-      // console.log(current(state));
-    },
-    lowestPowerValueInput(state, action: PayloadAction<string>) {
-      // Clear the power values before inputting a new power value
-      state.powerValues = [];
-      state.powerValues.push(action.payload)
+
+
+    // highestPowerValueInput(state, action: PayloadAction<string>) {
+    //   state.memoryArray.push(action.payload);
+    //   console.log(current(state));
+    // },
+    // lowestPowerValueInput(state, action: PayloadAction<string>) {
+    //   state.memoryArray = [];
+    //   state.memoryArray.push(action.payload)
+    // },
+    powerValueInput(state, action: PayloadAction<string[]>) {
+      // state.memoryArray = [];
+      
+      state.memoryArray = getMedians(action.payload)
+      console.log(state.memoryArray)
+    
+
+      // state.memoryArray.splice(0, state.memoryArray.length, );
+      // console.log(current(state))
     },
   },
 });
 
-export const { arnInput, funcParamsInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
+//function for getting 5 settings from the lower, med, upper median from the inputted values. - jk
+function getMedians(array: string[]) : number[] {
+  const arrayOfVals: number[] = array.map(Number)
+  const min = arrayOfVals[0]
+  const max = arrayOfVals[1]
+  const median = Math.ceil((min + max)/2)
+  const lowerMedian = Math.ceil((min + median)/2)
+  const upperMedian = Math.ceil((median + max)/2)
+  const result: number[] = [...arrayOfVals, median, lowerMedian, upperMedian]
+  return result.sort((a,b)=> a - b)
+}
+
+// export const { arnInput, funcParamsInput, powerValueInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
+export const { arnInput, funcParamsInput, powerValueInput } = infoSlice.actions;
 export default infoSlice.reducer;

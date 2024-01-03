@@ -10,6 +10,14 @@ router.post('/getLogs', getLambdaLogs, (req: Request, res: Response): void => {
     // console.log('GET request to /api');
     res.status(200).json(res.locals.output);
 });
+// router.post('/getLambdaLogs', (req: Request, res: Response): void => {
+//     res.locals.info = req.body;
+//     res.status(200).json(res.locals.info)
+// })
+router.post('/getLambdaLogs', lambdaController.shear, (req: Request, res: Response): void => {
+    res.status(200).json(res.locals.output)
+})
+
 
 // router.post('/addLogs', addLambdaLog,(req: Request, res: Response):void => {
 //     res.locals.info = req.body;
@@ -17,7 +25,7 @@ router.post('/getLogs', getLambdaLogs, (req: Request, res: Response): void => {
 // })
 
 // Executing "step function workflow"
-router.post("/executeLambdaWorkflow", lambdaController.shear, addLambdaLog, (req: Request, res:Response) : void =>{
+router.post("/executeLambdaWorkflow", lambdaController.shear, (req: Request, res: Response): void => {
     res.status(200).json(res.locals.output)
 })
 
