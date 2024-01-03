@@ -14,7 +14,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 
 
-const TIMES = 10;
+const TIMES = 100;
 const lambdaController = {
   async shear(request, response, next) {
     if (!request.body.ARN) {
@@ -24,6 +24,7 @@ const lambdaController = {
       return next(error);
     }
     const memoryArray = request.body.memoryArray;
+    response.locals.memoryArray = memoryArray;
     if (!memoryArray || !Array.isArray(memoryArray) || memoryArray.length === 0) {
       const error: CustomError = new Error('Error with memory array!');
       error.status = 403; 
@@ -381,6 +382,7 @@ function getRegionFromARN(arn) {
   }
 }
 function calculateMedianObject(arr) {
+  console.log(arr)
   const result = {};
 
   arr.forEach((item) => {

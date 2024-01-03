@@ -17,6 +17,9 @@ dotenv.config();
 export async function getLambdaLogs(req: Request, res: Response, next: NextFunction): Promise<void> {
   
   const { ARN } = req.body;
+  if (ARN.length == 0){
+    return next(new Error)
+  }
   try
   {
     const query = {
@@ -40,15 +43,20 @@ export async function getLambdaLogs(req: Request, res: Response, next: NextFunct
 }
 
 export async function addLambdaLog (req: Request, res: Response, next: NextFunction): Promise<void> {
-    const {ARN, memoryArray, output, cost } = res.locals;
+    const {ARN, memoryArray, output } = res.locals;
+    if(ARN.length == 0 || memoryArray.length <= 0 || output.billedDurationOutput || output.costOutput){
+      return next(new Error)
+    }
+    console.log(ARN)
+    console.log(memoryArray)
+    console.log(output,'OUTPUT FROM LAMBDA')
     try
     { 
-    
       const item = {
         funcName: ARN,
         memoryArr: memoryArray,
         result: output,
-        constPerThousand: cost
+      
     };
 
       const q = {
