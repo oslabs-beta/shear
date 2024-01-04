@@ -73,7 +73,8 @@ const lambdaController = {
           outputObj[element] = billedDurationArray;
           await wait(2000);
         }
-        console.log(outputObj)
+        //console.log(outputObj)
+        return outputObj;
       } catch (error) {
         console.error(
           "Error creating new version and updating memory size from Array:",
@@ -111,48 +112,20 @@ const lambdaController = {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    createNewVersionsFromMemoryArrayAndInvoke(memoryArray, functionARN)
-
+   const test = await createNewVersionsFromMemoryArrayAndInvoke(memoryArray, functionARN)
+  const billedDurationArray = reduceObjectToMedian(test)
+  
+  const outputObject = {
+    billedDurationOutput: billedDurationArray,
+    costOutput: calculateCosts(billedDurationArray)
+  }
+  response.locals.output = outputObject;
     return next();
   },
 
 };
 
-function getFunctionARN(arn) {
-  // console.log('arn is ' + arn)
-  const arnParts = arn.split(":");
-  const functionName = arnParts[arnParts.length - 1];
-  return functionName;
-}
 
-function extractBilledDuration(inputString) {
-  const attributes = inputString.split("\t");
-
-  for (const attr of attributes) {
-    if (attr.startsWith("Billed Duration")) {
-      const billedDuration = attr.split(": ")[1];
-      const numericValue = parseFloat(billedDuration); // Extracting only the numeric part
-      return numericValue; // Return the numeric value without the unit
-    }
-  }
-
-  return null; // Return null if billed duration is not found
-}
-
-function extractMemorySize(message) {
-  const segments = message.split("\t");
-  let memorySize;
-
-  segments.forEach((segment) => {
-    const [key, value] = segment.split(": ");
-
-    if (key.trim() === "Memory Size") {
-      memorySize = value.replace(" MB", "").trim();
-    }
-  });
-
-  return parseInt(memorySize);
-}
 
 function getRegionFromARN(arn) {
   const arnParts = arn.split(':');
@@ -161,36 +134,6 @@ function getRegionFromARN(arn) {
   } else {
     return null;
   }
-}
-function calculateMedianObject(arr) {
-  const result = {};
-
-  arr.forEach((item) => {
-    if (!Array.isArray(item) || item === null) return;
-
-    const [key, values] = item;
-    if (!Array.isArray(values)) return;
-
-    // Remove the first value (cold-start outlier)
-    const filteredValues = values.slice(1);
-
-    // Sort the values
-    const sortedValues = filteredValues.sort((a, b) => a - b);
-
-    let median;
-    const length = sortedValues.length;
-    if (length === 0) {
-      median = null;
-    } else if (length % 2 === 0) {
-      median = (sortedValues[length / 2 - 1] + sortedValues[length / 2]) / 2;
-    } else {
-      median = sortedValues[Math.floor(length / 2)];
-    }
-
-    result[key] = median;
-  });
-
-  return result;
 }
 function calculateCosts(resultObj: { [key: number]: number }): { [key: number]: number } {
   const newObj: { [key: number]: number } = {};
@@ -232,4 +175,28 @@ if (match) {
 } else {
   return 'error!'
 }
+}
+
+function reduceObjectToMedian(inputObj) {
+  const result = {};
+  
+  for (const key in inputObj) {
+    if (inputObj.hasOwnProperty(key)) {
+      const values = inputObj[key].map(Number); 
+      values.sort((a, b) => a - b); //sort
+
+      let median;
+      const middle = Math.floor(values.length / 2);
+
+      if (values.length % 2 === 0) {
+        median = (values[middle - 1] + values[middle]) / 2;
+      } else {
+        median = values[middle];
+      }
+
+      result[key] = median;
+    }
+  }
+
+  return result;
 }
