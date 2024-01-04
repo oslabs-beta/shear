@@ -1,4 +1,4 @@
-import { CloudWatchLogs, DescribeLogStreamsCommand, DescribeLogGroupsCommand, GetLogEventsCommand, OrderBy } from "@aws-sdk/client-cloudwatch-logs";
+//import { CloudWatchLogs, DescribeLogStreamsCommand, DescribeLogGroupsCommand, GetLogEventsCommand, OrderBy } from "@aws-sdk/client-cloudwatch-logs";
 import CustomError from "../types.js";
 import {
   LambdaClient,
@@ -32,30 +32,12 @@ const lambdaController = {
     const regionObj = { region: region2 }
     // setup for all the AWS work we're going to do.
     const lambdaClient = new LambdaClient(regionObj);
-    const cloudwatchlogs = new CloudWatchLogs(regionObj);
-
-    // const lambdaClient = new LambdaClient({
-    //   credentials: {
-    //     accessKeyID: "AKIASGEKRQSLWL4552VP",
-    //     secretAccessKey: "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",
-    //   },
-    //   region: "us-west-1"
-    // });
-    // const cloudwatchlogs = new CloudWatchLogs({
-    //   credentials: {
-    //     accessKeyID: "AKIASGEKRQSLWL4552VP",
-    //     secretAccessKey: "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",
-    //   },
-    //   region: "us-west-1"
-    // });
 
 
-    const functionName = getFunctionARN(request.body.ARN);
+    //const functionName = getFunctionARN(request.body.ARN);
     const functionARN = request.body.ARN;
 
     const functionPayload = request.body.functionPayload;
-
-
     const payloadBlob = fromUtf8(JSON.stringify(functionPayload));
 
     async function createNewVersionsFromMemoryArrayAndInvoke(inputArr, arn) {
@@ -63,8 +45,10 @@ const lambdaController = {
         const publishVersionParams = {
           FunctionName: arn,
         };
+        const outputObj = {}
 
         for (const element of inputArr) {
+          const billedDurationArray = []
           //this publishes a new version
           const newVersion = await lambdaClient.send(
             new PublishVersionCommand(publishVersionParams)
@@ -83,10 +67,13 @@ const lambdaController = {
           await wait(2000);
           for (let i = 0; i < TIMES; i++) {
             //invoke new version X times. currectly a global constant, but probably something we should let the user configure.
-            await invokeSpecificVersion(updatedFunction.Version, payloadBlob);
+            const value = await invokeSpecificVersion(updatedFunction.Version, payloadBlob);
+            billedDurationArray.push(value)
           }
+          outputObj[element] = billedDurationArray;
           await wait(2000);
         }
+        console.log(outputObj)
       } catch (error) {
         console.error(
           "Error creating new version and updating memory size from Array:",
@@ -104,12 +91,15 @@ const lambdaController = {
           FunctionName: functionARN,
           Qualifier: version,
           Payload: payload,
+        
+          LogType: "Tail"
         };
-
+// @ts-expect-error - weird typing bug
         const data = await lambdaClient.send(new InvokeCommand(invokeParams));
         // console.log("data:");
         // console.log(data.$metadata.requestId);
-        return data;
+        const billedDuration = extractBilledDurationFrom64(atob(data.LogResult))
+        return billedDuration;
       } catch (error) {
         const error1: CustomError = new Error('Error with invoking specific version.');
         error1.status = 512;
@@ -121,214 +111,7 @@ const lambdaController = {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    await createNewVersionsFromMemoryArrayAndInvoke(memoryArray, functionARN);
-    await wait(5000);
-
-    async function getLogStreams(logGroupName) {
-      //get the log streams via the log group name. we need to get 4 streams due to the phantom log issue. we actually might need to get more (since phantom logs can theoretically occur once per new configuration) but that's a problem for the future.
-      const params = {
-        logGroupName: logGroupName,
-        orderBy: OrderBy.LastEventTime,
-        limit: memoryArray.length + 1,
-        descending: true,
-      };
-
-      try {
-        const command = new DescribeLogStreamsCommand(params)
-        const logStreams = await cloudwatchlogs.send(command);
-        //console.log('Log Streams:', logStreams.logStreams);
-
-        return logStreams.logStreams;
-
-
-      } catch (error) {
-        const error1: CustomError = new Error('Error with fetching log streams.');
-        error1.status = 512;
-        error1.requestDetails = { body: request.body };
-        return next(error);
-      }
-    }
-
-    async function getLogGroupsNew(funcName) {
-      //get the Log Group via the function name
-      try {
-        const command = new DescribeLogGroupsCommand({
-          logGroupNamePattern: funcName,
-        });
-
-        const logGroups = await cloudwatchlogs.send(command);
-
-
-        if (logGroups && logGroups.logGroups) {
-          return logGroups.logGroups[0].logGroupName;
-        } else {
-          console.log('No log groups found for the specified pattern.');
-          return undefined;
-        }
-      }
-      catch (error) {
-        const error1: CustomError = new Error('Error with describing log streams.');
-        error1.status = 512;
-        error1.requestDetails = { body: request.body };
-        return next(error);
-      }
-    }
-
-    //in order to view the logs of a specific invocation, we need to get the Log Group, which is like the folder containing the logs, and the Log Streams, which are like the files in the folder
-    const logGroupName = await getLogGroupsNew(functionName);
-
-    const logStreams = await getLogStreams(logGroupName);
-
-    async function getFunctionLogs(logGroupName: string, logStreamName: string) {
-
-
-      const params = {
-        logGroupName: logGroupName,
-        logStreamName: logStreamName,
-        startFromHead: true,
-      };
-
-      try {
-        const command = new GetLogEventsCommand(params);
-        const logEvents = await cloudwatchlogs.send(command);
-
-        const logEventsEvents = logEvents.events;
-        if (!logEventsEvents || logEventsEvents.length <= 1) {
-          console.log('null log found')
-          return null;
-        }
-
-        // memoryArray.length should be TIMES??
-        const output = await seekReportsRecursively(logEventsEvents, TIMES, params)
-
-
-        return output;
-      } catch (error) {
-        console.error("Error fetching logs:", error);
-      }
-    }
-    async function seekReportsRecursively(
-      events,
-      soughtResults,
-      params,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      resultsArr: any = [],
-      attempts = 0
-    ) {
-      for (const element of events) {
-        if (element.message.startsWith("REPORT")) {
-          //console.log('Report found!')
-          if (resultsArr.length == 0) {
-            resultsArr.push(extractMemorySize(element.message));
-            resultsArr.push([extractBilledDuration(element.message)]);
-            // console.log('new mem value:')
-
-          } else {
-            resultsArr[1].push(extractBilledDuration(element.message));
-            // console.log('no new memval')
-            // console.log(resultsArr[1])
-          }
-        }
-      }
-      if (!resultsArr[1] && attempts < 5) {
-        attempts++;
-        const length = events.length - 1;
-        await wait(5000);
-
-
-        const command = new GetLogEventsCommand(params);
-        const newEvents = await cloudwatchlogs.send(command);
-        const newEventsEvents = newEvents.events;
-        console.log("insufficient events! waiting 5sec");
-        console.log("attempts: ", attempts);
-        if (newEventsEvents) {
-          resultsArr = await seekReportsRecursively(
-            newEventsEvents.slice(length),
-            soughtResults,
-            params,
-            resultsArr,
-            attempts
-          );
-        }
-        else {
-          console.log('UHHHHHHH')
-        }
-        return resultsArr;
-      } else if (!resultsArr[1] && attempts >= 5) {
-        console.log("error! log file contained no valid end reports");
-        console.log("resultsArr is: ");
-        console.log(resultsArr);
-        return resultsArr;
-      } else if (resultsArr[1].length >= soughtResults) return resultsArr;
-      else if (resultsArr[1].length < soughtResults && attempts < 5) {
-        await wait(5000);
-        attempts++;
-        const length = events.length - 1;
-
-        const command = new GetLogEventsCommand(params);
-        const newEvents = await cloudwatchlogs.send(command);
-        const newEventsEvents = newEvents.events;
-        console.log("insufficient events! waiting 5sec");
-        console.log("valid reports durations:");
-        console.log(resultsArr[1]);
-        console.log("attempts: ", attempts);
-        if (newEventsEvents) {
-          resultsArr = await seekReportsRecursively(
-            newEventsEvents.slice(length),
-            soughtResults,
-            params,
-            resultsArr,
-            attempts
-          );
-        }
-        else {
-          console.log('Null log somehow started getting processed?')
-        }
-        return resultsArr;
-      } else if (attempts >= 5) {
-        console.log("Maximum attempts made. Proceeding to next memory value.");
-        return resultsArr;
-      }
-    }
-
-
-    const outputArr: Array<[number, number[]]> = [];
-    if (logStreams && logGroupName) {
-      for (const element of logStreams) {
-        if (element.logStreamName) {
-          console.log("NEW LOG STREAM");
-          console.log(element.logStreamName);
-          outputArr.push(
-            await getFunctionLogs(logGroupName, element.logStreamName)
-          );
-        }
-        else {
-          const error1: CustomError = new Error('Error with reading logStream Name. This should not happen.');
-          error1.status = 512;
-          error1.requestDetails = { body: request.body };
-          return next(error1);
-        }
-      }
-
-      outputArr.forEach((element) => {
-        if (Array.isArray(element)) {
-          console.log(element[0]);
-        }
-      });
-      const billedDurationOutput = calculateMedianObject(outputArr);
-      const costOutput = calculateCosts(billedDurationOutput);
-      const trueOutputObject = {
-        billedDurationOutput,
-        costOutput
-      }
-      response.locals.output = trueOutputObject;
-    }
-    else {
-      const error1: CustomError = new Error('Error with reading logStream Name or logGroup name. This should not happen.');
-      error1.status = 512;
-      error1.requestDetails = { body: request.body };
-      return next(error1);
-    }
+    createNewVersionsFromMemoryArrayAndInvoke(memoryArray, functionARN)
 
     return next();
   },
@@ -434,3 +217,19 @@ function calculateCosts(resultObj: { [key: number]: number }): { [key: number]: 
 
 
 export default lambdaController;
+
+
+
+function extractBilledDurationFrom64(logText) {
+
+  const billedDurationRegex = /Billed Duration: (\d+(\.\d+)?) ms/;
+const match = logText.match(billedDurationRegex);
+
+
+if (match) {
+  
+  return match[1]
+} else {
+  return 'error!'
+}
+}
