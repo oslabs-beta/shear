@@ -34,7 +34,7 @@ const ChakraForm: React.FC = () => {
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
         dispatch(powerValueInput(memoryRef.current));
         
-
+        
        
     };
 

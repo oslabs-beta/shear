@@ -1,5 +1,6 @@
 import { CloudWatchLogs, DescribeLogStreamsCommand, DescribeLogGroupsCommand, GetLogEventsCommand, OrderBy } from "@aws-sdk/client-cloudwatch-logs";
 import CustomError from "../types.js";
+import dotenv from "dotenv"
 import {
   LambdaClient,
   InvokeCommand,
@@ -13,7 +14,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 
 
-const TIMES = 100;
+const TIMES = 5;
 const lambdaController = {
   async shear(request, response, next) {
     if (!request.body.ARN) {
@@ -23,7 +24,6 @@ const lambdaController = {
       return next(error);
     }
     const memoryArray = request.body.memoryArray;
-    response.locals.memoryArray = memoryArray;
     if (!memoryArray || !Array.isArray(memoryArray) || memoryArray.length === 0) {
       const error: CustomError = new Error('Error with memory array!');
       error.status = 403;
@@ -31,11 +31,14 @@ const lambdaController = {
       return next(error);
     }
     const region2 = getRegionFromARN(request.body.ARN);
+    response.locals.ARN = request.body.ARN
+    response.locals.memoryArray = memoryArray;
 
-    const regionObj = { region: region2 }
+
+    // const regionObj = { region: region2 }
     // setup for all the AWS work we're going to do.
-    const lambdaClient = new LambdaClient(regionObj);
-    const cloudwatchlogs = new CloudWatchLogs(regionObj);
+    // const lambdaClient = new LambdaClient(regionObj);
+    // const cloudwatchlogs = new CloudWatchLogs(regionObj);
 
     // const lambdaClient = new LambdaClient({
     //   credentials: {
@@ -51,6 +54,24 @@ const lambdaController = {
     //   },
     //   region: "us-west-1"
     // });
+
+    const lambdaClient = new LambdaClient({
+      credentials: { 
+        accessKeyId: process.env.ACC_KEY, // Your access key ID
+        secretAccessKey: process.env.SEC_KEY, // Your secret access key
+      },
+      region: region2, // Your AWS region
+    });
+
+    const cloudwatchlogs = new CloudWatchLogs({
+      credentials: { 
+        accessKeyId: process.env.ACC_KEY, // Your access key ID
+        secretAccessKey: process.env.SEC_KEY, // Your secret access key
+      },
+      region: region2, // Your AWS region
+    });
+
+
 
 
     const functionName = getFunctionARN(request.body.ARN);
@@ -203,7 +224,7 @@ const lambdaController = {
 
         // memoryArray.length should be TIMES??
         const output = await seekReportsRecursively(logEventsEvents, TIMES, params)
-
+        console.log(output,'this be the output')
 
         return output;
       } catch (error) {
@@ -415,7 +436,7 @@ function calculateMedianObject(arr) {
 }
 function calculateCosts(resultObj: { [key: number]: number }): { [key: number]: number } {
   const newObj: { [key: number]: number } = {};
-
+  console.log("calculating costs......!!")
   for (const key in resultObj) {
     if (Object.prototype.hasOwnProperty.call(resultObj, key)) {
       const originalValue = resultObj[key];
