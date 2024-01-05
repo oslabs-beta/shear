@@ -18,3 +18,9 @@ h2 {
   /* width: 900px !important; */
   background-color: rgb(183, 232, 196) !important;
 }
+
+.button:active {
+  background-color: #3498db;
+  color: #fff;
+  transform: scale(0.95);
+}
