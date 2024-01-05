@@ -1,33 +1,46 @@
+<<<<<<< HEAD
 import { CloudWatchLogs, DescribeLogStreamsCommand, DescribeLogGroupsCommand, GetLogEventsCommand, OrderBy } from "@aws-sdk/client-cloudwatch-logs";
 import CustomError from "../types.js";
 import dotenv from "dotenv"
+=======
+>>>>>>> dev
 import {
   LambdaClient,
   InvokeCommand,
-  PublishVersionCommand,
   UpdateFunctionConfigurationCommand,
 } from "@aws-sdk/client-lambda";
 
+<<<<<<< HEAD
 dotenv.config();
+=======
+import {wait, extractBilledDurationFrom64, reduceObjectToMedian, calculateCosts, createCustomError, getRegionFromARN} from "../utils/utils.js"
+>>>>>>> dev
 
 import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 
 
+<<<<<<< HEAD
 const TIMES = 5;
+=======
+
+const TIMES = 10;
+>>>>>>> dev
 const lambdaController = {
   async shear(request, response, next) {
     if (!request.body.ARN) {
-      const error: CustomError = new Error('Error reading ARN!');
-      error.status = 403;
-      error.requestDetails = { body: request.body }; // Adding request details to the error object
+      
+      const error = createCustomError('Error reading ARN!', 403, {body: request.body})
+      return next(error);
+    }
+    if (!validateLambdaARN(request.body.ARN)) {
+      console.log(request.body.ARN)
+      const error = createCustomError('Invalid ARN!', 403, {body: request.body})
       return next(error);
     }
     const memoryArray = request.body.memoryArray;
     if (!memoryArray || !Array.isArray(memoryArray) || memoryArray.length === 0) {
-      const error: CustomError = new Error('Error with memory array!');
-      error.status = 403;
-      error.requestDetails = { body: request.body };
+      const error = createCustomError('Error with memory array!', 403, { body: request.body });
       return next(error);
     }
     const region2 = getRegionFromARN(request.body.ARN);
@@ -37,6 +50,7 @@ const lambdaController = {
 
     // const regionObj = { region: region2 }
     // setup for all the AWS work we're going to do.
+<<<<<<< HEAD
     // const lambdaClient = new LambdaClient(regionObj);
     // const cloudwatchlogs = new CloudWatchLogs(regionObj);
 
@@ -54,6 +68,9 @@ const lambdaController = {
     //   },
     //   region: "us-west-1"
     // });
+=======
+    const lambdaClient = new LambdaClient(regionObj);
+>>>>>>> dev
 
     const lambdaClient = new LambdaClient({
       credentials: { 
@@ -74,52 +91,41 @@ const lambdaController = {
 
 
 
-    const functionName = getFunctionARN(request.body.ARN);
     const functionARN = request.body.ARN;
 
     const functionPayload = request.body.functionPayload;
-
-
     const payloadBlob = fromUtf8(JSON.stringify(functionPayload));
 
     async function createNewVersionsFromMemoryArrayAndInvoke(inputArr, arn) {
       try {
-        const publishVersionParams = {
-          FunctionName: arn,
-        };
+        const outputObj = {}
 
         for (const element of inputArr) {
-          //this publishes a new version
-          const newVersion = await lambdaClient.send(
-            new PublishVersionCommand(publishVersionParams)
-          );
-          //this updates the configuration of the new version
-          const updateConfigParams = {
-            FunctionName: functionARN,
-            MemorySize: element,
-            Description: "New version with " + element + " MB of memory",
-            Qualifier: newVersion.Version,
-          };
-          const updatedFunction = await lambdaClient.send(
-            new UpdateFunctionConfigurationCommand(updateConfigParams)
-          );
-          console.log("New version created:", updatedFunction.Version);
-          await wait(2000);
-          for (let i = 0; i < TIMES; i++) {
-            //invoke new version X times. currectly a global constant, but probably something we should let the user configure.
-            await invokeSpecificVersion(updatedFunction.Version, payloadBlob);
+           const billedDurationArray = []
+
+          const input = {
+            FunctionName: arn,
+            MemorySize:Number(element),
+            Description: "New version with " + element +" MB of RAM" 
           }
-          await wait(2000);
+          const command = new UpdateFunctionConfigurationCommand(input)
+          await lambdaClient.send(command)
+          
+          await wait(2000)
+          outputObj[element] = billedDurationArray;
+          for (let i = 0; i < TIMES; i++) {
+               //invoke new version X times. currectly a global constant, but probably something we should let the user configure.
+               const value = await invokeSpecificVersion('$LATEST', payloadBlob);
+               billedDurationArray.push(value)
+             }
+          
+          //await wait(2000);
         }
+        
+        return outputObj;
       } catch (error) {
-        console.error(
-          "Error creating new version and updating memory size from Array:",
-          error
-        );
-        const error1: CustomError = new Error('Error creating new versions.');
-        error1.status = 403;
-        error1.requestDetails = { body: request.body };
-        return next(error1);
+        const customError = createCustomError('Error creating new versions.', 403, { body: request.body });
+        return next(customError);
       }
     }
     async function invokeSpecificVersion(version, payload) {
@@ -128,19 +134,20 @@ const lambdaController = {
           FunctionName: functionARN,
           Qualifier: version,
           Payload: payload,
+        
+          LogType: "Tail"
         };
-
+// @ts-expect-error - weird typing bug
         const data = await lambdaClient.send(new InvokeCommand(invokeParams));
-        // console.log("data:");
-        // console.log(data.$metadata.requestId);
-        return data;
+
+        const billedDuration = extractBilledDurationFrom64(atob(data.LogResult))
+        return billedDuration;
       } catch (error) {
-        const error1: CustomError = new Error('Error with invoking specific version.');
-        error1.status = 512;
-        error1.requestDetails = { body: request.body };
-        return next(error);
+        const customError = createCustomError('Error with invoking specific version.', 512, { body: request.body });
+        return next(customError);
       }
     }
+<<<<<<< HEAD
     function wait(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
@@ -354,18 +361,33 @@ const lambdaController = {
       return next(error1);
     }
 
+=======
+try {
+   const test = await createNewVersionsFromMemoryArrayAndInvoke(memoryArray, functionARN)
+  const billedDurationArray = reduceObjectToMedian(test)
+  
+  const outputObject = {
+    billedDurationOutput: billedDurationArray,
+    costOutput: calculateCosts(billedDurationArray)
+  }
+  response.locals.output = outputObject;
+>>>>>>> dev
     return next();
+}
+catch (error) {
+  const customError = createCustomError('Unhandled error occurred.', 500, { body: request.body });
+      return next(customError);
+}
   },
 
 };
 
-function getFunctionARN(arn) {
-  // console.log('arn is ' + arn)
-  const arnParts = arn.split(":");
-  const functionName = arnParts[arnParts.length - 1];
-  return functionName;
+const lambdaArnRegex = /^arn:aws:lambda:[a-z\d-]+:\d{12}:function:[a-zA-Z0-9-_]+$/;
+function validateLambdaARN(arn) {
+  return lambdaArnRegex.test(arn);
 }
 
+<<<<<<< HEAD
 function extractBilledDuration(inputString) {
   const attributes = inputString.split("\t");
 
@@ -455,7 +477,12 @@ function calculateCosts(resultObj: { [key: number]: number }): { [key: number]: 
 
   return newObj;
 }
+=======
+>>>>>>> dev
 
 
 
 export default lambdaController;
+
+
+
