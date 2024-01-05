@@ -6,6 +6,7 @@ import { RootState } from "../store.ts";
 import React from "react";
 import * as d3 from "d3";
 import { runOptimizer } from "../formData/resultsSlice";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function Graph() {
     const graphData = useSelector((state: RootState) => state.results)
@@ -13,19 +14,46 @@ export default function Graph() {
     const costData = graphData.CostData;
     const xData = graphData.MemoryData;
 
-    // const [timeData, setTimeData] = React.useState<number[]>([500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120]);
-    // const [costData, setCostData] = React.useState<number[]>([180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200])
-    // const [xData, setXData] = useState([128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048]);
+
     const svgRef = useRef<SVGSVGElement | null>(null);
 
-    // function onSubmit(e: React.FormEvent) {
-    //     e.preventDefault();
-    //     d3.select("svg").selectAll("*").remove();
-    //     // svg.selectAll("*").remove()
-    //     setCostData([450, 400, 310, 490, 2400, 150, 1700, 150, 135, 1200, 120])
-    //     setXData([128, 256, 484, 512, 540, 738, 900, 1024, 1352, 1580, 2048])
-    // }
-
+    const data = [
+        {
+            memory: 128,
+            invocation_time: 4000,
+            runtime_cost: 2400,
+        },
+        {
+            memory: 256,
+            invocation_time: 3000,
+            runtime_cost: 1398,
+        },
+        {
+            memory: 512,
+            invocation_time: 2000,
+            runtime_cost: 9800,
+        },
+        {
+            memory: 768,
+            invocation_time: 2780,
+            runtime_cost: 3908,
+        },
+        {
+            memory: 1024,
+            invocation_time: 1890,
+            runtime_cost: 4800,
+        },
+        {
+            memory: 2048,
+            invocation_time: 2390,
+            runtime_cost: 3800,
+        },
+        {
+            memory: 4096,
+            invocation_time: 3490,
+            runtime_cost: 4300,
+        }
+    ];
     useEffect(() => {
         // setting up svg
         let width: number = 800;
@@ -36,7 +64,7 @@ export default function Graph() {
         let heightRightMagnitude = (Math.floor(Math.log10(Math.max(...costData))))
         let heightRight = 10 ** heightRightMagnitude *
             Math.ceil(Math.max(...costData) / (10 ** heightRightMagnitude))
-        
+
 
         const svg = d3
             .select(svgRef.current)
@@ -145,38 +173,56 @@ export default function Graph() {
 
     return (
         <div className="chartWrapper" >
-            <h2 style={{marginTop: "10px"}}>Line Charts </h2>
-            <svg className="svgWrap" ref={svgRef} style={{ display: "block", width: "800px", height: "600px", margin: '20px auto'}
-            }></svg>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                <div style={{ marginRight: "10px" }}>
-                    <span
-                        style={{
-                            display: "inline-block",
-                            width: "10px",
-                            height: "10px",
-                            backgroundColor: "blue",
-                            marginRight: "5px",
-                            marginTop: "20px"
-                        }}
-                    />
-                    <span>Invocation Time</span>
-                </div>
-                <div>
-                    <span
-                        style={{
-                            display: "inline-block",
-                            width: "10px",
-                            height: "10px",
-                            backgroundColor: "red",
-                            marginRight: "5px",
-                            marginTop: "20px"
-                        }}
-                    />
-                    <span>Runtime Cost</span>
-                </div>
-            </div>
-            {/* <button onClick={onSubmit}>click to change value</button> */}
+            return (
+            <LineChart
+                width={1000}
+                height={600}
+                data={data}
+                margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5
+                }}
+            >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="memory" />
+                <YAxis
+                    yAxisId="left"
+                    label={{
+                        value: `Invocation Time`,
+                        style: { textAnchor: 'middle' },
+                        angle: -90,
+                        position: 'left',
+                        offset: 0,
+                    }}
+                />
+                <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    label={{
+                        value: `Runtime Cost`,
+                        style: { textAnchor: 'middle' },
+                        angle: -90,
+                        position: 'right',
+                        offset: 0,
+                    }}
+                />
+                <Tooltip />
+                <Legend />
+                <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="invocation_time"
+                    stroke="#8884d8"
+                    activeDot={{ r: 8 }}
+                />
+                <Line yAxisId="right"
+                    type="monotone"
+                    dataKey="runtime_cost"
+                    stroke="#82ca9d" />
+            </LineChart>
+
         </div>
     );
 };
