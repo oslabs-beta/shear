@@ -15,10 +15,12 @@ const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
     if (!request.body.ARN) {
+      
       const error = createCustomError('Error reading ARN!', 403, {body: request.body})
       return next(error);
     }
     if (!validateLambdaARN(request.body.ARN)) {
+      console.log(request.body.ARN)
       const error = createCustomError('Invalid ARN!', 403, {body: request.body})
       return next(error);
     }
@@ -109,7 +111,7 @@ catch (error) {
 
 };
 
-const lambdaArnRegex = /^arn:aws:lambda:[a-z]{2}(-gov-[\w-]+)?-[a-z]+\d?:\d{12}:function:[a-zA-Z0-9-_]+$/;
+const lambdaArnRegex = /^arn:aws:lambda:[a-z\d-]+:\d{12}:function:[a-zA-Z0-9-_]+$/;
 function validateLambdaARN(arn) {
   return lambdaArnRegex.test(arn);
 }
