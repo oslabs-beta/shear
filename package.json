@@ -12,10 +12,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
     "@aws-sdk/client-cloudwatch-logs": "^3.465.0",
     "@aws-sdk/client-lambda": "^3.465.0",
     "@aws-sdk/util-utf8-node": "^3.259.0",
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
@@ -42,7 +42,7 @@
     "@types/react-dom": "^18.2.15",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
-    "@vitejs/plugin-react": "^4.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "concurrently": "^8.2.1",
     "eslint": "^8.53.0",
     "eslint-plugin-react-hooks": "^4.6.0",

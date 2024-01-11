@@ -10,7 +10,8 @@ export interface RootState {
 export const store = configureStore({
   reducer:  {
     info: infoReducer,
-    results: resultsReducer
+    results: resultsReducer,
+    
   }
 })
 

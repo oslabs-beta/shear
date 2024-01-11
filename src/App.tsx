@@ -1,5 +1,4 @@
 import React from "react"
-import Form from "./components/form.js"
 import ChakraForm from "./components/chakraForm.js"
 import Graph from "./components/graph.js"
 import { ChakraProvider } from '@chakra-ui/react'

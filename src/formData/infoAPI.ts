@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { FormValues } from "./infoSlice";
+import { FormValues } from "./infoSlice.ts";
 
 
 
