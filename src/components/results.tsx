@@ -5,6 +5,8 @@ import { RootState } from "../store";
 
 interface ResultsProps {}
 
+//TAKE DATA from setting SSE connection and map over and populate.
+
 export const Results: React.FC<ResultsProps> = () => {
   const billedState = useSelector((state: RootState) => state.results.billedDurationOutput);
   const costState = useSelector((state: RootState) => state.results.costOutput)

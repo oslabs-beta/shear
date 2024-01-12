@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 
 export const router = express.Router();
 import lambdaController from './controllers/lambdaController.js'
+import { Request, Response } from 'aws-sdk';
 
 // Database routes, getting data
 
@@ -14,10 +15,13 @@ router.get('/', (req: Request, res: Response): void => {
 //     res.locals.info = req.body;
 //     res.status(200).json(res.locals.info)
 // })
+
+//added a get method to make sure SSE are sent during functionality with the post request.
+
+
 router.post('/getLambdaLogs', lambdaController.shear, (req: Request, res: Response): void => {
     res.status(200).json(res.locals.output)
 })
-
 
 
 // Executing "step function workflow"

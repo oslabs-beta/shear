@@ -1,14 +1,19 @@
-import { PayloadAction, createSlice, current } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice, current, createAsyncThunk } from "@reduxjs/toolkit";
+
+
+
+const sseConnection = createAsyncThunk("sse/Start", async () => {
+  
+});
 
 export interface SseState  {
-  status: boolean
+  connection: EventSource | null,
   data: string[]
-
 
 }
 
 const sseState: SseState = {
- status: true,
+ connection: null,
  data: [],
 
 }
@@ -22,7 +27,7 @@ const sseSlice = createSlice({
     addData(state, action: PayloadAction<string>) {
       state.data.push(action.payload)
       console.log(current(state.data))
-    }
+    },
   },
 
 })
