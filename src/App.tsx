@@ -4,7 +4,7 @@ import Graph from "./components/graph.js"
 import { ChakraProvider } from '@chakra-ui/react'
 import chakraTheme from '@chakra-ui/theme'
 import './style.css'
-import { Results } from "./components/results.tsx"
+import Results from "./components/results.js"
 
 const App: React.FC = () => {
 
