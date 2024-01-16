@@ -1,8 +1,9 @@
 import React, { useRef, FormEvent, useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store.ts";
-import { arnInput, funcParamsInput, powerValueInput } from "../formData/infoSlice.ts";
-import { runOptimizer } from "../formData/resultsSlice";
+import { RootState } from "../store.js";
+import { arnInput, funcParamsInput, powerValueInput } from "../formData/infoSlice.js";
+import { sseConnection } from "../formData/sseSlice.js";
+import { runOptimizer } from "../formData/resultsSlice.js";
 import * as ChakraUI from '@chakra-ui/react'
 import './style.css'
 
@@ -33,6 +34,7 @@ const ChakraForm: React.FC = () => {
         dispatch(arnInput(arnRef.current?.value || ''));
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
         dispatch(powerValueInput(memoryRef.current));
+        dispatch(sseConnection())
         
 
        

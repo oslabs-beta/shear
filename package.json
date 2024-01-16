@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "serve": "node --no-warnings --loader ts-node/esm src/server/server.ts --host 0.0.0.0 --port 3000",
+    "serve": "node --loader ts-node/esm src/server/server.ts --host 0.0.0.0 --port 3000",
     "all": "concurrently \"npm run serve\" \"npm run dev\"",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -48,7 +48,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2",
+    "typescript": "^5.4.0-dev.20240115",
     "vite": "^5.0.0"
   }
 }

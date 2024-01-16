@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import infoReducer, {FormValues} from "./formData/infoSlice.ts";
-import resultsReducer, {ResultValues} from './formData/resultsSlice.ts'
-import sseReducer, {SseState} from "./formData/sseSlice.ts";
+import infoReducer, {FormValues} from "./formData/infoSlice.js";
+import resultsReducer, {ResultValues} from './formData/resultsSlice.js'
+import sseReducer, {SseState} from "./formData/sseSlice.js";
 
 export interface RootState {
   info: FormValues

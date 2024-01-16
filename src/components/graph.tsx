@@ -2,10 +2,10 @@
 import './style.css'
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from "../store.ts";
+import { RootState } from "../store.js";
 import React from "react";
 import * as d3 from "d3";
-import { runOptimizer } from "../formData/resultsSlice";
+import { runOptimizer } from "../formData/resultsSlice.js";
 
 export default function Graph() {
     const graphData = useSelector((state: RootState) => state.results)

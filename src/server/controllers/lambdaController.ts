@@ -15,11 +15,6 @@ const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
 
-    response.setHeader('Content-Type', 'text/event-stream');
-    response.setHeader('Cache-Control', 'no-cache');
-    response.setHeader('Connection', 'keep-alive');
-    response.flushHeaders();
-
     const sendSSEUpdate = (data) => {
       response.write(`data: ${JSON.stringify(data)}\n\n`);
     };

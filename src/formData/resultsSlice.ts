@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { optimizerAPI } from "./infoAPI";
-import { FormValues } from "./infoSlice";
+import { optimizerAPI } from "./infoAPI.js";
+import { FormValues } from "./infoSlice.js";
 
 
 export interface ResultValues {

@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 
 export const router = express.Router();
 import lambdaController from './controllers/lambdaController.js'
-import { Request, Response } from 'aws-sdk';
+
 
 // Database routes, getting data
 
@@ -20,6 +20,10 @@ router.get('/', (req: Request, res: Response): void => {
 
 
 router.post('/getLambdaLogs', lambdaController.shear, (req: Request, res: Response): void => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
     res.status(200).json(res.locals.output)
 })
 
