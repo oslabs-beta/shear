@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './style.css'
-import { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux'
+import { useEffect, useRef} from "react";
+import { useSelector } from 'react-redux'
 import { RootState } from "../store.js";
 import React from "react";
 import * as d3 from "d3";
-import { runOptimizer } from "../formData/resultsSlice.js";
+// import { runOptimizer } from "../formData/resultsSlice.js";
 
 export default function Graph() {
     const graphData = useSelector((state: RootState) => state.results)

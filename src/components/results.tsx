@@ -1,7 +1,7 @@
 // SSEComponent.js
-import React, { useEffect } from 'react';
+import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sseConnection} from '../formData/sseSlice.js';
+// import { sseConnection} from '../formData/sseSlice.js';
 import { RootState } from '../store.js';
 
 const Results: React.FC = () => {

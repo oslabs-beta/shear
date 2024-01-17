@@ -14,10 +14,10 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
-
-    const sendSSEUpdate = (data) => {
-      response.write(`data: ${JSON.stringify(data)}\n\n`);
-    };
+    console.log(request.body)
+    // const sendSSEUpdate = (data) => {
+    //   response.write(`data: ${JSON.stringify(data)}\n\n`);
+    // };
 
     if (!request.body.ARN) {
       const error: CustomError = new Error('Error reading ARN!');
@@ -84,7 +84,7 @@ const lambdaController = {
           const updatedFunction = await lambdaClient.send(
             new UpdateFunctionConfigurationCommand(updateConfigParams)
           );
-          sendSSEUpdate({message: 'New Version Created'})
+          // sendSSEUpdate({message: 'New Version Created'})
           console.log("New version created:", updatedFunction.Version);
           await wait(2000);
           for (let i = 0; i < TIMES; i++) {
@@ -302,7 +302,7 @@ const lambdaController = {
     if (logStreams && logGroupName) {
       for (const element of logStreams) {
         if (element.logStreamName) {
-          sendSSEUpdate({Update: 'New Log Stream'})
+          // sendSSEUpdate({Update: 'New Log Stream'})
           console.log("NEW LOG STREAM");
           console.log(element.logStreamName);
           outputArr.push(
