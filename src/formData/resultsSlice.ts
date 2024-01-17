@@ -39,6 +39,7 @@ const resultsSlice = createSlice({
     builder
       .addCase(runOptimizer.fulfilled, (state, action) => {
         // console.log("Result incoming")
+
         const rawResults = action.payload;
         const rawMemory = Object.keys(rawResults.billedDurationOutput).map((x) => parseInt(x));
         state.MemoryData.splice(0, state.MemoryData.length, ...rawMemory);
