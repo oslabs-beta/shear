@@ -26,7 +26,9 @@ router.post('/getLambdaLogs', lambdaController.shear, (req: Request, res: Respon
 
 // Executing "step function workflow"
 router.post("/executeLambdaWorkflow", lambdaController.shear, addLambdaLog, (req: Request, res: Response): void => {
+
     res.status(200).json(res.locals.output)
+ 
 })
 
 
