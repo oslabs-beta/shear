@@ -1,0 +1,12 @@
+// tsconfig-server.json
+{
+    "compilerOptions": {
+      "target": "es2022",
+      "module": "NodeNext",
+      "outDir": "./serverDist",
+      "esModuleInterop": true,
+      "moduleResolution": "NodeNext"
+      // Add any other necessary compiler options
+    }
+  }
+  

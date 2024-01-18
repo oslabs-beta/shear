@@ -4,7 +4,7 @@ import { FormValues } from "./infoSlice.js";
 
 
 // Use this to make the baseURL of the fetch call so you can just add the string endpoint. - JK
-axios.defaults.baseURL = "http://localhost:3000/api";
+axios.defaults.baseURL = process.env.ec2ip || "http://localhost:3000/api" ;
 
 export const optimizerAPI = {
   runOptimizerFunc: (form: FormValues): Promise<AxiosResponse> => {
