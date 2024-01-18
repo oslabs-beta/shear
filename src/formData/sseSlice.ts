@@ -5,7 +5,7 @@ import { PayloadAction, createSlice, current, createAsyncThunk, Dispatch } from 
 
 
 export const sseConnection = createAsyncThunk<void, void, { dispatch: Dispatch }>('sse/startSSE', async () => {
-  const sseConnect = new EventSource('http://localhost:3000/api/executeLambdaWorkflow');
+  const sseConnect = new EventSource('http://localhost:3000/api/hello');
   console.log(sseConnect);
 
   return Promise.resolve(); // You can return a Promise if needed

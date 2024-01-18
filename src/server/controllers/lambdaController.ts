@@ -14,7 +14,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
-    console.log(request.body)
+    // response.write('this is from the lambacontroller')
     // const sendSSEUpdate = (data) => {
     //   response.write(`data: ${JSON.stringify(data)}\n\n`);
     // };
