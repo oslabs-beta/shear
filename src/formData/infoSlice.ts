@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk, current } from "@reduxjs/toolkit";
-import { optimizerAPI } from "./infoAPI";
+import { optimizerAPI } from "./infoAPI.js";
 
 export interface FormValues {
   ARN: string;

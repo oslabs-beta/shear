@@ -14,6 +14,11 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
+    console.log(request.body)
+    // const sendSSEUpdate = (data) => {
+    //   response.write(`data: ${JSON.stringify(data)}\n\n`);
+    // };
+
     if (!request.body.ARN) {
       
       const error = createCustomError('Error reading ARN!', 403, {body: request.body})
