@@ -6,15 +6,8 @@ import { LambdaClient }  from "@aws-sdk/client-lambda"
 
 
 
-  dotenv.config(); 
-  const config = {
-    credentials: { 
-      accessKeyId: process.env.ACC_KEY, // Your access key ID
-      secretAccessKey: process.env.SEC_KEY, // Your secret access key
-    },
-    region: process.env.REGION, // Your AWS region
-  }
-  const DBClient = new DynamoDBClient(config);
+  
+const DBClient = new DynamoDBClient();
 
 
 export async function getLambdaLogs(req: Request, res: Response, next: NextFunction): Promise<void> {
