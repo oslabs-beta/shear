@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { optimizerAPI } from "./infoAPI";
-import { FormValues } from "./infoSlice";
+import { optimizerAPI } from "./infoAPI.js";
+import { FormValues } from "./infoSlice.js";
 
 
 export interface ResultValues {
@@ -39,6 +39,7 @@ const resultsSlice = createSlice({
     builder
       .addCase(runOptimizer.fulfilled, (state, action) => {
         // console.log("Result incoming")
+
         const rawResults = action.payload;
         const rawMemory = Object.keys(rawResults.billedDurationOutput).map((x) => parseInt(x));
         state.MemoryData.splice(0, state.MemoryData.length, ...rawMemory);

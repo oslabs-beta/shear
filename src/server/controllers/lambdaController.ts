@@ -14,13 +14,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
-    console.log("testing before")
-    response.status(200).set({ "content-type"  : "text/event-stream"
-    , "cache-control" : "no-cache"
-    , "connection"    : "keep-alive"
-    })
-    response.write("data: From inside of shear!!!\n\n")
-    console.log("testing after")
+  
     if (!request.body.ARN) {
       
       const error = createCustomError('Error reading ARN!', 403, {body: request.body})
@@ -90,7 +84,6 @@ const lambdaController = {
           outputObj[element] = billedDurationArray;
           for (let i = 0; i < TIMES; i++) {
                //invoke new version X times. currectly a global constant, but probably something we should let the user configure.
-               response.write(`data: Later in the shear function, ${i} times!!!\n\n`)
                const value = await invokeSpecificVersion('$LATEST', payloadBlob);
                billedDurationArray.push(value)
              }

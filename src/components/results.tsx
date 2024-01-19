@@ -1,27 +1,25 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+// SSEComponent.js
+import React  from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+// import { sseConnection} from '../formData/sseSlice.js';
+import { RootState } from '../store.js';
+
+const Results: React.FC = () => {
+  const dispatch = useDispatch();
+  const sseData = useSelector((state: RootState) => state.sse.data);
 
 
-interface ResultsProps {}
-
-export const Results: React.FC<ResultsProps> = () => {
-  const billedState = useSelector((state: RootState) => state.results.billedDurationOutput);
-  const costState = useSelector((state: RootState) => state.results.costOutput)
-
-  const finalResults = Object.entries(billedState)
-
-  const mappedFinalResults = finalResults.map(([memory, fastestAvg]) => {
-    const costData = costState[memory]
-    return <p key={memory}>at this memory configuation {memory}MBS your billed duration output is {fastestAvg} MS with an average cost of  ${costData} PER 1000 INVOCATIONS</p>
-  })
-   
-    
-  
 
   return (
     <div>
-      {mappedFinalResults}
+      <h2>SSE Data:</h2>
+      <ul>
+        {sseData.map((data, index) => (
+          <li key={index}>{JSON.stringify(data)}</li>
+        ))}
+      </ul>
     </div>
   );
 };
+
+export default Results;
