@@ -35,27 +35,6 @@ const lambdaController = {
     response.locals.memoryArray = memoryArray;
 
 
-    // const regionObj = { region: region2 }
-    // setup for all the AWS work we're going to do.
-    // const lambdaClient = new LambdaClient(regionObj);
-
-    const lambdaClient = new LambdaClient({
-      credentials: { 
-        accessKeyId: process.env.ACC_KEY, // Your access key ID
-        secretAccessKey: process.env.SEC_KEY, // Your secret access key
-      },
-      region: region2, // Your AWS region
-    });
-
-    // const cloudwatchlogs = new CloudWatchLogs({
-    //   credentials: { 
-    //     accessKeyId: process.env.ACC_KEY, // Your access key ID
-    //     secretAccessKey: process.env.SEC_KEY, // Your secret access key
-    //   },
-    //   region: region2, // Your AWS region
-    // });
-
-
 
 
     const functionARN = request.body.ARN;
