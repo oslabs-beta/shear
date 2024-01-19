@@ -86,38 +86,38 @@ export async function addLambdaLog (req: Request, res: Response, next: NextFunct
 }
 
 
-const getFuncDef = async (input) => {
-  const command = new GetFunctionCommand(input);
-  const response = await lambdaClient.send(command);
-  const presignedUrl = response.Code.Location;
+// const getFuncDef = async (input) => {
+//   const command = new GetFunctionCommand(input);
+//   const response = await lambdaClient.send(command);
+//   const presignedUrl = response.Code.Location;
 
-  https
-    .get(presignedUrl, (response) => {
-      const chunks = [];
+//   https
+//     .get(presignedUrl, (response) => {
+//       const chunks = [];
 
-      response.on("data", (chunk) => {
-        console.log(chunk);
-        chunks.push(chunk);
-      });
+//       response.on("data", (chunk) => {
+//         console.log(chunk);
+//         chunks.push(chunk);
+//       });
 
-      response.on("end", () => {
-        const buffer = Buffer.concat(chunks);
-        const zip = new AdmZip(buffer);
-        const zipEntries = zip.getEntries(); 
+//       response.on("end", () => {
+//         const buffer = Buffer.concat(chunks);
+//         const zip = new AdmZip(buffer);
+//         const zipEntries = zip.getEntries(); 
 
-        zipEntries.forEach((zipEntry) => {
-          if (!zipEntry.isDirectory) {
+//         zipEntries.forEach((zipEntry) => {
+//           if (!zipEntry.isDirectory) {
            
-            const result = zipEntry.getData().toString("utf8")
-            return result
-          }
-        });
-      });
-    })
-    .on("error", (error) => {
-      console.error("Error: ", error);
-    });
-};
+//             const result = zipEntry.getData().toString("utf8")
+//             return result
+//           }
+//         });
+//       });
+//     })
+//     .on("error", (error) => {
+//       console.error("Error: ", error);
+//     });
+// };
 
 
 
