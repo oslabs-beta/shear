@@ -12,7 +12,9 @@
     "build": "tsc && vite build",
     "build-sketchy": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-server": "tsc -p src/server/tsconfig-server.json"
+    
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.465.0",
@@ -27,6 +29,8 @@
     "aws-sdk": "^2.1513.0",
     "axios": "^1.6.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "env": "^0.0.2",
     "express": "^4.18.2",
     "framer-motion": "^10.16.12",
     "nodemon": "^3.0.1",
