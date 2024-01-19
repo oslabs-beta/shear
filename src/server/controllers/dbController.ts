@@ -2,13 +2,9 @@ import {PutItemCommand,GetItemCommand,DynamoDBClient} from "@aws-sdk/client-dyna
 import dotenv from 'dotenv'; 
 import {Express, Request, Response, NextFunction} from 'express';
 import { marshall } from "@aws-sdk/util-dynamodb";
-import https from "https";
-import AdmZip from "adm-zip"
-import { LambdaClient, GetFunctionCommand }  from "@aws-sdk/client-lambda"
+import { LambdaClient }  from "@aws-sdk/client-lambda"
 
-  const input = {
-    FunctionName: "arn:aws:lambda:us-west-1:066290895578:function:findPrime", // required
-  };
+
 
   dotenv.config(); 
   const config = {
@@ -19,7 +15,7 @@ import { LambdaClient, GetFunctionCommand }  from "@aws-sdk/client-lambda"
     region: process.env.REGION, // Your AWS region
   }
   const DBClient = new DynamoDBClient(config);
-  const lambdaClient = new LambdaClient(config);
+
 
 export async function getLambdaLogs(req: Request, res: Response, next: NextFunction): Promise<void> {
   
@@ -50,22 +46,19 @@ export async function getLambdaLogs(req: Request, res: Response, next: NextFunct
 }
 
 export async function addLambdaLog (req: Request, res: Response, next: NextFunction): Promise<void> {
-    const {ARN, memoryArray, output,payload } = res.locals;
-  
-    // error handling for res.locals
-    console.log(ARN)
-    console.log(memoryArray)
-    console.log(output,'OUTPUT FROM LAMBDA')
-    console.log(payload)
+    const {ARN, memoryArray, output, payload } = res.locals;
+    // Add name above ^ for changes and change testFunction10 to use the variable
+    if (!ARN.length || !memoryArray.length || !Object.values(output).length || !Object.values(payload).length){
+      return next("Error in providing addLambdaLog params")
+    }
     try
     { 
       const item = {
         lambdaARN: ARN,
-        functionName: "testFunction2",
+        functionName: "testFunction10",
         memoryArr: memoryArray,
         result: output,
         payload: payload
-        // functionDefinition: getFuncDef(input)
       };
 
       const q = {
@@ -85,6 +78,16 @@ export async function addLambdaLog (req: Request, res: Response, next: NextFunct
 
 }
 
+
+/**
+ * This code below is for getting the function body, still a WIP 
+ */
+
+
+// const lambdaClient = new LambdaClient(config);
+// const input = {
+//   FunctionName: "arn:aws:lambda:us-west-1:066290895578:function:findPrime", // required
+// };
 
 // const getFuncDef = async (input) => {
 //   const command = new GetFunctionCommand(input);
