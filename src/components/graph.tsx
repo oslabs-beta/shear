@@ -3,7 +3,6 @@ import './style.css'
 import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux'
 import { RootState } from "../store.ts";
-import React from "react";
 import { runOptimizer } from "../formData/resultsSlice";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 

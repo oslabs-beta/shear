@@ -4,8 +4,8 @@ import { RootState } from "../store.ts";
 import { arnInput, funcParamsInput, powerValueInput } from "../formData/infoSlice.ts";
 import { runOptimizer } from "../formData/resultsSlice";
 import * as ChakraUI from '@chakra-ui/react'
+import LoadingBar from "./loadingBar.tsx"
 import './style.css'
-
 
 const ChakraForm: React.FC = () => {
     const resultsState = useSelector((state: RootState) => state.results)
@@ -14,12 +14,16 @@ const ChakraForm: React.FC = () => {
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryRef = useRef<string[]>([])
+    const [show, setShow] = useState(false);
     useEffect(() => {
         if (formState.ARN !== '') {
             dispatch(runOptimizer(formState))
         }
     }, [formState])
 
+    const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
+        memoryRef.current[0] = e.target.value
+    }
     const onChangeMinVal = (e: ChangeEvent<HTMLInputElement>) => {
         memoryRef.current[0] = e.target.value
     }
@@ -39,11 +43,10 @@ const ChakraForm: React.FC = () => {
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log('submitted');
+        setShow(true);
         dispatch(arnInput(arnRef.current?.value || ''));
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
-        dispatch(powerValueInput(memoryRef.current));
-
-
+        dispatch(powerValueInput(memoryRef.current))
 
     };
 
@@ -53,6 +56,10 @@ const ChakraForm: React.FC = () => {
             <ChakraUI.Box position="relative" h="20%" w="60%" border="2px" padding="50px" borderRadius='lg' overflow='hidden' bg='lightgrey' margin='0 auto'>
                 <ChakraUI.Stack spacing={4}>
                     <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Amazon stuff</ChakraUI.Text>
+                    <ChakraUI.InputGroup>
+                        <ChakraUI.InputLeftAddon children='Name' bg='gray.400' />
+                        <ChakraUI.Input type="text" onChange={onChangeName} placeholder='Function Name' />
+                    </ChakraUI.InputGroup>
                     <ChakraUI.InputGroup>
                         <ChakraUI.InputLeftAddon children='ARN' bg='gray.400' />
                         <ChakraUI.Input ref={arnRef} placeholder='arn:aws:iam::123456789012:user/johndoe' />
@@ -66,6 +73,7 @@ const ChakraForm: React.FC = () => {
                     <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Memory Allocation</ChakraUI.Text>
                     {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
                     <ChakraUI.HStack>
+
                         <ChakraUI.InputGroup>
                             <ChakraUI.InputLeftAddon children='Min' bg='gray.400' />
                             <ChakraUI.Input type="text" onChange={onChangeMinVal} placeholder='128' />
@@ -96,6 +104,7 @@ const ChakraForm: React.FC = () => {
                     Submit
                 </ChakraUI.Button>
             </ChakraUI.Box>
+            {show ? <LoadingBar /> : null}
         </div>
     );
 };
