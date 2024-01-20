@@ -28,10 +28,6 @@ router.post('/getLambdaLogs', lambdaController.shear, (req: Request, res: Respon
 // Executing "step function workflow"
 router.post("/executeLambdaWorkflow", lambdaController.shear, (req: Request, res: Response): void => {
     console.log(req.body)
-    // res.setHeader('Content-Type', 'text/event-stream');
-    // res.setHeader('Cache-Control', 'no-cache');
-    // res.setHeader('Connection', 'keep-alive');
-    // res.flushHeaders();
     res.status(200).json(res.locals.output)
 })
 
