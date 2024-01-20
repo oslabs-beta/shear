@@ -6,6 +6,7 @@ export interface FormValues {
   memoryArray: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   functionPayload: Record<any, any>;
+  showLoading: (boolean);
 }
 
 
