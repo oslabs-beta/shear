@@ -31,6 +31,9 @@ const lambdaController = {
       return next(error);
     }
     const region2 = getRegionFromARN(request.body.ARN);
+    const regionObj = { region: region2 }
+     // setup for all the AWS work we're going to do.
+     const lambdaClient = new LambdaClient(regionObj);
     response.locals.ARN = request.body.ARN
     response.locals.memoryArray = memoryArray;
 
