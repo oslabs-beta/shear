@@ -14,11 +14,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 const TIMES = 10;
 const lambdaController = {
   async shear(request, response, next) {
-    console.log(request.body)
-    // const sendSSEUpdate = (data) => {
-    //   response.write(`data: ${JSON.stringify(data)}\n\n`);
-    // };
-
+  
     if (!request.body.ARN) {
       
       const error = createCustomError('Error reading ARN!', 403, {body: request.body})
@@ -35,19 +31,24 @@ const lambdaController = {
       return next(error);
     }
     const region2 = getRegionFromARN(request.body.ARN);
-
     const regionObj = { region: region2 }
-    // setup for all the AWS work we're going to do.
-    const lambdaClient = new LambdaClient(regionObj);
+     // setup for all the AWS work we're going to do.
+     const lambdaClient = new LambdaClient(regionObj);
+    response.locals.ARN = request.body.ARN
+    response.locals.memoryArray = memoryArray;
+
+
 
 
     const functionARN = request.body.ARN;
 
     const functionPayload = request.body.functionPayload;
+    response.locals.payload = functionPayload
     const payloadBlob = fromUtf8(JSON.stringify(functionPayload));
-
+    
     async function createNewVersionsFromMemoryArrayAndInvoke(inputArr, arn) {
       try {
+
         const outputObj = {}
 
         for (const element of inputArr) {
