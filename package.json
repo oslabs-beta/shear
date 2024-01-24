@@ -16,7 +16,7 @@
     "build-server": "tsc -p src/server/tsconfig-server.json",
     "run-server-ec2": "node serverDist/server.js",
     "run-server-local" : "node dist/serverDist/server.js",
-    "deploy": "aws cloudformation create-stack --region us-east-2 --stack-name testprogram5 --template-body file://./src/scripts/shearCFDeploymentv1.yaml --capabilities CAPABILITY_IAM"
+    "deploy": "aws cloudformation create-stack --region us-east-2 --stack-name testprogram5 --template-body file://./src/scripts/cloudFormationDeploy.yaml --capabilities CAPABILITY_IAM"
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.465.0",
