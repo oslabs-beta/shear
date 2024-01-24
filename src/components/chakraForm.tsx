@@ -14,7 +14,8 @@ const ChakraForm: React.FC = () => {
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryRef = useRef<string[]>([])
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(false); //this is used to toggle whether the loading bar shows up
+
     useEffect(() => {
         if (formState.ARN !== '') {
             dispatch(runOptimizer(formState))
@@ -49,7 +50,9 @@ const ChakraForm: React.FC = () => {
         dispatch(powerValueInput(memoryRef.current))
 
     };
-
+    useEffect(() => {
+        setShow(false)
+    }, [resultsState])
 
     return (
         <div>
@@ -104,7 +107,10 @@ const ChakraForm: React.FC = () => {
                     Submit
                 </ChakraUI.Button>
             </ChakraUI.Box>
-            {show ? <LoadingBar /> : null}
+            <ChakraUI.Box h="40px" >
+                {show ? <LoadingBar /> : null}
+            </ChakraUI.Box>
+
         </div>
     );
 };
