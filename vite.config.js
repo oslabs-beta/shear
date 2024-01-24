@@ -6,7 +6,7 @@ export default defineConfig({
     build: {
         rollupOptions: {
           input: {
-            main: 'src/main.tsx', // Assuming your main entry file is a TypeScript file
+            main: 'src/main.tsx', 
             html: 'index.html',
           },
         },

@@ -1,7 +1,7 @@
 {
   "name": "shear",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,13 +14,15 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "build-server": "tsc -p src/server/tsconfig-server.json",
-    "run-server-ec2": "node serverDist/server.js"
-    
-    
+    "run-server-ec2": "node serverDist/server.js",
+    "run-server-local" : "node dist/serverDist/server.js",
+    "deploy": "aws cloudformation create-stack --region us-east-2 --stack-name testprogram5 --template-body file://./src/scripts/cloudFormationDeploy.yaml --capabilities CAPABILITY_IAM"
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch-logs": "^3.465.0",
+    "@aws-sdk/client-dynamodb": "^3.495.0",
     "@aws-sdk/client-lambda": "^3.465.0",
+    "@aws-sdk/util-dynamodb": "^3.495.0",
     "@aws-sdk/util-utf8-node": "^3.259.0",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
@@ -28,14 +30,17 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/material": "^5.14.19",
     "@reduxjs/toolkit": "^1.9.7",
-    "aws-sdk": "^2.1513.0",
+    "adm-zip": "^0.5.10",
+    "aws-sdk": "^2.1530.0",
     "axios": "^1.6.2",
+    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "env": "^0.0.2",
     "express": "^4.18.2",
-    "framer-motion": "^10.16.12",
-    "nodemon": "^3.0.1",
+    "https": "^1.0.0",
+    "marshall": "^1.3.2",
+    "nodemon": "^3.0.3",
+    "prettier": "^3.1.0",
     "react": "^18.2.0",
     "react-d3-library": "^1.1.8",
     "react-dom": "^18.2.0",
