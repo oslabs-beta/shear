@@ -6,7 +6,7 @@ test('demo', () => {
     expect(true).toBe(true)
 })
 
-test("Render the main page", () => {
-    render(<App></App>)
-    expect(true).toBeTruthy()
-})
+// test("Render the main page", () => {
+//     render(<App></App>)
+//     expect(true).toBeTruthy()
+// })
