@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: EC2LambdaTestDeploy1
+
+Resources:
+  MySecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow all traffic
+      VpcId: vpc-06fd4d9670db45536
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: -1
+          FromPort: 0
+          ToPort: 65535
+          CidrIpv6: '::/0'
+
+  LambdaFullAccessRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: LambdaFullAccessPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: 'lambda:*'
+                Resource: '*'
+
+  EC2InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref LambdaFullAccessRole
+
+  Ec2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      SubnetId: subnet-0d44c795d29e0a1e8
+      ImageId: ami-04af221020bbd0872
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      UserData: !Base64 
+        'Fn::Sub': >
+          #!/bin/bash
+
+          cd /home/ubuntu/dist
+
+          su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm install"
+
+          su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm run
+          run-server-ec2"
+      Tags:
+        - Key: EC2LambdaTestDeploy
+          Value: MyTag

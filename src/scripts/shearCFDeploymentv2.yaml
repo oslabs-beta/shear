@@ -1,0 +1,48 @@
+
+
+Resources:
+
+        
+  MySecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: AllowAllSG8
+      GroupDescription: Allow all traffic
+      VpcId: vpc-06fd4d9670db45536
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: -1
+          FromPort: 0
+          ToPort: 65535
+          CidrIpv6: ::/0
+          
+  MyInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+        InstanceProfileName: EC2LambdaFreshNew1
+        Roles: 
+        - EC2Lambda
+        
+  Ec2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+
+      InstanceType: t2.micro
+      IamInstanceProfile: !Ref MyInstanceProfile
+      SubnetId: subnet-0d44c795d29e0a1e8
+      ImageId: ami-046624add83748301
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          cd /home/ubuntu/dist
+          su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm install"
+          su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm run run-server-ec2"
+      Tags:
+        - Key: EC2LambdaTestDeploy
+          Value: MyTag
+          
