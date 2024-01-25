@@ -82,5 +82,5 @@ function getMedians(array: string[]): number[] {
 }
 
 // export const { arnInput, funcParamsInput, powerValueInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
-export const { arnInput, funcParamsInput, powerValueInput } = infoSlice.actions;
+export const { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput } = infoSlice.actions;
 export default infoSlice.reducer;

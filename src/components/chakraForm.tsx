@@ -1,7 +1,7 @@
 import React, { useRef, FormEvent, useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store.ts";
-import { arnInput, funcParamsInput, powerValueInput } from "../formData/infoSlice.ts";
+import { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput } from "../formData/infoSlice.ts";
 import { runOptimizer } from "../formData/resultsSlice";
 import * as ChakraUI from '@chakra-ui/react'
 import LoadingBar from "./loadingBar.tsx"
@@ -25,7 +25,7 @@ const ChakraForm: React.FC = () => {
     }, [formState])
 
     const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-        memoryRef.current[0] = e.target.value
+        memoryRef.current[5] = e.target.value
     }
     const onChangeMinVal = (e: ChangeEvent<HTMLInputElement>) => {
         memoryRef.current[0] = e.target.value
@@ -47,6 +47,7 @@ const ChakraForm: React.FC = () => {
         e.preventDefault();
         console.log('submitted');
         setShow(true);
+        dispatch(nameInput(memoryRef.current[5]))
         dispatch(arnInput(arnRef.current?.value || ''));
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
         dispatch(powerValueInput(memoryRef.current));
