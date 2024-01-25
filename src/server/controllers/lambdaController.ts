@@ -11,7 +11,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 
 
-const TIMES = 10;
+
 const lambdaController = {
   async shear(request, response, next) {
   
@@ -36,7 +36,7 @@ const lambdaController = {
      const lambdaClient = new LambdaClient(regionObj);
     response.locals.ARN = request.body.ARN
     response.locals.memoryArray = memoryArray;
-
+    const TIMES = request.body.volume || 20
 
 
 
@@ -104,9 +104,52 @@ try {
   
   const outputObject = {
     billedDurationOutput: billedDurationArray,
-    costOutput: calculateCosts(billedDurationArray)
+    costOutput: calculateCosts(billedDurationArray),
+    bonusData: null
   }
   response.locals.output = outputObject;
+  if (request.body.recursiveSearch) {
+    //look through the best left and right...
+    const entries = Object.entries(outputObject.costOutput)
+    const minEntry = entries.reduce((min, entry) => (entry[1] < min[1] ? entry : min), entries[0]);
+    const minEntryIndex = memoryArray.indexOf(Number(minEntry[0]))
+
+const midpoints: number[] = [];
+    if (minEntryIndex == 0) {
+      //case where first data point is best cost/invocation
+      for (let i = 1; i <= 7; i++) {
+        const midpoint = Math.round((memoryArray[minEntryIndex] * (7 - i) + memoryArray[minEntryIndex+1] * i) / 7);
+        midpoints.push(midpoint);
+      }
+    }
+    else if (minEntryIndex >= memoryArray.length-1) {
+      //case where last data point is best cost/invocation
+      for (let i = 1; i <= 7; i++) {
+        const midpoint = Math.round((memoryArray[minEntryIndex-1] * (7 - i) + memoryArray[minEntryIndex] * i) / 7);
+        midpoints.push(midpoint);
+      }
+    }
+    else {
+      //normal case...
+
+  for (let i = 1; i <= 7; i++) {
+    const midpoint = Math.round((memoryArray[minEntryIndex-1] * (7 - i) + memoryArray[minEntryIndex+1] * i) / 7);
+    midpoints.push(midpoint);
+  }
+    }
+    midpoints.pop()
+    console.log('midpoints:')
+    console.log(midpoints)
+    const test2 = await createNewVersionsFromMemoryArrayAndInvoke(midpoints, functionARN)
+  const billedDurationArray2 = reduceObjectToMedian(test2)
+
+  const outputObject2 = {
+    billedDurationOutput: billedDurationArray2,
+    costOutput: calculateCosts(billedDurationArray2)
+  }
+  console.log(outputObject2)
+  outputObject.bonusData = outputObject2;
+  }
     return next();
 }
 catch (error) {
