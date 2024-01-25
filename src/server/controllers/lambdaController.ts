@@ -11,7 +11,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 
 
-const TIMES = 25;
+
 const lambdaController = {
   async shear(request, response, next) {
   
@@ -36,7 +36,7 @@ const lambdaController = {
      const lambdaClient = new LambdaClient(regionObj);
     response.locals.ARN = request.body.ARN
     response.locals.memoryArray = memoryArray;
-
+    const TIMES = request.body.volume || 20
 
 
 
