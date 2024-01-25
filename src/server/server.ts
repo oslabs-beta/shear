@@ -26,7 +26,7 @@ app.use("/api", router);
 
 
 // Path to serve static assests
-app.use(express.static(path.join(__dirname, '../../src/dist')));
+app.use(express.static(path.join(__dirname, '../../dist')));
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: CustomError, req: Request, res: Response, _next: NextFunction) => {

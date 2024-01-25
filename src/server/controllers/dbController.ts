@@ -65,8 +65,14 @@ export async function addLambdaLog (req: Request, res: Response, next: NextFunct
       return next()
     }
       catch(e){
-        console.log(e)
-        return next(e)
+        if (e.name === 'ResourceNotFoundException') {
+          //I think there's a region issue in addition to the 'what if there is not a table?' issue
+          console.warn("DynamoDB table not found. Item not added.");
+          return next();
+      } else {
+          console.error(e);
+          return next();
+      }
       }
 
 }

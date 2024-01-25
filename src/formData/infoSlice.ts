@@ -6,6 +6,7 @@ export interface FormValues {
   memoryArray: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   functionPayload: Record<any, any>;
+  showLoading: (boolean);
 }
 
 
@@ -19,6 +20,8 @@ const formValues: FormValues = {
   memoryArray: [],
   functionPayload: {},
 };
+
+
 
 // `"startRange": 1000000, "endRange": 20000000, "xPrimes": 40"`
 
@@ -49,10 +52,10 @@ const infoSlice = createSlice({
     // },
     powerValueInput(state, action: PayloadAction<string[]>) {
       // state.memoryArray = [];
-      
+
       state.memoryArray = getMedians(action.payload)
       console.log(state.memoryArray)
-    
+
 
       // state.memoryArray.splice(0, state.memoryArray.length, );
       // console.log(current(state))
@@ -61,15 +64,20 @@ const infoSlice = createSlice({
 });
 
 //function for getting 5 settings from the lower, med, upper median from the inputted values. - jk
-function getMedians(array: string[]) : number[] {
+function getMedians(array: string[]): number[] {
   const arrayOfVals: number[] = array.map(Number)
   const min = arrayOfVals[0]
   const max = arrayOfVals[1]
-  const median = Math.ceil((min + max)/2)
-  const lowerMedian = Math.ceil((min + median)/2)
-  const upperMedian = Math.ceil((median + max)/2)
-  const result: number[] = [...arrayOfVals, median, lowerMedian, upperMedian]
-  return result.sort((a,b)=> a - b)
+  const incrementVals = []
+  const increments = (max - min) / (arrayOfVals[2] + 1)
+  for (let i = 1; i <= arrayOfVals[2]; i++) {
+    incrementVals.push(Math.floor(min + (i * increments)))
+  }
+  const median = Math.ceil((min + max) / 2)
+  const lowerMedian = Math.ceil((min + median) / 2)
+  const upperMedian = Math.ceil((median + max) / 2)
+  const result: number[] = [arrayOfVals[0], arrayOfVals[1], ...incrementVals]
+  return result.sort((a, b) => a - b)
 }
 
 // export const { arnInput, funcParamsInput, powerValueInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
