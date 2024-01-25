@@ -2,11 +2,13 @@ import { createSlice, PayloadAction, createAsyncThunk, current } from "@reduxjs/
 import { optimizerAPI } from "./infoAPI.js";
 
 export interface FormValues {
+  name: string;
   ARN: string;
   memoryArray: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   functionPayload: Record<any, any>;
-  showLoading: (boolean);
+  testVol: (number);
+  recursiveSearch: (boolean);
 }
 
 
@@ -16,9 +18,12 @@ export const loadData = createAsyncThunk('data/data', async (formData: FormValue
 })
 
 const formValues: FormValues = {
+  name: '',
   ARN: '',
   memoryArray: [],
   functionPayload: {},
+  testVol: 10,
+  recursiveSearch: true,
 };
 
 
@@ -29,6 +34,10 @@ const infoSlice = createSlice({
   name: 'info',
   initialState: formValues,
   reducers: {
+    nameInput(state, action: PayloadAction<string>) {
+      state.name = action.payload;
+      // console.log(state.arn);
+    },
     arnInput(state, action: PayloadAction<string>) {
       state.ARN = action.payload;
       // console.log(state.arn);
@@ -41,24 +50,16 @@ const infoSlice = createSlice({
       state.functionPayload = parsedPayLoad;
     },
 
-
-    // highestPowerValueInput(state, action: PayloadAction<string>) {
-    //   state.memoryArray.push(action.payload);
-    //   console.log(current(state));
-    // },
-    // lowestPowerValueInput(state, action: PayloadAction<string>) {
-    //   state.memoryArray = [];
-    //   state.memoryArray.push(action.payload)
-    // },
     powerValueInput(state, action: PayloadAction<string[]>) {
       // state.memoryArray = [];
 
       state.memoryArray = getMedians(action.payload)
       console.log(state.memoryArray)
 
-
-      // state.memoryArray.splice(0, state.memoryArray.length, );
-      // console.log(current(state))
+    },
+    testVolInput(state, action: PayloadAction<number>) {
+      state.testVol = action.payload;
+      // console.log(state.arn);
     },
   },
 });
@@ -81,5 +82,5 @@ function getMedians(array: string[]): number[] {
 }
 
 // export const { arnInput, funcParamsInput, powerValueInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
-export const { arnInput, funcParamsInput, powerValueInput } = infoSlice.actions;
+export const { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput } = infoSlice.actions;
 export default infoSlice.reducer;
