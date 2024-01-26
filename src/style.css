@@ -1,3 +1,7 @@
+.body {
+    background-color: rgba(211, 211, 211, 0.23);
+}
+
 .flex-container {
     display: flex;
 }

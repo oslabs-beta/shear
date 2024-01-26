@@ -59,9 +59,9 @@ const ChakraForm: React.FC = () => {
 
     return (
         <div>
-            <ChakraUI.Box position="relative" h="20%" w="60%" border="2px" padding="50px" borderRadius='lg' overflow='hidden' bg='lightgrey' margin='0 auto'>
+            <ChakraUI.Box position="absolute" left="1%" top="5%" h="50%" w="20%" border="2px" padding="50px" borderRadius='lg' overflow='hidden' bg='lightgrey' margin='0 auto'>
                 <ChakraUI.Stack spacing={4}>
-                    <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Amazon stuff</ChakraUI.Text>
+                    <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>ARN Details</ChakraUI.Text>
                     <ChakraUI.InputGroup>
                         <ChakraUI.InputLeftAddon children='Name' bg='gray.400' />
                         <ChakraUI.Input type="text" onChange={onChangeName} placeholder='Input function name to save function for future use' />
@@ -78,50 +78,42 @@ const ChakraForm: React.FC = () => {
                     />
                     <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Memory Allocation</ChakraUI.Text>
                     {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
-                    <ChakraUI.HStack>
-                        <ChakraUI.FormControl isRequired>
-                            <ChakraUI.InputGroup>
-                                <ChakraUI.InputLeftAddon children='Min' bg='gray.400' />
-                                <ChakraUI.Input type="text" onChange={onChangeMinVal} placeholder='128' />
-                            </ChakraUI.InputGroup>
-                        </ChakraUI.FormControl>
-                        <ChakraUI.FormControl isRequired>
-                            <ChakraUI.InputGroup>
-                                <ChakraUI.InputLeftAddon children='Max' bg='gray.400' />
-                                <ChakraUI.Input type="text" onChange={onChangeMaxVal} placeholder='4096' />
-                            </ChakraUI.InputGroup>
-                        </ChakraUI.FormControl>
-                    </ChakraUI.HStack>
-                    <ChakraUI.HStack>
-                        <ChakraUI.FormControl isRequired>
-                            <ChakraUI.InputGroup>
-                                <ChakraUI.InputLeftAddon children='Memory Intervals' bg='gray.400' />
-                                <ChakraUI.Input type="text" onChange={onChangeIncrements} placeholder='8' />
-                            </ChakraUI.InputGroup>
-                        </ChakraUI.FormControl>
-                        <ChakraUI.FormControl isRequired>
-                            <ChakraUI.InputGroup>
-                                <ChakraUI.InputLeftAddon children='Test Volume' bg='gray.400' />
-                                <ChakraUI.Input type="text" onChange={onChangeTestVol} placeholder='10' />
-                            </ChakraUI.InputGroup>
-                        </ChakraUI.FormControl>
-                    </ChakraUI.HStack>
+                    <ChakraUI.Stack>
+                        <ChakraUI.InputGroup>
+                            <ChakraUI.InputLeftAddon children='Min' bg='gray.400' />
+                            <ChakraUI.Input type="text" onChange={onChangeMinVal} placeholder='128' />
+                        </ChakraUI.InputGroup>
+                        <ChakraUI.InputGroup>
+                            <ChakraUI.InputLeftAddon children='Max' bg='gray.400' />
+                            <ChakraUI.Input type="text" onChange={onChangeMaxVal} placeholder='4096' />
+                        </ChakraUI.InputGroup>
+                        <ChakraUI.InputGroup>
+                            <ChakraUI.InputLeftAddon children='Memory Intervals' bg='gray.400' />
+                            <ChakraUI.Input type="text" onChange={onChangeIncrements} placeholder='8' />
+                        </ChakraUI.InputGroup>
+                        <ChakraUI.InputGroup>
+                            <ChakraUI.InputLeftAddon children='Test Volume' bg='gray.400' />
+                            <ChakraUI.Input type="text" onChange={onChangeTestVol} placeholder='10' />
+                        </ChakraUI.InputGroup>
+                    </ChakraUI.Stack>
                 </ChakraUI.Stack>
-
-                <ChakraUI.Button
-                    mt={4}
-                    colorScheme='blue'
-                    type='submit'
-                    onClick={onSubmit}
-                >
-                    Submit
-                </ChakraUI.Button>
+                <ChakraUI.Stack>
+                    <ChakraUI.Button
+                        mt={4}
+                        colorScheme='blue'
+                        type='submit'
+                        onClick={onSubmit}
+                    >
+                        Submit
+                    </ChakraUI.Button>
+                    <ChakraUI.Checkbox defaultChecked>Recursive Search</ChakraUI.Checkbox>
+                </ChakraUI.Stack>
             </ChakraUI.Box>
             <ChakraUI.Box h="40px" >
                 {show ? <LoadingBar /> : null}
             </ChakraUI.Box>
 
-        </div>
+        </div >
     );
 };
 

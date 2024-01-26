@@ -30,14 +30,14 @@ export default function Graph() {
     useEffect(() => {
         //setShow(false)
         convertData()
-    }, [graphData.TimeData])
+    }, [graphData])
 
     // Recharts code; largely self-explanatory
     return (
-        <div>
+        <div className="graphMain">
             <ResponsiveContainer
                 width="100%"
-                height={600}
+                height={800}
             >
                 <LineChart
                     width="100%"
