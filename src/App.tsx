@@ -1,6 +1,7 @@
 import React from "react"
 import ChakraForm from "./components/chakraForm.js"
 import Graph from "./components/graph.js"
+import GraphDetailed from "./components/graphDetailed.js"
 import { ChakraProvider } from '@chakra-ui/react'
 // import chakraTheme from '@chakra-ui/theme'
 import './style.css'
@@ -15,6 +16,7 @@ const App: React.FC = () => {
       {/* <Form /> */}
       <ChakraForm />
       <Graph />
+      <GraphDetailed />
       {/* </div> */}
       <Results />
     </ChakraProvider>

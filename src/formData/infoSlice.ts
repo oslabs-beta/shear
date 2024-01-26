@@ -7,7 +7,7 @@ export interface FormValues {
   memoryArray: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   functionPayload: Record<any, any>;
-  testVol: (number);
+  volume: (number);
   recursiveSearch: (boolean);
 }
 
@@ -18,11 +18,11 @@ export const loadData = createAsyncThunk('data/data', async (formData: FormValue
 })
 
 const formValues: FormValues = {
-  name: '',
+  name: 'Bob',
   ARN: '',
   memoryArray: [],
   functionPayload: {},
-  testVol: 10,
+  volume: 10,
   recursiveSearch: true,
 };
 
@@ -58,7 +58,7 @@ const infoSlice = createSlice({
 
     },
     testVolInput(state, action: PayloadAction<number>) {
-      state.testVol = action.payload;
+      state.volume = action.payload;
       // console.log(state.arn);
     },
   },
