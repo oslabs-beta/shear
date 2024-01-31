@@ -14,13 +14,11 @@ export const sseConnection = createAsyncThunk<void, void, { dispatch: Dispatch }
 export interface SseState  {
   connection: EventSource | null,
   data: string[]
-
 }
 
 const sseState: SseState = {
  connection: null,
  data: [],
-
 }
 
 

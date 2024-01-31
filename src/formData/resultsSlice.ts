@@ -20,6 +20,7 @@ export const runOptimizer = createAsyncThunk<ResultValues, FormValues>('results/
 });
 
 
+
 export const getAllData = createAsyncThunk
 
 //current state of return data, Double check what we are expecting(discuss with backend)- JK
