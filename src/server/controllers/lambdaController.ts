@@ -1,3 +1,4 @@
+import { myEventEmitter } from "../routes.js";
 import {
   LambdaClient,
   InvokeCommand,
@@ -7,9 +8,6 @@ import {
 import {wait, extractBilledDurationFrom64, reduceObjectToMedian, calculateCosts, createCustomError, getRegionFromARN} from "../utils/utils.js"
 
 import { fromUtf8 } from "@aws-sdk/util-utf8-node";
-
-
-
 
 
 const lambdaController = {
@@ -50,9 +48,12 @@ const lambdaController = {
       try {
 
         const outputObj = {}
-
+        let count = 0;
         for (const element of inputArr) {
            const billedDurationArray = []
+           myEventEmitter.emit('update', ++count)
+           console.log(myEventEmitter)
+          //  console.log('hello from lambda controller')
 
           const input = {
             FunctionName: arn,
@@ -67,6 +68,7 @@ const lambdaController = {
           for (let i = 0; i < TIMES; i++) {
                //invoke new version X times. currectly a global constant, but probably something we should let the user configure.
                const value = await invokeSpecificVersion('$LATEST', payloadBlob);
+              //  console.log('hello from lambda controller')
                billedDurationArray.push(value)
              }
           

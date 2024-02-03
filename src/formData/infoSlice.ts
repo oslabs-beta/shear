@@ -23,7 +23,7 @@ const formValues: FormValues = {
   memoryArray: [],
   functionPayload: {},
   testVol: 10,
-  recursiveSearch: true,
+  recursiveSearch: false,
 };
 
 
