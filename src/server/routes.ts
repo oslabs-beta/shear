@@ -7,25 +7,23 @@ import { EventEmitter } from 'events';
 export const myEventEmitter = new EventEmitter();
 
 router.get('/LambdaWorkflowSSE', (req: Request, res: Response): void => {
-    // console.log('wassup')
+    
+   
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
 
-    const sendUpdate = (message) => {
-        res.write(`data: ${message}`)
+    const sendUpdate = (data) => {
+        res.write(`data: ${JSON.stringify({ message: data })}\n\n`)
     }
-    const updateMessage = (message) => {
-        console.log('message recieved', message)
-        sendUpdate(message)
-    }
-   myEventEmitter.on('update', updateMessage )
+
+   myEventEmitter.on('update', sendUpdate )
    
-//    console.log(eventEmitter.eventNames())
-    // req.on('close', () => {
-    //     myEventEmitter.off('update', updateMessage);
-    //     console.log('Client connection closed');
-    // });
+//    console.log(myEventEmitter.eventNames())
+    req.on('close', () => {
+        myEventEmitter.off('update', sendUpdate);
+        console.log('Client connection closed');
+    });
 });
 
 router.post('/getLambdaLogs', lambdaController.shear, (req: Request, res: Response): void => {

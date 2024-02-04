@@ -51,8 +51,7 @@ const lambdaController = {
         let count = 0;
         for (const element of inputArr) {
            const billedDurationArray = []
-           myEventEmitter.emit('update', ++count)
-           console.log(myEventEmitter)
+           myEventEmitter.emit('update', `currently on ${++count} memory value`)
           //  console.log('hello from lambda controller')
 
           const input = {

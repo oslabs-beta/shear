@@ -1,17 +1,31 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sseConnection} from '../formData/sseSlice.js';
+
 import { RootState } from '../store.js';
 import axios from 'axios';
 axios.defaults.baseURL = "http://localhost:3000/api"
 
 const Results: React.FC = () => {
-
-  axios.get('/LambdaWorkflowSSE')
-  .then(res => {
-    console.log(res.data);
-  })
+  let source;
+  useEffect(() => {
+    const startSSE = () => {
+      source = new EventSource('http://localhost:3000/api/LambdaWorkflowSSE')
+      if (source) {
+        console.log('source connected', source)
+      }
+      source.onmessage = (message) => {
+        console.log('this is msg',message.data)
+      }
+    }
+    startSSE();
+   
+  }, [])
+ 
+ 
+  
+ 
  
   // source.addEventListener("message", function(message) {
   //   console.log(message.data)})
