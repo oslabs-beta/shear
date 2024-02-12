@@ -3,7 +3,7 @@ Description: EC2LambdaTestDeploy1
 
 Resources:
   MySecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: "AWS::EC2::SecurityGroup"
     Properties:
       GroupDescription: Allow all traffic
       SecurityGroupIngress:
@@ -14,10 +14,10 @@ Resources:
         - IpProtocol: -1
           FromPort: 0
           ToPort: 65535
-          CidrIpv6: '::/0'
+          CidrIpv6: "::/0"
 
   LambdaFullAccessRole:
-    Type: 'AWS::IAM::Role'
+    Type: "AWS::IAM::Role"
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -27,7 +27,7 @@ Resources:
               Service:
                 - ec2.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
+              - "sts:AssumeRole"
       Path: /
       Policies:
         - PolicyName: LambdaFullAccessPolicy
@@ -35,27 +35,52 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Action: 'lambda:*'
-                Resource: '*'
+                Action: "lambda:*"
+                Resource: "*"
+
+  ElasticIPManagementRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: /
+      Policies:
+        - PolicyName: ElasticIPManagementPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ec2:AllocateAddress"
+                  - "ec2:AssociateAddress"
+                  - "ec2:DescribeAddresses"
+                Resource: "*"
 
   EC2InstanceProfile:
-    Type: 'AWS::IAM::InstanceProfile'
+    Type: "AWS::IAM::InstanceProfile"
     Properties:
       Path: /
       Roles:
         - !Ref LambdaFullAccessRole
 
   Ec2Instance:
-    Type: 'AWS::EC2::Instance'
+    Type: "AWS::EC2::Instance"
     Properties:
       InstanceType: t2.micro
       IamInstanceProfile: !Ref EC2InstanceProfile
       ImageId: ami-04af221020bbd0872
       SecurityGroupIds:
         - !Ref MySecurityGroup
-      UserData: !Base64 
-        'Fn::Sub': >
+      UserData: !Base64
+        "Fn::Sub": >
           #!/bin/bash
+          sudo apt-get update
+          sudo apt-get install nginx
           cd /home/ubuntu/dist
           su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm install"
           su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm run
