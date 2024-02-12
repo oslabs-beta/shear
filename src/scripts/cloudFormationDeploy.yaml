@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: EC2LambdaTestDeploy1
+Description: EC2LambdaTestDeploy102
 
 Resources:
   MySecurityGroup:
@@ -50,16 +50,17 @@ Resources:
     Properties:
       InstanceType: t2.micro
       IamInstanceProfile: !Ref EC2InstanceProfile
-      ImageId: ami-04af221020bbd0872
+      ImageId:  ami-039f5d5f278d91a6f
       SecurityGroupIds:
         - !Ref MySecurityGroup
-      UserData: !Base64 
-        'Fn::Sub': >
+      UserData: !Base64 |
           #!/bin/bash
-          cd /home/ubuntu/dist
+          su - ubuntu -c "sudo -i -u ubuntu"
+          su - ubuntu -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
+          su - ubuntu -c "source ~/.nvm/nvm.sh && nvm install --lts"     
+          cd /home/ubuntu/dist     
           su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm install"
-          su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm run
-          run-server-ec2"
+          su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm run run-server-ec2"
       Tags:
         - Key: EC2LambdaTestDeploy
           Value: MyTag
