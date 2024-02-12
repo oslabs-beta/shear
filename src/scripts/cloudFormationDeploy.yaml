@@ -61,6 +61,11 @@ Resources:
                   - "ec2:DescribeAddresses"
                 Resource: "*"
 
+  EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
   EC2InstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
@@ -88,3 +93,17 @@ Resources:
       Tags:
         - Key: EC2LambdaTestDeploy
           Value: MyTag
+
+  WaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    DependsOn: Ec2Instance
+    Properties:
+      Handle: !Ref Ec2Instance
+      Timeout: "150"
+
+  EIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    DependsOn: WaitCondition
+    Properties:
+      AllocationId: !GetAtt EIP.AllocationId
+      InstanceId: !Ref Ec2Instance
