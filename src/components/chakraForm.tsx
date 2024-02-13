@@ -5,6 +5,8 @@ import { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput } f
 import { runOptimizer } from "../formData/resultsSlice";
 import * as ChakraUI from '@chakra-ui/react'
 import LoadingBar from "./loadingBar.tsx"
+import { Form, Field, useField, useForm } from "react-final-form";
+import validate from "./validate";
 import './style.css'
 
 const ChakraForm: React.FC = () => {
@@ -16,8 +18,6 @@ const ChakraForm: React.FC = () => {
     const memoryRef = useRef<string[]>([])
     const [show, setShow] = useState(false); //this is used to toggle whether the loading bar shows up
 
-    const [mem, setMem] = useState('')
-    const isError = mem === ''
     useEffect(() => {
         if (formState.ARN !== '') {
             dispatch(runOptimizer(formState))
@@ -58,62 +58,72 @@ const ChakraForm: React.FC = () => {
     }, [resultsState])
 
     return (
-        <div>
-            <ChakraUI.Box position="absolute" left="1%" top="5%" h="50%" w="20%" border="2px" padding="50px" borderRadius='lg' overflow='hidden' bg='lightgrey' margin='0 auto'>
-                <ChakraUI.Stack spacing={4}>
-                    <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>ARN Details</ChakraUI.Text>
-                    <ChakraUI.InputGroup>
-                        <ChakraUI.InputLeftAddon children='Name' bg='gray.400' />
-                        <ChakraUI.Input type="text" onChange={onChangeName} placeholder='Input function name to save function for future use' />
-                    </ChakraUI.InputGroup>
-                    <ChakraUI.InputGroup>
-                        <ChakraUI.InputLeftAddon children='ARN' bg='gray.400' />
-                        <ChakraUI.Input ref={arnRef} placeholder='arn:aws:iam::123456789012:user/johndoe' />
-                    </ChakraUI.InputGroup>
-                    <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Function Parameters</ChakraUI.Text>
-                    <ChakraUI.Textarea
-                        ref={funcParamsRef}
-                        placeholder='Please enter parameters and values in JSON format'
-                        size='sm'
-                    />
-                    <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Memory Allocation</ChakraUI.Text>
-                    {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
-                    <ChakraUI.Stack>
+        <ChakraUI.Center w="100%">
+            <ChakraUI.Box position="relative" h="20%" w="100%" border="2px" padding="50px" overflow='hidden' bg='lightgrey' margin='0px'>
+                <ChakraUI.HStack spacing={10} direction='row' align='stretch' divider={<ChakraUI.StackDivider borderColor='gray.200' />}>
+                    <ChakraUI.Stack spacing={8} direction='row' align='stretch'>
+                        <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>ARN Details</ChakraUI.Text>
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon children='Min' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Name' bg='gray.400' />
+                            <ChakraUI.Input type="text" onChange={onChangeName} placeholder='Input function name to save function for future use' />
+                        </ChakraUI.InputGroup>
+                        <ChakraUI.InputGroup>
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='ARN' bg='gray.400' />
+                            <ChakraUI.Input ref={arnRef} placeholder='arn:aws:iam::123456789012:user/johndoe' />
+                        </ChakraUI.InputGroup>
+                    </ChakraUI.Stack>
+
+                    <ChakraUI.Stack spacing={8} direction='row' align='stretch'>
+                        <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Function Parameters</ChakraUI.Text>
+                        <ChakraUI.InputGroup>
+                            <ChakraUI.Textarea
+                                ref={funcParamsRef}
+                                placeholder='Please enter parameters and values in JSON format'
+                                size='sm'
+                            />
+                        </ChakraUI.InputGroup>
+                    </ChakraUI.Stack>
+
+                    <ChakraUI.Stack spacing={8} direction='row' align='stretch'>
+                        <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Memory Allocation</ChakraUI.Text>
+                        {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
+
+                        <ChakraUI.InputGroup>
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Minimum Allocation (MB)' bg='gray.400' />
                             <ChakraUI.Input type="text" onChange={onChangeMinVal} placeholder='128' />
                         </ChakraUI.InputGroup>
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon children='Max' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Maximum Allocation (MB)' bg='gray.400' />
                             <ChakraUI.Input type="text" onChange={onChangeMaxVal} placeholder='4096' />
                         </ChakraUI.InputGroup>
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon children='Memory Intervals' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Memory Intervals' bg='gray.400' />
                             <ChakraUI.Input type="text" onChange={onChangeIncrements} placeholder='8' />
                         </ChakraUI.InputGroup>
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon children='Test Volume' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Test Volume' bg='gray.400' />
                             <ChakraUI.Input type="text" onChange={onChangeTestVol} placeholder='10' />
                         </ChakraUI.InputGroup>
                     </ChakraUI.Stack>
-                </ChakraUI.Stack>
-                <ChakraUI.Stack>
-                    <ChakraUI.Button
-                        mt={4}
-                        colorScheme='blue'
-                        type='submit'
-                        onClick={onSubmit}
-                    >
-                        Submit
-                    </ChakraUI.Button>
-                    <ChakraUI.Checkbox defaultChecked>Recursive Search</ChakraUI.Checkbox>
-                </ChakraUI.Stack>
+                    <ChakraUI.Stack spacing={4} direction='row' align='center'>
+                        <ChakraUI.Button
+                            mt={4}
+                            colorScheme='blue'
+                            type='submit'
+                            onClick={onSubmit}
+                        >
+                            Submit
+                        </ChakraUI.Button>
+                        <ChakraUI.Checkbox defaultChecked>Recursive Search</ChakraUI.Checkbox>
+                    </ChakraUI.Stack>
+                </ChakraUI.HStack>
+
             </ChakraUI.Box>
             <ChakraUI.Box h="40px" >
                 {show ? <LoadingBar /> : null}
             </ChakraUI.Box>
 
-        </div >
+        </ChakraUI.Center>
     );
 };
 

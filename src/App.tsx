@@ -24,8 +24,8 @@ const App: React.FC = () => {
       {/* <Form /> */}
       <ChakraForm />
       {/* <div className="flex-container"> */}
-      <Graph />
-      <GraphDetailed />
+      {/* <Graph />
+      <GraphDetailed /> */}
 
       <Results />
       {/* </div> */}
