@@ -3,7 +3,8 @@
   margin: 0 auto;
   /* padding: 2rem; */
   text-align: center;
-  background-color: rgba(216, 73, 73, 0.23);
+  height: 100%;
+  /* background-color: rgba(38, 228, 35, 0.23); */
 }
 
 /* .body {
@@ -12,30 +13,24 @@
 } */
 
 .chakra-ui-light {
-  background-color: lightgrey;
+  /* background-color: rgba(86, 181, 91, 0.284); */
 }
 
 h2 {
   font-size: 24px;
 }
 
-/* .graphMain {
+.graphMain {
 
-  position: relative;
-  top: 5%;
-  right: 25%;
-  width: 150%;
+  padding: 100px;
   margin: 0 auto;
 }
 
 .graphDetailed {
 
-  position: relative;
-  top: 150%;
-  right: 25%;
-  width: 150%;
+  padding: 100px;
   margin: 0 auto;
-} */
+}
 
 .button:active {
   background-color: #3498db;

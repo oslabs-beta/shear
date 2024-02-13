@@ -37,7 +37,8 @@ export default function GraphDetailed() {
         <div className="graphDetailed">
             <ResponsiveContainer
                 width="100%"
-                height={800}
+                aspect={2.4}
+            // height={800}
             >
                 <LineChart
                     width="100%"
@@ -81,11 +82,13 @@ export default function GraphDetailed() {
                         dataKey='Invocation time'
                         stroke="#8884d8"
                         activeDot={{ r: 8 }}
+                        strokeWidth="8px"
                     />
                     <Line yAxisId="right"
                         type="monotone"
                         dataKey="Runtime cost"
-                        stroke="#82ca9d" />
+                        stroke="#82ca9d"
+                        strokeWidth="8px" />
                 </LineChart>
             </ResponsiveContainer>
             {/* <button onClick={convertData}>Testtest</button> */}

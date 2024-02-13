@@ -30,10 +30,10 @@ export const getAllData = createAsyncThunk
 const initialState: ResultValues = {
   billedDurationOutput: {},
   costOutput: {},
-  CostData: [180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200],
+  CostData: [190, 180, 215, 170, 160, 195, 220, 230, 185, 190, 210],
   TimeData: [500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120],
   MemoryData: [128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048],
-  DetailedCostData: [180, 190, 202, 203, 201, 202, 203, 190, 185, 190, 200],
+  DetailedCostData: [190, 180, 215, 170, 160, 195, 220, 230, 185, 190, 210],
   DetailedTimeData: [500, 420, 350, 290, 240, 200, 170, 150, 135, 125, 120],
   DetailedMemoryData: [128, 256, 384, 512, 640, 768, 896, 1024, 1152, 1280, 2048],
 };

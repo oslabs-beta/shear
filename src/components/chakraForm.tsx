@@ -10,13 +10,14 @@ import validate from "./validate";
 import './style.css'
 
 const ChakraForm: React.FC = () => {
-    const resultsState = useSelector((state: RootState) => state.results)
-    const formState = useSelector((state: RootState) => state.info)
+    const resultsState = useSelector((state: RootState) => state.results);
+    const formState = useSelector((state: RootState) => state.info);
     const dispatch = useDispatch();
     const arnRef = useRef<HTMLInputElement | null>(null);
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
-    const memoryRef = useRef<string[]>([])
+    const memoryRef = useRef<string[]>([]);
     const [show, setShow] = useState(false); //this is used to toggle whether the loading bar shows up
+    const toast = ChakraUI.useToast();
 
     useEffect(() => {
         if (formState.ARN !== '') {
@@ -57,18 +58,20 @@ const ChakraForm: React.FC = () => {
         setShow(false)
     }, [resultsState])
 
+    
+
     return (
-        <ChakraUI.Center w="100%">
-            <ChakraUI.Box position="relative" h="20%" w="100%" border="2px" padding="50px" overflow='hidden' bg='lightgrey' margin='0px'>
+        <ChakraUI.Center w="100%" top="10%" h="30%"  >
+            <ChakraUI.Box position="relative" top="10%" h="30%" w="100%" borderBottomWidth="5px" borderColor='blue.100' padding="50px" overflow='hidden' bg='blue.100' margin='0px'>
                 <ChakraUI.HStack spacing={10} direction='row' align='stretch' divider={<ChakraUI.StackDivider borderColor='gray.200' />}>
                     <ChakraUI.Stack spacing={8} direction='row' align='stretch'>
                         <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>ARN Details</ChakraUI.Text>
-                        <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Name' bg='gray.400' />
+                        <ChakraUI.InputGroup >
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Name' bg='gray.600' />
                             <ChakraUI.Input type="text" onChange={onChangeName} placeholder='Input function name to save function for future use' />
                         </ChakraUI.InputGroup>
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='ARN' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='ARN' bg='gray.600' />
                             <ChakraUI.Input ref={arnRef} placeholder='arn:aws:iam::123456789012:user/johndoe' />
                         </ChakraUI.InputGroup>
                     </ChakraUI.Stack>
@@ -89,19 +92,19 @@ const ChakraForm: React.FC = () => {
                         {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
 
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Minimum Allocation (MB)' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Minimum Allocation (MB)' bg='gray.600' />
                             <ChakraUI.Input type="text" onChange={onChangeMinVal} placeholder='128' />
                         </ChakraUI.InputGroup>
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Maximum Allocation (MB)' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Maximum Allocation (MB)' bg='gray.600' />
                             <ChakraUI.Input type="text" onChange={onChangeMaxVal} placeholder='4096' />
                         </ChakraUI.InputGroup>
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Memory Intervals' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Memory Intervals' bg='gray.600' />
                             <ChakraUI.Input type="text" onChange={onChangeIncrements} placeholder='8' />
                         </ChakraUI.InputGroup>
                         <ChakraUI.InputGroup>
-                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Test Volume' bg='gray.400' />
+                            <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Test Volume' bg='gray.600' />
                             <ChakraUI.Input type="text" onChange={onChangeTestVol} placeholder='10' />
                         </ChakraUI.InputGroup>
                     </ChakraUI.Stack>
@@ -114,7 +117,12 @@ const ChakraForm: React.FC = () => {
                         >
                             Submit
                         </ChakraUI.Button>
-                        <ChakraUI.Checkbox defaultChecked>Recursive Search</ChakraUI.Checkbox>
+                        <ChakraUI.Tooltip hasArrow label='Runs a second set of tests using the two lowest cost results of the first test. Results are populated in separate graph' bg='gray.300' color='black' shouldWrapChildren>
+                            <ChakraUI.Checkbox defaultChecked>Recursive Search</ChakraUI.Checkbox>
+                        </ChakraUI.Tooltip>
+                        <ChakraUI.Tooltip hasArrow label='Tests all memory intervals concurrently. Recommended for more memory-intensive functions' bg='gray.300' color='black' shouldWrapChildren>
+                            <ChakraUI.Checkbox defaultChecked>Concurrent Search</ChakraUI.Checkbox>
+                        </ChakraUI.Tooltip>
                     </ChakraUI.Stack>
                 </ChakraUI.HStack>
 
