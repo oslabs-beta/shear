@@ -20,9 +20,10 @@ const App: React.FC = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      {/* <div className="flex-container"> */}
+
       {/* <Form /> */}
       <ChakraForm />
+      {/* <div className="flex-container"> */}
       <Graph />
       <GraphDetailed />
 

@@ -4,4 +4,6 @@
 
 .flex-container {
     display: flex;
+    position: absolute;
+    /* top: 25%; */
 }

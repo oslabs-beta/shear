@@ -19,7 +19,7 @@ h2 {
   font-size: 24px;
 }
 
-.graphMain {
+/* .graphMain {
 
   position: relative;
   top: 5%;
@@ -35,7 +35,7 @@ h2 {
   right: 25%;
   width: 150%;
   margin: 0 auto;
-}
+} */
 
 .button:active {
   background-color: #3498db;
