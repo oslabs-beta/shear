@@ -88,13 +88,13 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          set -e
-          apt-get update
-          apt-get install -y awscli nginx curl
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
-          source /home/ubuntu/.nvm/nvm.sh && nvm install --lts
+          su - ubuntu -c "sudo -i -u ubuntu"
+          su - ubuntu -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
+          su - ubuntu -c "source ~/.nvm/nvm.sh && nvm install --lts"   
+          sudo apt-get update
+          sudo apt-get install -y awscli nginx 
           cd /home/ubuntu/dist
-          source /home/ubuntu/.nvm/nvm.sh && npm install && npm run run-server-ec2
+          npm install && npm run run-server-ec2
 
           cat << 'EOF' > /home/ubuntu/update_nginx.sh
           #!/bin/bash
@@ -102,13 +102,13 @@ Resources:
               EIP=$(aws ec2 describe-addresses --region us-east-2 --filters "Name=instance-id,Values=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)" --query "Addresses[0].PublicIp" --output text)
               if [ -n "$EIP" ]; then
                   echo "Elastic IP associated: $EIP"
-                  tee /etc/nginx/sites-available/reverse-proxy <<EOCONFIG
+                  sudo tee /etc/nginx/sites-available/reverse-proxy <<EOCONFIG
                   server {
                       listen 80;
                       server_name $EIP;
 
                       location / {
-                          proxy_pass http://127.0.0.1:3000;
+                          proxy_pass http://localhost:3000;
                           proxy_http_version 1.1;
                           proxy_set_header Upgrade $http_upgrade;
                           proxy_set_header Connection 'upgrade';
@@ -117,16 +117,16 @@ Resources:
                       }
                   }
                   EOCONFIG
-                  ln -s /etc/nginx/sites-available/reverse-proxy /etc/nginx/sites-enabled/
-                  systemctl restart nginx
+                  sudo ln -s /etc/nginx/sites-available/reverse-proxy /etc/nginx/sites-enabled/
+                  sudo systemctl restart nginx
                   break
               fi
               sleep 10
           done
           EOF
 
-          chmod +x /home/ubuntu/update_nginx.sh
-          nohup /home/ubuntu/update_nginx.sh &>/dev/null &
+          sudo chmod +x /home/ubuntu/update_nginx.sh
+          sudo nohup /home/ubuntu/update_nginx.sh &>/dev/null &
 
   EIPAssociation:
     Type: AWS::EC2::EIPAssociation
