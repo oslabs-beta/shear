@@ -1,7 +1,7 @@
 import React, { useRef, FormEvent, useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store.ts";
-import { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput } from "../formData/infoSlice.ts";
+import { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput, checksInput } from "../formData/infoSlice.ts";
 import { runOptimizer } from "../formData/resultsSlice";
 import * as ChakraUI from '@chakra-ui/react'
 import LoadingBar from "./loadingBar.tsx"
@@ -17,7 +17,8 @@ const ChakraForm: React.FC = () => {
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryRef = useRef<string[]>([]);
     const [show, setShow] = useState(false); //this is used to toggle whether the loading bar shows up
-    const toast = ChakraUI.useToast();
+    const [checkedItems, setCheckedItems] = React.useState([true, false])
+    // const toast = ChakraUI.useToast();
 
     useEffect(() => {
         if (formState.ARN !== '') {
@@ -43,6 +44,8 @@ const ChakraForm: React.FC = () => {
         memoryRef.current[3] = e.target.value
     }
 
+
+
     //onSubmit changes the form state then invokes post request to backend -JK
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -53,6 +56,7 @@ const ChakraForm: React.FC = () => {
         dispatch(funcParamsInput(funcParamsRef.current?.value || ''));
         dispatch(powerValueInput(memoryRef.current));
         dispatch(testVolInput(memoryRef.current[3]))
+        dispatch(checksInput(checkedItems))
     };
     useEffect(() => {
         setShow(false)
@@ -120,19 +124,14 @@ const ChakraForm: React.FC = () => {
                             Submit
                         </ChakraUI.Button>
                         <ChakraUI.Tooltip hasArrow label='Runs a second set of tests using the two lowest cost results of the first test. Results are populated in second graph.' bg='gray.300' color='black' shouldWrapChildren fontSize='24px'>
-                            <ChakraUI.Checkbox defaultChecked fontSize='18px'>Fine-tuned Search</ChakraUI.Checkbox>
+                            <ChakraUI.Checkbox colorScheme='red' isChecked={checkedItems[0]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])} fontSize='18px'>Fine-tuned Search</ChakraUI.Checkbox>
                         </ChakraUI.Tooltip>
                         <ChakraUI.Tooltip hasArrow label='Tests all memory intervals concurrently. Recommended for more memory-intensive functions.' bg='gray.300' color='black' shouldWrapChildren fontSize='24px'>
-                            <ChakraUI.Checkbox defaultChecked fontSize='18px'>Concurrent Search</ChakraUI.Checkbox>
+                            <ChakraUI.Checkbox colorScheme='red' onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])} isChecked={checkedItems[1]} fontSize='18px'>Concurrent Search</ChakraUI.Checkbox>
                         </ChakraUI.Tooltip>
                     </ChakraUI.Stack>
                 </ChakraUI.HStack>
-
             </ChakraUI.Box>
-            <ChakraUI.Box h="40px" >
-                {show ? <LoadingBar /> : null}
-            </ChakraUI.Box>
-
         </ChakraUI.Center>
     );
 };

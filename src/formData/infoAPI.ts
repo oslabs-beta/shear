@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { FormValues } from "./infoSlice.js";
-import { useToast } from '@chakra-ui/react'
+
 
 // Use this to make the baseURL of the fetch call so you can just add the string endpoint. - JK
 axios.defaults.baseURL = "http://localhost:3000/api";  //"/api"
@@ -8,9 +8,9 @@ axios.defaults.baseURL = "http://localhost:3000/api";  //"/api"
 export const optimizerAPI = {
   
   runOptimizerFunc: (form: FormValues): Promise<AxiosResponse> => {
-    const toast = useToast(); 
+
     const stringifiedFormData = JSON.stringify(form)
-    // console.log(stringifiedFormData)
+    console.log(stringifiedFormData)
     return axios.post('executeLambdaWorkflow', stringifiedFormData, {
       headers: {
         'Content-Type': 'application/json',

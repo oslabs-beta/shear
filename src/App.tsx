@@ -21,7 +21,7 @@ const App: React.FC = () => {
   return (
     <ChakraProvider theme={theme}>
       <Box>
-        <Box top="0%" left="0%" h="10vh" w="full" borderBottomWidth="5px" borderColor='gray.200' padding="50px" overflow='hidden' bg='gray.200' margin='0px'>
+        <Box top="0%" left="0%" h="30%" w="full" borderBottomWidth="5px" borderColor='gray.200' padding="50px" overflow='hidden' bg='gray.200' margin='0px'>
           <HStack>
             <Text as='b' fontSize='100px' color='#4285F4'>Shear</Text>
             <Text as='b' fontSize='30px' color='#4285F4'>an AWS Lambda function optimizer</Text>

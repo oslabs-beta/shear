@@ -61,7 +61,7 @@ export default function Graph() {
                             angle: -90,
                             position: 'left',
                             offset: 8,
-                            fontSize: 35,
+                            fontSize: 30,
                         }}
                         tick={{ fontSize: 25 }}
                     />
@@ -74,7 +74,7 @@ export default function Graph() {
                             angle: -90,
                             position: 'right',
                             offset: 0,
-                            fontSize: 35,
+                            fontSize: 30,
                         }}
                         tick={{ fontSize: 25 }}
                     />
