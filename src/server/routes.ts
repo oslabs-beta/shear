@@ -7,8 +7,6 @@ import { EventEmitter } from 'events';
 export const myEventEmitter = new EventEmitter();
 
 router.get('/LambdaWorkflowSSE', (req: Request, res: Response): void => {
-    
-   
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
@@ -35,9 +33,6 @@ router.post("/executeLambdaWorkflow", lambdaController.shear, addLambdaLog, (req
     console.log(req.body)
     res.status(200).json(res.locals.output)
 })
-
-
-
 
 
 
