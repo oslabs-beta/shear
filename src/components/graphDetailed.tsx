@@ -6,11 +6,11 @@ import { RootState } from "../store.ts";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
-export default function Graph() {
+export default function GraphDetailed() {
     const graphData = useSelector((state: RootState) => state.results)
-    const timeData = graphData.TimeData;
-    const costData = graphData.CostData;
-    const xData = graphData.MemoryData;
+    const timeData = graphData.DetailedTimeData;
+    const costData = graphData.DetailedCostData;
+    const xData = graphData.DetailedMemoryData;
 
     //converts raw data into appropriate format for graph
     const convertData = () => {
@@ -34,7 +34,7 @@ export default function Graph() {
 
     // Recharts code; largely self-explanatory
     return (
-        <div className="graphMain">
+        <div className="graphDetailed">
             <ResponsiveContainer
                 width="100%"
                 height="100%"

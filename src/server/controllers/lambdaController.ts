@@ -5,22 +5,22 @@ import {
   UpdateFunctionConfigurationCommand,
 } from "@aws-sdk/client-lambda";
 
-import {wait, extractBilledDurationFrom64, reduceObjectToMedian, calculateCosts, createCustomError, getRegionFromARN} from "../utils/utils.js"
+import { wait, extractBilledDurationFrom64, reduceObjectToMedian, calculateCosts, createCustomError, getRegionFromARN } from "../utils/utils.js"
 
 import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 
 const lambdaController = {
   async shear(request, response, next) {
-  
+    console.log("this works")
     if (!request.body.ARN) {
-      
-      const error = createCustomError('Error reading ARN!', 403, {body: request.body})
+
+      const error = createCustomError('Error reading ARN!', 403, { body: request.body })
       return next(error);
     }
     if (!validateLambdaARN(request.body.ARN)) {
       console.log(request.body.ARN)
-      const error = createCustomError('Invalid ARN!', 403, {body: request.body})
+      const error = createCustomError('Invalid ARN!', 403, { body: request.body })
       return next(error);
     }
     const memoryArray = request.body.memoryArray;
@@ -30,8 +30,8 @@ const lambdaController = {
     }
     const region2 = getRegionFromARN(request.body.ARN);
     const regionObj = { region: region2 }
-     // setup for all the AWS work we're going to do.
-     const lambdaClient = new LambdaClient(regionObj);
+    // setup for all the AWS work we're going to do.
+    const lambdaClient = new LambdaClient(regionObj);
     response.locals.ARN = request.body.ARN
     response.locals.memoryArray = memoryArray;
     const TIMES = request.body.volume || 20
@@ -43,7 +43,7 @@ const lambdaController = {
     const functionPayload = request.body.functionPayload;
     response.locals.payload = functionPayload
     const payloadBlob = fromUtf8(JSON.stringify(functionPayload));
-    
+
     async function createNewVersionsFromMemoryArrayAndInvoke(inputArr, arn) {
       try {
         if (request.body.concurrent) {
@@ -130,10 +130,10 @@ const lambdaController = {
           FunctionName: functionARN,
           Qualifier: version,
           Payload: payload,
-        
+
           LogType: "Tail"
         };
-// @ts-expect-error - weird typing bug
+        // @ts-expect-error - weird typing bug
         const data = await lambdaClient.send(new InvokeCommand(invokeParams));
 
         const billedDuration = extractBilledDurationFrom64(atob(data.LogResult))
@@ -143,21 +143,21 @@ const lambdaController = {
         return next(customError);
       }
     }
-try {
-   const test = await createNewVersionsFromMemoryArrayAndInvoke(memoryArray, functionARN)
-  const billedDurationArray = reduceObjectToMedian(test)
-  
-  const outputObject = {
-    billedDurationOutput: billedDurationArray,
-    costOutput: calculateCosts(billedDurationArray),
-    bonusData: null
-  }
-  response.locals.output = outputObject;
-  if (request.body.recursiveSearch) {
-    //look through the best left and right...
-    const entries = Object.entries(outputObject.costOutput)
-    const minEntry = entries.reduce((min, entry) => (entry[1] < min[1] ? entry : min), entries[0]);
-    const minEntryIndex = memoryArray.indexOf(Number(minEntry[0]))
+    try {
+      const test = await createNewVersionsFromMemoryArrayAndInvoke(memoryArray, functionARN)
+      const billedDurationArray = reduceObjectToMedian(test)
+
+      const outputObject = {
+        billedDurationOutput: billedDurationArray,
+        costOutput: calculateCosts(billedDurationArray),
+        bonusData: null
+      }
+      response.locals.output = outputObject;
+      if (request.body.recursiveSearch) {
+        //look through the best left and right...
+        const entries = Object.entries(outputObject.costOutput)
+        const minEntry = entries.reduce((min, entry) => (entry[1] < min[1] ? entry : min), entries[0]);
+        const minEntryIndex = memoryArray.indexOf(Number(minEntry[0]))
 
     const midpoints: number[] = [];
     let first;
@@ -209,7 +209,7 @@ billedDurationArray2[memoryArray[last]]= billedDurationArray[memoryArray[last]]
 catch (error) {
   const customError = createCustomError('Unhandled error occurred.', 500, { body: request.body });
       return next(customError);
-}
+    }
   },
 
 };

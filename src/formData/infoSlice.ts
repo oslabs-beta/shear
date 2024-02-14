@@ -7,8 +7,9 @@ export interface FormValues {
   memoryArray: (string | number)[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   functionPayload: Record<any, any>;
-  testVol: (number);
+  volume: (number);
   recursiveSearch: (boolean);
+  concurrent: (boolean);
 }
 
 
@@ -18,12 +19,13 @@ export const loadData = createAsyncThunk('data/data', async (formData: FormValue
 })
 
 const formValues: FormValues = {
-  name: '',
+  name: 'Bob',
   ARN: '',
   memoryArray: [],
   functionPayload: {},
-  testVol: 10,
-  recursiveSearch: false,
+  volume: 10,
+  recursiveSearch: true,
+  concurrent: true,
 };
 
 
@@ -54,12 +56,18 @@ const infoSlice = createSlice({
       // state.memoryArray = [];
 
       state.memoryArray = getMedians(action.payload)
-      console.log(state.memoryArray)
+      // console.log(state.memoryArray)
 
     },
     testVolInput(state, action: PayloadAction<number>) {
-      state.testVol = action.payload;
+      state.volume = action.payload;
       // console.log(state.arn);
+    },
+
+    checksInput(state, action: PayloadAction<boolean[]>) {
+      state.recursiveSearch = action.payload[0];
+      state.concurrent = action.payload[1];
+      // console.log(state.recursiveSearch, state.concurrent);
     },
   },
 });
@@ -82,5 +90,5 @@ function getMedians(array: string[]): number[] {
 }
 
 // export const { arnInput, funcParamsInput, powerValueInput, lowestPowerValueInput, highestPowerValueInput } = infoSlice.actions;
-export const { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput } = infoSlice.actions;
+export const { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput, checksInput } = infoSlice.actions;
 export default infoSlice.reducer;

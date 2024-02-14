@@ -1,22 +1,41 @@
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
-  background-color: lightgrey;
+  height: 100%;
+  /* background-color: rgba(38, 228, 35, 0.23); */
 }
+
+/* .body {
+  display: flex;
+  background-color: rgba(211, 211, 211, 0.23);
+} */
+
 .chakra-ui-light {
-  background-color: lightgrey;
+  /* background-color: rgba(86, 181, 91, 0.284); */
 }
 
 h2 {
   font-size: 24px;
 }
 
-.svgWrap {
-  /* height: 800px !important; */
-  /* width: 900px !important; */
-  background-color: rgb(183, 232, 196) !important;
+.graphMain {
+
+  padding: 100px;
+  padding-bottom: 30%;
+  margin: 0 auto;
+  height: 80vh;
+  width: 45vw;
+}
+
+.graphDetailed {
+
+  padding: 100px;
+  padding-bottom: 30%;
+  margin: 0 auto;
+  height: 80vh;
+  width: 45vw;
 }
 
 .button:active {

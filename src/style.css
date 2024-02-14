@@ -1,3 +1,11 @@
+.body {
+    background-color: rgb(237, 38, 217);
+}
+
 .flex-container {
     display: flex;
+    position: absolute;
+    /* top: 25%; */
+    height: 100vh;
+    background-color: rgba(40, 57, 206, 0.23);
 }
