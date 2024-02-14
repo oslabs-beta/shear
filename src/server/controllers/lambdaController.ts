@@ -67,6 +67,7 @@ const lambdaController = {
                   // Push all invocations into an array
                   invocations.push(invokeSpecificVersion('$LATEST', payloadBlob));
               }
+                await Promise.all(invocations)
   
               // Execute all invocations concurrently using Promise.all() await Promise.all(invocations);
               
