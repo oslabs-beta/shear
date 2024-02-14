@@ -1,9 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: EC2LambdaTestDeploy102
+Description: EC2 Instance with NGINX Reverse Proxy and Elastic IP
 
 Resources:
   MySecurityGroup:
-    Type: "AWS::EC2::SecurityGroup"
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow all traffic
       SecurityGroupIngress:
@@ -17,7 +17,7 @@ Resources:
           CidrIpv6: "::/0"
 
   LambdaFullAccessRole:
-    Type: "AWS::IAM::Role"
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -37,13 +37,9 @@ Resources:
               - Effect: Allow
                 Action: "lambda:*"
                 Resource: "*"
-              - Effect: Allow
-                Action:
-                  - "ec2:DescribeAddresses"
-                Resource: "*"
 
   ElasticIPManagementRole:
-    Type: "AWS::IAM::Role"
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -71,11 +67,11 @@ Resources:
       Domain: vpc
 
   EC2InstanceProfile:
-    Type: "AWS::IAM::InstanceProfile"
+    Type: AWS::IAM::InstanceProfile
     Properties:
       Path: /
       Roles:
-        - !Ref LambdaFullAccessRole
+        - Ref: LambdaFullAccessRole
 
   Ec2Instance:
     Type: "AWS::EC2::Instance"
@@ -85,50 +81,38 @@ Resources:
       ImageId: ami-039f5d5f278d91a6f
       SecurityGroupIds:
         - !Ref MySecurityGroup
-      UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash
-          su - ubuntu -c "sudo -i -u ubuntu"
-          su - ubuntu -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
-          su - ubuntu -c "source ~/.nvm/nvm.sh && nvm install --lts"   
-          sudo apt-get update
-          sudo apt-get install -y awscli nginx 
-          cd /home/ubuntu/dist
-          npm install && npm run run-server-ec2
+      UserData: !Base64 |
+        #!/bin/bash
+        sudo apt-get update
+        sudo apt-get install -y awscli nginx
+        aws ec2 associate-address --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --allocation-id !GetAtt EIP.AllocationId --region ${AWS::Region}
+        su - ubuntu -c "sudo -i -u ubuntu"
+        su - ubuntu -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
+        su - ubuntu -c "source ~/.nvm/nvm.sh && nvm install --lts"     
+        cd /home/ubuntu/dist
+        EIP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+        sudo tee /etc/nginx/sites-available/reverse-proxy > /dev/null <<EOCONFIG
+        server {
+          listen 80;
+          server_name $EIP;
 
-          cat << 'EOF' > /home/ubuntu/update_nginx.sh
-          #!/bin/bash
-          while true; do
-              EIP=$(aws ec2 describe-addresses --region us-east-2 --filters "Name=instance-id,Values=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)" --query "Addresses[0].PublicIp" --output text)
-              if [ -n "$EIP" ]; then
-                  echo "Elastic IP associated: $EIP"
-                  sudo tee /etc/nginx/sites-available/reverse-proxy <<'EOCONFIG'
-                  server {
-                      listen 80;
-                      server_name '"$EIP"';
-
-                      location / {
-                          proxy_pass http://localhost:3000;
-                          proxy_http_version 1.1;
-                          proxy_set_header Upgrade '"$http_upgrade"';
-                          proxy_set_header Connection 'upgrade';
-                          proxy_set_header Host '"$host"';
-                          proxy_cache_bypass '"$http_upgrade"';
-                      }
-                  }
-                  EOCONFIG
-
-                  sudo ln -s /etc/nginx/sites-available/reverse-proxy /etc/nginx/sites-enabled/
-                  sudo systemctl restart nginx
-                  break
-              fi
-              sleep 10
-          done
-          EOF
-
-          sudo chmod +x /home/ubuntu/update_nginx.sh
-          sudo nohup /home/ubuntu/update_nginx.sh &>/dev/null &
-
+          location / {
+            proxy_pass http://localhost:3000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host \$host;
+            proxy_cache_bypass \$http_upgrade;
+          }
+        }
+        EOCONFIG
+        sudo ln -s /etc/nginx/sites-available/reverse-proxy /etc/nginx/sites-enabled/
+        sudo systemctl restart nginx
+        su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm install"
+        su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm run run-server-ec2"
+      Tags:
+        - Key: EC2LambdaTestDeploy
+          Value: MyTag
   EIPAssociation:
     Type: AWS::EC2::EIPAssociation
     DependsOn: Ec2Instance
