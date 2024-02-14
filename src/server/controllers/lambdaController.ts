@@ -46,13 +46,14 @@ const lambdaController = {
     
     async function createNewVersionsFromMemoryArrayAndInvoke(inputArr, arn) {
       try {
+        let count = 0;
         if (request.body.concurrent) {
           const outputObj = {};
-          let count = 0;
           for (const element of inputArr) {
               const billedDurationArray = [];
               const invocations = [];
               myEventEmitter.emit('update', `currently on ${++count} memory value`)
+              
   
               const input = {
                   FunctionName: arn,
@@ -88,7 +89,9 @@ const lambdaController = {
             billedDurationArray.push(...results3);
             outputObj[element] = billedDurationArray;
             console.log('concurrently invoked!')
+            count = 0;
           }
+          
           return outputObj;
         }
         else {
@@ -97,6 +100,7 @@ const lambdaController = {
 
           for (const element of inputArr) {
              const billedDurationArray = []
+             myEventEmitter.emit('update', `currently on ${++count} memory value`)
   
             const input = {
               FunctionName: arn,
@@ -117,6 +121,7 @@ const lambdaController = {
             //await wait(2000);
           }
           console.log('sequentially invoked!')
+          count = 0;
           return outputObj;
 
         }
