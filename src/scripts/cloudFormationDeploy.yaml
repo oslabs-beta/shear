@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: EC2LambdaTestDeploy1
+Description: EC2LambdaTestDeploy102
 
 Resources:
   MySecurityGroup:
@@ -82,20 +82,22 @@ Resources:
     Properties:
       InstanceType: t2.micro
       IamInstanceProfile: !Ref EC2InstanceProfile
-      ImageId: ami-04af221020bbd0872
+      ImageId:  ami-039f5d5f278d91a6f
       SecurityGroupIds:
         - !Ref MySecurityGroup
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
+          su - ubuntu -c "sudo -i -u ubuntu"
+          su - ubuntu -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash"
+          su - ubuntu -c "source ~/.nvm/nvm.sh && nvm install --lts"     
           sudo apt-get update
           sudo apt-get install -y awscli
           sudo apt-get install -y nginx
-          cd /home/ubuntu/dist
+          cd /home/ubuntu/dist     
           su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm install"
           su - ubuntu -c "source ~/.nvm/nvm.sh && cd ~/dist && npm run run-server-ec2"
-
-          cat << 'EOF' > /home/ubuntu/update_nginx.sh
+ cat << 'EOF' > /home/ubuntu/update_nginx.sh
           #!/bin/bash
           while true; do
               EIP=$(aws ec2 describe-addresses --region us-east-2 --filters "Name=instance-id,Values=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)" --query "Addresses[0].PublicIp" --output text)

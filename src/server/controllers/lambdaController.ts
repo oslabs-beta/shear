@@ -46,40 +46,83 @@ const lambdaController = {
     
     async function createNewVersionsFromMemoryArrayAndInvoke(inputArr, arn) {
       try {
-
-        const outputObj = {}
-        let count = 0;
-        for (const element of inputArr) {
-           const billedDurationArray = []
-           myEventEmitter.emit('update', `currently on ${++count} memory value`)
-          //  console.log('hello from lambda controller')
-
-          const input = {
-            FunctionName: arn,
-            MemorySize:Number(element),
-            Description: "New version with " + element +" MB of RAM" 
+        if (request.body.concurrent) {
+          const outputObj = {};
+  
+          for (const element of inputArr) {
+              const billedDurationArray = [];
+              const invocations = [];
+  
+              const input = {
+                  FunctionName: arn,
+                  MemorySize: Number(element),
+                  Description: "New version with " + element + " MB of RAM"
+              };
+  
+              const command = new UpdateFunctionConfigurationCommand(input);
+              await lambdaClient.send(command);
+              await wait(2000);
+  
+              for (let i = 0; i < TIMES; i++) {
+                  // Push all invocations into an array
+                  invocations.push(invokeSpecificVersion('$LATEST', payloadBlob));
+              }
+  
+              // Execute all invocations concurrently using Promise.all() await Promise.all(invocations);
+              
+              const invocations2 = [];
+              for (let i = 0; i < TIMES; i++) {
+                // Push all invocations into an array
+                invocations2.push(invokeSpecificVersion('$LATEST', payloadBlob));
+            }
+              await Promise.all(invocations2)
+              const invocations3 = [];
+              
+              for (let i = 0; i < TIMES; i++) {
+                // Push all invocations into an array
+                invocations3.push(invokeSpecificVersion('$LATEST', payloadBlob));
+            }
+            const results3 = await Promise.all(invocations3)
+            billedDurationArray.push(...results3);
+            outputObj[element] = billedDurationArray;
+            console.log('concurrently invoked!')
           }
-          const command = new UpdateFunctionConfigurationCommand(input)
-          await lambdaClient.send(command)
-          
-          await wait(2000)
-          outputObj[element] = billedDurationArray;
-          for (let i = 0; i < TIMES; i++) {
-               //invoke new version X times. currectly a global constant, but probably something we should let the user configure.
-               const value = await invokeSpecificVersion('$LATEST', payloadBlob);
-              //  console.log('hello from lambda controller')
-               billedDurationArray.push(value)
-             }
-          
-          //await wait(2000);
+          return outputObj;
         }
-        
-        return outputObj;
+        else {
+
+          const outputObj = {}
+
+          for (const element of inputArr) {
+             const billedDurationArray = []
+  
+            const input = {
+              FunctionName: arn,
+              MemorySize:Number(element),
+              Description: "New version with " + element +" MB of RAM" 
+            }
+            const command = new UpdateFunctionConfigurationCommand(input)
+            await lambdaClient.send(command)
+            
+            await wait(2000)
+            outputObj[element] = billedDurationArray;
+            for (let i = 0; i < TIMES; i++) {
+                 //invoke new version X times. currectly a global constant, but probably something we should let the user configure.
+                 const value = await invokeSpecificVersion('$LATEST', payloadBlob);
+                 billedDurationArray.push(value)
+               }
+            
+            //await wait(2000);
+          }
+          console.log('sequentially invoked!')
+          return outputObj;
+
+        }
       } catch (error) {
-        const customError = createCustomError('Error creating new versions.', 403, { body: request.body });
-        return next(customError);
+          const customError = createCustomError('Error creating new versions.', 403, { body: request.body });
+          return next(customError);
       }
-    }
+  }
     async function invokeSpecificVersion(version, payload) {
       try {
         const invokeParams = {
@@ -115,40 +158,49 @@ try {
     const minEntry = entries.reduce((min, entry) => (entry[1] < min[1] ? entry : min), entries[0]);
     const minEntryIndex = memoryArray.indexOf(Number(minEntry[0]))
 
-const midpoints: number[] = [];
-    if (minEntryIndex == 0) {
-      //case where first data point is best cost/invocation
-      for (let i = 1; i <= 7; i++) {
-        const midpoint = Math.round((memoryArray[minEntryIndex] * (7 - i) + memoryArray[minEntryIndex+1] * i) / 7);
-        midpoints.push(midpoint);
-      }
-    }
-    else if (minEntryIndex >= memoryArray.length-1) {
-      //case where last data point is best cost/invocation
-      for (let i = 1; i <= 7; i++) {
-        const midpoint = Math.round((memoryArray[minEntryIndex-1] * (7 - i) + memoryArray[minEntryIndex] * i) / 7);
-        midpoints.push(midpoint);
-      }
-    }
-    else {
-      //normal case...
-
+    const midpoints: number[] = [];
+    let first;
+    let last;
+if (minEntryIndex === 0) {
+  // Case where the first data point is the best cost/invocation
+  first = 0;
+  last = 2;
   for (let i = 1; i <= 7; i++) {
-    const midpoint = Math.round((memoryArray[minEntryIndex-1] * (7 - i) + memoryArray[minEntryIndex+1] * i) / 7);
+    const midpoint = Math.round((memoryArray[0] * (7 - i) + memoryArray[1] * i) / 7);
     midpoints.push(midpoint);
   }
-    }
-    midpoints.pop()
-    console.log('midpoints:')
-    console.log(midpoints)
+} else if (minEntryIndex === memoryArray.length - 1) {
+  // Case where the last data point is the best cost/invocation
+  first = minEntryIndex-1;
+  last = minEntryIndex;
+  for (let i = 1; i <= 7; i++) {
+    const midpoint = Math.round((memoryArray[memoryArray.length - 2] * (7 - i) + memoryArray[memoryArray.length - 1] * i) / 7);
+    midpoints.push(midpoint);
+  }
+} else {
+  // Normal case
+  first = minEntryIndex - 1;
+  last = minEntryIndex +1;
+  for (let i = 1; i <= 7; i++) {
+    const midpoint = Math.round((memoryArray[minEntryIndex - 1] * (7 - i) + memoryArray[minEntryIndex + 1] * i) / 7);
+    midpoints.push(midpoint);
+  }
+}
+midpoints.pop()
+  
     const test2 = await createNewVersionsFromMemoryArrayAndInvoke(midpoints, functionARN)
+
   const billedDurationArray2 = reduceObjectToMedian(test2)
+//add first
+//add last
+billedDurationArray2[memoryArray[first]] = billedDurationArray[memoryArray[first]]
+billedDurationArray2[memoryArray[last]]= billedDurationArray[memoryArray[last]]
 
   const outputObject2 = {
     billedDurationOutput: billedDurationArray2,
     costOutput: calculateCosts(billedDurationArray2)
   }
-  console.log(outputObject2)
+  //console.log(outputObject2)
   outputObject.bonusData = outputObject2;
   }
     return next();
