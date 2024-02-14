@@ -48,10 +48,12 @@ const lambdaController = {
       try {
         if (request.body.concurrent) {
           const outputObj = {};
-  
+          let count = 0;
           for (const element of inputArr) {
               const billedDurationArray = [];
               const invocations = [];
+              console.log(++count)
+              myEventEmitter.emit('update', `currently on ${++count} memory value`)
   
               const input = {
                   FunctionName: arn,
