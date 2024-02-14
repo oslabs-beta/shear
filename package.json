@@ -16,7 +16,7 @@
     "build-server": "tsc -p src/server/tsconfig-server.json",
     "run-server-ec2": "node serverDist/server.js",
     "run-server-local" : "node dist/serverDist/server.js",
-    "deploy": "aws cloudformation create-stack --region us-east-2 --stack-name testprogram806 --template-body file://./src/scripts/cloudFormationDeploy.yaml --capabilities CAPABILITY_IAM",
+    "deploy": "aws cloudformation create-stack --region us-east-2 --stack-name testprogram9242 --template-body file://./src/scripts/cloudFormationDeploy.yaml --capabilities CAPABILITY_IAM",
     "packer": "packer build src/scripts/packer/aws-ubuntu.pkr.hcl"
   },
   "dependencies": {
