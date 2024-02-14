@@ -37,8 +37,9 @@ export default function GraphDetailed() {
         <div className="graphDetailed">
             <ResponsiveContainer
                 width="100%"
-                aspect={2.4}
-            // height={800}
+                height="100%"
+                minHeight={400}
+            // aspect={2.4}
             >
                 <LineChart
                     width="100%"

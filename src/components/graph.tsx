@@ -37,8 +37,9 @@ export default function Graph() {
         <div className="graphMain">
             <ResponsiveContainer
                 width="100%"
-                // height={800}
-                aspect={2.4}
+                height="100%"
+                minHeight={400}
+            // aspect={2.4}
             >
                 <LineChart
                     width="100%"

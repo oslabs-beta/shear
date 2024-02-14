@@ -1,16 +1,16 @@
 import axios, { AxiosResponse } from "axios";
 import { FormValues } from "./infoSlice.js";
 
-
-// Use this to make the baseURL of the fetch call so you can just add the string endpoint. - JK
-axios.defaults.baseURL = "http://localhost:3000/api";  //"/api"
+axios.defaults.baseURL = "http://localhost:3000/api"
 
 export const optimizerAPI = {
   
   runOptimizerFunc: (form: FormValues): Promise<AxiosResponse> => {
-
     const stringifiedFormData = JSON.stringify(form)
+<<<<<<< HEAD
     console.log(stringifiedFormData)
+=======
+>>>>>>> 2e2b719a83259b47621206bd982f2da8bd22b580
     return axios.post('executeLambdaWorkflow', stringifiedFormData, {
       headers: {
         'Content-Type': 'application/json',
@@ -20,6 +20,7 @@ export const optimizerAPI = {
   },
 }
 
+<<<<<<< HEAD
 // function PromiseBasedToastExample() {
   
 //   return (
@@ -73,6 +74,8 @@ export const optimizerAPI = {
 //     },
 //   });
 // },
+=======
+>>>>>>> 2e2b719a83259b47621206bd982f2da8bd22b580
 
 
 

@@ -15,8 +15,13 @@
     "preview": "vite preview",
     "build-server": "tsc -p src/server/tsconfig-server.json",
     "run-server-ec2": "node serverDist/server.js",
+<<<<<<< HEAD
     "run-server-local": "node dist/serverDist/server.js",
     "deploy": "aws cloudformation create-stack --region us-east-2 --stack-name testprogram806 --template-body file://./src/scripts/cloudFormationDeploy.yaml --capabilities CAPABILITY_IAM",
+=======
+    "run-server-local" : "node dist/serverDist/server.js",
+    "deploy": "aws cloudformation create-stack --region us-east-2 --stack-name testprogram9242 --template-body file://./src/scripts/cloudFormationDeploy.yaml --capabilities CAPABILITY_IAM",
+>>>>>>> 2e2b719a83259b47621206bd982f2da8bd22b580
     "packer": "packer build src/scripts/packer/aws-ubuntu.pkr.hcl"
   },
   "dependencies": {

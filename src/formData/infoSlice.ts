@@ -23,9 +23,14 @@ const formValues: FormValues = {
   ARN: '',
   memoryArray: [],
   functionPayload: {},
+<<<<<<< HEAD
   volume: 10,
   recursiveSearch: true,
   concurrent: true,
+=======
+  testVol: 10,
+  recursiveSearch: false,
+>>>>>>> 2e2b719a83259b47621206bd982f2da8bd22b580
 };
 
 

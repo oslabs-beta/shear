@@ -67,8 +67,8 @@ const ChakraForm: React.FC = () => {
     return (
         <ChakraUI.Center w="100%" top="10%" h="30%"  >
             <ChakraUI.Box position="relative" top="10%" h="30%" w="100%" borderBottomWidth="5px" borderColor='blue.100' padding="50px" overflow='hidden' bg='blue.100' margin='0px'>
-                <ChakraUI.HStack spacing={10} direction='row' align='stretch' divider={<ChakraUI.StackDivider borderColor='gray.700' />}>
-                    <ChakraUI.Stack spacing={8} direction='row' align='stretch' sx={{ borderRadius: "10%" }}>
+                <ChakraUI.HStack spacing={4} direction='row' align='left' divider={<ChakraUI.StackDivider borderColor='gray.700' shouldWrapChildren='true' />}>
+                    <ChakraUI.Stack spacing={4} direction='row' align='stretch'>
                         <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>ARN Details</ChakraUI.Text>
                         <ChakraUI.InputGroup borderRadius="lg">
                             <ChakraUI.InputLeftAddon padding="10px" as='b' fontSize='18px' children='Name' bg='gray.200' borderLeftRadius="lg" />
@@ -80,7 +80,7 @@ const ChakraForm: React.FC = () => {
                         </ChakraUI.InputGroup>
                     </ChakraUI.Stack>
 
-                    <ChakraUI.Stack spacing={8} direction='row' align='stretch'>
+                    <ChakraUI.Stack spacing={4} direction='row' align='stretch'>
                         <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Function Parameters</ChakraUI.Text>
                         <ChakraUI.InputGroup>
                             <ChakraUI.Textarea
@@ -92,7 +92,7 @@ const ChakraForm: React.FC = () => {
                         </ChakraUI.InputGroup>
                     </ChakraUI.Stack>
 
-                    <ChakraUI.Stack spacing={8} direction='row' align='stretch'>
+                    <ChakraUI.Stack spacing={4} direction='row' align='stretch'>
                         <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>Memory Allocation</ChakraUI.Text>
                         {/* <ChakraUI.FormLabel>Power Values</ChakraUI.FormLabel> */}
 

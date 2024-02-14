@@ -25,12 +25,17 @@ h2 {
   padding: 100px;
   padding-bottom: 30%;
   margin: 0 auto;
+  height: 80vh;
+  width: 45vw;
 }
 
 .graphDetailed {
 
   padding: 100px;
+  padding-bottom: 30%;
   margin: 0 auto;
+  height: 80vh;
+  width: 45vw;
 }
 
 .button:active {
