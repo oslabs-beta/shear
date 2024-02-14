@@ -52,7 +52,7 @@ export default function GraphDetailed() {
                     }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="Memory" />
+                    <XAxis dataKey="Memory" tick={{ fontSize: 25 }} />
                     <YAxis
                         yAxisId="left"
                         label={{
@@ -60,8 +60,10 @@ export default function GraphDetailed() {
                             style: { textAnchor: 'middle' },
                             angle: -90,
                             position: 'left',
-                            offset: 0,
+                            offset: 8,
+                            fontSize: 35,
                         }}
+                        tick={{ fontSize: 25 }}
                     />
                     <YAxis
                         yAxisId="right"
@@ -72,23 +74,26 @@ export default function GraphDetailed() {
                             angle: -90,
                             position: 'right',
                             offset: 0,
+                            fontSize: 35,
                         }}
+                        tick={{ fontSize: 25 }}
                     />
-                    <Tooltip />
-                    <Legend />
+                    <Tooltip cursor={{ strokeWidth: 4, }} wrapperStyle={{ fontSize: "25px" }} />
+                    <Legend wrapperStyle={{ fontSize: "25px", fontWeight: "bold" }} iconSize={28} />
                     <Line
                         yAxisId="left"
                         type="monotone"
                         dataKey='Invocation time'
-                        stroke="#8884d8"
-                        activeDot={{ r: 8 }}
-                        strokeWidth="8px"
+                        stroke="#4285F4"
+                        activeDot={{ r: 15 }}
+                        strokeWidth="7px"
                     />
                     <Line yAxisId="right"
                         type="monotone"
                         dataKey="Runtime cost"
                         stroke="#82ca9d"
-                        strokeWidth="8px" />
+                        activeDot={{ r: 15 }}
+                        strokeWidth="7px" />
                 </LineChart>
             </ResponsiveContainer>
             {/* <button onClick={convertData}>Testtest</button> */}
