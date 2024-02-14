@@ -4,6 +4,8 @@ import {
   UpdateFunctionConfigurationCommand,
 } from "@aws-sdk/client-lambda";
 
+
+
 import {wait, extractBilledDurationFrom64, reduceObjectToMedian, calculateCosts, createCustomError, getRegionFromARN} from "../utils/utils.js"
 
 import { fromUtf8 } from "@aws-sdk/util-utf8-node";
@@ -71,7 +73,7 @@ const lambdaController = {
               }
   
               // Execute all invocations concurrently using Promise.all() await Promise.all(invocations);
-              
+              await Promise.all(invocations)
               const invocations2 = [];
               for (let i = 0; i < TIMES; i++) {
                 // Push all invocations into an array
