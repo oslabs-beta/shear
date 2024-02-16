@@ -66,7 +66,7 @@ Shear welcomes contributions from the open source community. Submit Issues on Gi
 - Albert Hu | [GitHub](https://github.com/albhu24) | [LinkedIn](https://www.linkedin.com/in/hu-albert/)
 - Ari Anguiano | [Github](https://github.com/crispulum) | [LinkedIn](https://www.linkedin.com/in/ari-anguiano)
 - Caleb Kao | [GitHub](https://github.com/caleb-kao) | [LinkedIn](https://www.linkedin.com/in/calebkao/)
-- Dinesh Wijesekara | [GitHub](https://github.com/Dwijesek/shear-docs) | [LinkedIn](https://github.com/Dwijesek)
+- Dinesh Wijesekara | [GitHub](https://github.com/Dwijesek) | [LinkedIn](https://www.linkedin.com/in/dinesh-wijesekara-a14b96251/)
 - Jonathan Kim | [GitHub](https://github.com/jonbingkim) | [LinkedIn](https://www.linkedin.com/in/jonbkim)
 
 ## License
