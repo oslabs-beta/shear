@@ -2,7 +2,7 @@ import React from "react"
 import ChakraForm from "./components/chakraForm.js"
 import Graph from "./components/graph.js"
 import GraphDetailed from "./components/graphDetailed.js"
-import { Box, Text, Flex, Spacer, Stack, HStack, Grid, Center, ChakraProvider, extendBaseTheme, theme as chakraTheme, } from '@chakra-ui/react'
+import { Box, Text, Flex, Spacer, Stack, HStack, Grid, Center, Progress, Checkbox, ChakraProvider, extendBaseTheme, theme as chakraTheme, } from '@chakra-ui/react'
 // import chakraTheme from '@chakra-ui/theme'
 import './style.css'
 import Results from "./components/results.js"
@@ -25,8 +25,8 @@ const App: React.FC = () => {
           <HStack>
             <Text as='b' fontSize='100px' color='#4285F4'>Shear</Text>
             <Text as='b' fontSize='30px' color='#4285F4'>an AWS Lambda function optimizer</Text>
+            <Results />
           </HStack>
-
         </Box>
         <ChakraForm />
         <Box top="0%" left="0%" h="75vh" w="full" borderBottomWidth="5px" borderColor='gray.200' padding="50px" overflow='hidden' bg='gray.200' margin='0px'>
@@ -44,7 +44,7 @@ const App: React.FC = () => {
         <Box top="0%" left="0%" h="7vh" w="full" borderBottomWidth="5px" borderColor='blue.50' padding="50px" overflow='hidden' bg='blue.100' margin='0px'></Box>
         {/* <div className="flex-container"></div> */}
       </Box >
-      <Results />
+
 
     </ChakraProvider >
   )

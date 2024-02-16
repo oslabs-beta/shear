@@ -1,7 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { FormValues } from "./infoSlice.js";
 
+// switch to /api before each PR
 axios.defaults.baseURL = "http://localhost:3000/api"
+// axios.defaults.baseURL = "/api"
 
 export const optimizerAPI = {
 

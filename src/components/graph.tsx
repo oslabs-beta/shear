@@ -11,9 +11,14 @@ export default function Graph() {
     const timeData = graphData.TimeData;
     const costData = graphData.CostData;
     const xData = graphData.MemoryData;
+    const [first, setFirst] = useState(true)
+    const [noGraph, setNoGraph] = useState(false);
 
     //converts raw data into appropriate format for graph
     const convertData = () => {
+        { first ? null : setNoGraph(true) };
+        setFirst(false);
+
         const temp = []
         for (let i = 0; i < xData.length; i++) {
             temp.push({
@@ -53,7 +58,7 @@ export default function Graph() {
                     }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="Memory" tick={{ fontSize: 25 }} />
+                    <XAxis dataKey="Memory" tick={{ fontSize: 20 }} />
                     <YAxis
                         yAxisId="left"
                         label={{
@@ -62,9 +67,9 @@ export default function Graph() {
                             angle: -90,
                             position: 'left',
                             offset: 8,
-                            fontSize: 30,
+                            fontSize: 25,
                         }}
-                        tick={{ fontSize: 25 }}
+                        tick={{ fontSize: 20 }}
                     />
                     <YAxis
                         yAxisId="right"
@@ -75,26 +80,40 @@ export default function Graph() {
                             angle: -90,
                             position: 'right',
                             offset: 0,
-                            fontSize: 30,
+                            fontSize: 25,
                         }}
-                        tick={{ fontSize: 25 }}
+                        tick={{ fontSize: 20 }}
                     />
                     <Tooltip cursor={{ strokeWidth: 4, }} wrapperStyle={{ fontSize: "25px" }} />
-                    <Legend wrapperStyle={{ fontSize: "25px", fontWeight: "bold" }} iconSize={28} />
-                    <Line
+                    <Legend wrapperStyle={{ fontSize: "20px", fontWeight: "bold" }} iconSize={28} />
+                    {noGraph ? <Line
                         yAxisId="left"
                         type="monotone"
                         dataKey='Invocation time'
                         stroke="#4285F4"
                         activeDot={{ r: 15 }}
                         strokeWidth="7px"
-                    />
-                    <Line yAxisId="right"
+                    /> : <Line
+                        yAxisId="left"
+                        type="monotone"
+                        dataKey='Invocation time'
+                        stroke="#4285F4"
+                        dot={false}
+                        strokeWidth="0px"
+                    />}
+
+                    {noGraph ? <Line yAxisId="right"
                         type="monotone"
                         dataKey="Runtime cost"
                         stroke="#82ca9d"
                         activeDot={{ r: 15 }}
-                        strokeWidth="7px" />
+                        strokeWidth="7px" /> :
+                        <Line yAxisId="right"
+                            type="monotone"
+                            dataKey="Runtime cost"
+                            stroke="#82ca9d"
+                            dot={false}
+                            strokeWidth="0px" />}
                 </LineChart>
             </ResponsiveContainer>
             {/* <button onClick={convertData}>Testtest</button> */}

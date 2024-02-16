@@ -49,13 +49,15 @@ const resultsSlice = createSlice({
 
         const rawResults = action.payload;
         const rawMemory = Object.keys(rawResults.billedDurationOutput).map((x) => parseInt(x));
-        const detailedMemory = Object.keys(rawResults.bonusData.billedDurationOutput).map((x) => parseInt(x));
         state.MemoryData.splice(0, state.MemoryData.length, ...rawMemory);
         state.CostData.splice(0, state.CostData.length, ...Object.values(rawResults.costOutput));
         state.TimeData.splice(0, state.TimeData.length, ...Object.values(rawResults.billedDurationOutput));
-        state.DetailedMemoryData.splice(0, state.MemoryData.length, ...detailedMemory);
-        state.DetailedCostData.splice(0, state.CostData.length, ...Object.values(rawResults.bonusData.costOutput));
-        state.DetailedTimeData.splice(0, state.TimeData.length, ...Object.values(rawResults.bonusData.billedDurationOutput));
+        if (rawResults.bonusData) {
+          const detailedMemory = Object.keys(rawResults.bonusData.billedDurationOutput).map((x) => parseInt(x));
+          state.DetailedMemoryData.splice(0, state.MemoryData.length, ...detailedMemory);
+          state.DetailedCostData.splice(0, state.CostData.length, ...Object.values(rawResults.bonusData.costOutput));
+          state.DetailedTimeData.splice(0, state.TimeData.length, ...Object.values(rawResults.bonusData.billedDurationOutput));
+        }
         console.log(state)
         // return action.payload;
       })

@@ -17,7 +17,7 @@ const ChakraForm: React.FC = () => {
     const funcParamsRef = useRef<HTMLInputElement | null>(null);
     const memoryRef = useRef<string[]>([]);
     const [show, setShow] = useState(false); //this is used to toggle whether the loading bar shows up
-    const [checkedItems, setCheckedItems] = React.useState([true, false])
+    const [checkedItems, setCheckedItems] = React.useState([false, false])
     // const toast = ChakraUI.useToast();
 
     useEffect(() => {
@@ -26,6 +26,7 @@ const ChakraForm: React.FC = () => {
         }
     }, [formState])
 
+    // note: refactor these so the onChange events are embedded in the form fields
     const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         memoryRef.current[5] = e.target.value
     }
@@ -63,11 +64,10 @@ const ChakraForm: React.FC = () => {
     }, [resultsState])
 
 
-
     return (
         <ChakraUI.Center w="100%" top="10%" h="30%"  >
             <ChakraUI.Box position="relative" top="10%" h="30%" w="100%" borderBottomWidth="5px" borderColor='blue.100' padding="50px" overflow='hidden' bg='blue.100' margin='0px'>
-                <ChakraUI.HStack spacing={4} direction='row' align='left' divider={<ChakraUI.StackDivider borderColor='gray.700' shouldWrapChildren='true' />}>
+                <ChakraUI.HStack spacing={4} direction='row' align='left' divider={<ChakraUI.StackDivider borderColor='gray.700' />}>
                     <ChakraUI.Stack spacing={4} direction='row' align='stretch'>
                         <ChakraUI.Text as='b' fontSize='24px' color='#4285F4'>ARN Details</ChakraUI.Text>
                         <ChakraUI.InputGroup borderRadius="lg">
@@ -124,14 +124,36 @@ const ChakraForm: React.FC = () => {
                             Submit
                         </ChakraUI.Button>
                         <ChakraUI.Tooltip hasArrow label='Runs a second set of tests using the two lowest cost results of the first test. Results are populated in second graph.' bg='gray.300' color='black' shouldWrapChildren fontSize='24px'>
-                            <ChakraUI.Checkbox colorScheme='red' isChecked={checkedItems[0]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])} fontSize='18px'>Fine-tuned Search</ChakraUI.Checkbox>
+                            {/* <ChakraUI.Checkbox isChecked={checkedItems[0]} onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])} size='lg' fontSize='18px'>Fine-tuned Search</ChakraUI.Checkbox> */}
+                            <ChakraUI.Box fontSize='18px'>
+                                <ChakraUI.Checkbox style={{ border: "2px solid black", padding: "0px", display: "inline-block", width: "25px", height: "25px" }}
+                                    isChecked={checkedItems[0]}
+                                    onChange={(e) => setCheckedItems([e.target.checked, checkedItems[1]])}
+                                    fontSize='18px'
+                                    marginRight='5px'
+                                    top='10px'
+                                />
+                                Fine-Tuned Search
+                            </ChakraUI.Box>
                         </ChakraUI.Tooltip>
                         <ChakraUI.Tooltip hasArrow label='Tests all memory intervals concurrently. Recommended for more memory-intensive functions.' bg='gray.300' color='black' shouldWrapChildren fontSize='24px'>
-                            <ChakraUI.Checkbox colorScheme='red' onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])} isChecked={checkedItems[1]} fontSize='18px'>Concurrent Search</ChakraUI.Checkbox>
+                            {/* <ChakraUI.Checkbox onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])} isChecked={checkedItems[1]} size='lg' fontSize='18px'>Concurrent Search</ChakraUI.Checkbox> */}
+                            <ChakraUI.Box fontSize='18px'>
+                                <ChakraUI.Checkbox style={{ border: "2px solid black", padding: "0px", display: "inline-block", width: "25px", height: "25px" }}
+                                    isChecked={checkedItems[1]}
+                                    onChange={(e) => setCheckedItems([checkedItems[0], e.target.checked])}
+                                    fontSize='18px'
+                                    marginRight='5px'
+                                    top='10px'
+                                />
+                                Concurrent Search
+                            </ChakraUI.Box>
                         </ChakraUI.Tooltip>
                     </ChakraUI.Stack>
                 </ChakraUI.HStack>
+                {/* {show ? <LoadingBar /> : null} */}
             </ChakraUI.Box>
+
         </ChakraUI.Center>
     );
 };
