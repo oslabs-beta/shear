@@ -85,8 +85,6 @@ Allow HTTP/S traffic from your IP addresses.
 **IAM Role Details:**  
 An EC2 Role permitting Lambda Full Access.
 
-**ECR Image URI:**  
-`public.ecr.aws/k9x5s2b8/aa-test:latest`
 
 ### Option 3: Local Deployment
 
