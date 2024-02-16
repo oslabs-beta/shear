@@ -34,6 +34,9 @@ Automate the creation of Amazon Machine Images (AMIs) using Packer to streamline
    ```
    The output will be the AMI image ID.
 
+   **Alternative**
+   If you do not wish to compile the image yourself, you can use this publicly-available version.
+
 ## Deployment Options
 
 ### Option 1: EC2
