@@ -62,6 +62,9 @@ For an automated and secure deployment option using EC2:
 
    This command creates and runs a CloudFormation stack, which sets up necessary security groups and deploys an EC2 instance with your server running. After all steps are completed, go to EC2 IPv4 address add port 3000 to the end and remove the “s” from “http” (e.g. http://ec2-3-144-128-131.us-east-2.compute.amazonaws.com:3000/ )
 
+   **Alternative**
+   If you do not wish to use access keys to login to the CLI, you can simply upload the CloudFormation Template yourself.
+
    **Note:** Ensure the stack name is unique each time you deploy by adjusting it in `package.json` under `npm run deploy`.
 
 ### Option 2: Fargate via ECR
