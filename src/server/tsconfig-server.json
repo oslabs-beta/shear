@@ -1,7 +1,7 @@
 // tsconfig-server.json
 {
     "compilerOptions": {
-      "target": "es2022",
+      "target": "ESNext",
       "module": "NodeNext",
       "outDir": "../../dist/serverDist",
       "esModuleInterop": true,

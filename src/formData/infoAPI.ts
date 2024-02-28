@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { FormValues } from "./infoSlice.js";
+import { FormValues } from "./infoSlice";
 
 axios.defaults.baseURL = "http://localhost:3000/api"
 
@@ -13,7 +13,6 @@ export const optimizerAPI = {
         'Content-Type': 'application/json',
       },
     });
-
   },
 }
 

@@ -1,7 +1,7 @@
 import React, { useRef, FormEvent, useEffect, useState, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store.ts";
-import { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput, checksInput } from "../formData/infoSlice.ts";
+import { RootState } from "../store";
+import { nameInput, arnInput, funcParamsInput, powerValueInput, testVolInput, checksInput } from "../formData/infoSlice";
 import { runOptimizer } from "../formData/resultsSlice";
 import * as ChakraUI from '@chakra-ui/react'
 import LoadingBar from "./loadingBar.tsx"

@@ -1,4 +1,4 @@
-import { myEventEmitter } from "../routes.js";
+import { myEventEmitter } from "../routes";
 import {
   LambdaClient,
   InvokeCommand,
@@ -12,7 +12,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 const lambdaController = {
   async shear(request, response, next) {
-    console.log("this works")
+    // console.log("this works")
     if (!request.body.ARN) {
 
       const error = createCustomError('Error reading ARN!', 403, { body: request.body })
