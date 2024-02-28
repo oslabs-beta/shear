@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ES2022",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "noEmit": true,
-    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "useUnknownInCatchVariables": false,
     "skipLibCheck": true,
     "outDir": "./dist/",
-    "rootDir": "./src",
+    "rootDir": "./src"
   },
   "include": ["src"],
   "exclude": ["vite.config.ts"]

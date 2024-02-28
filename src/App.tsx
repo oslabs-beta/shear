@@ -1,11 +1,11 @@
 import React from "react"
-import ChakraForm from "./components/chakraForm.js"
-import Graph from "./components/graph.js"
-import GraphDetailed from "./components/graphDetailed.js"
+import ChakraForm from "./components/chakraForm"
+import Graph from "./components/graph"
+import GraphDetailed from "./components/graphDetailed"
 import { Box, Text, Flex, Spacer, Stack, HStack, Grid, Center, ChakraProvider, extendBaseTheme, theme as chakraTheme, } from '@chakra-ui/react'
 // import chakraTheme from '@chakra-ui/theme'
 import './style.css'
-import Results from "./components/results.js"
+import Results from "./components/results"
 
 const { Button } = chakraTheme.components
 

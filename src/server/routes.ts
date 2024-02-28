@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 export const router = express.Router();
-import lambdaController from './controllers/lambdaController.js'
-import {getLambdaLogs, addLambdaLog} from "./controllers/dbController.js"
+import lambdaController from './controllers/lambdaController.ts'
+import {getLambdaLogs, addLambdaLog} from "./controllers/dbController.ts"
 import { EventEmitter } from 'events';
 
 export const myEventEmitter = new EventEmitter();

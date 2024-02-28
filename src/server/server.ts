@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express'
-import {router} from "./routes.js"
+import {router} from "./routes.ts"
 import path from "path"
 import { fileURLToPath } from 'url';
-import CustomError from './types.js';
+import CustomError from './types';
 
 const PORT = 3000;
 const app = express();
