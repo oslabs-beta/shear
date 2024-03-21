@@ -12,7 +12,7 @@ import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 const lambdaController = {
   async shear(request, response, next) {
-    // console.log("this works")
+
     if (!request.body.ARN) {
 
       const error = createCustomError('Error reading ARN!', 403, { body: request.body })
@@ -30,7 +30,6 @@ const lambdaController = {
     }
     const region2 = getRegionFromARN(request.body.ARN);
     const regionObj = { region: region2 }
-    // setup for all the AWS work we're going to do.
     const lambdaClient = new LambdaClient(regionObj);
     response.locals.ARN = request.body.ARN
     response.locals.memoryArray = memoryArray;
@@ -39,7 +38,6 @@ const lambdaController = {
 
 
     const functionARN = request.body.ARN;
-
     const functionPayload = request.body.functionPayload;
     response.locals.payload = functionPayload
     const payloadBlob = fromUtf8(JSON.stringify(functionPayload));

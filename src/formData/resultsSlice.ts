@@ -12,21 +12,14 @@ export interface ResultValues {
   DetailedCostData: (string | number)[];
   DetailedTimeData: (string | number)[];
   DetailedMemoryData: (string | number)[];
+  error: boolean;
 }
 
-//function sends form data to backend to get spun up. Back end will need to send back the data from spinning the algo. -JK
 export const runOptimizer = createAsyncThunk<ResultValues, FormValues>('results/data', async (Formdata) => {
   const response = await optimizerAPI.runOptimizerFunc(Formdata);
-  // console.log(response)
-  // console.log(response.data)
   return response.data;
 });
 
-
-
-export const getAllData = createAsyncThunk
-
-//current state of return data, Double check what we are expecting(discuss with backend)- JK
 const initialState: ResultValues = {
   billedDurationOutput: {},
   costOutput: {},
@@ -36,6 +29,7 @@ const initialState: ResultValues = {
   DetailedCostData: [170, 168, 163, 164, 161, 156, 162, 160, 160],
   DetailedTimeData: [290, 286, 278, 274, 266, 248, 250, 244, 240],
   DetailedMemoryData: [512, 528, 544, 560, 576, 592, 608, 624, 640],
+  error: false
 };
 
 const resultsSlice = createSlice({
@@ -45,8 +39,6 @@ const resultsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(runOptimizer.fulfilled, (state, action) => {
-        // console.log("Result incoming")
-
         const rawResults = action.payload;
         const rawMemory = Object.keys(rawResults.billedDurationOutput).map((x) => parseInt(x));
         const detailedMemory = Object.keys(rawResults.bonusData.billedDurationOutput).map((x) => parseInt(x));
@@ -56,14 +48,9 @@ const resultsSlice = createSlice({
         state.DetailedMemoryData.splice(0, state.MemoryData.length, ...detailedMemory);
         state.DetailedCostData.splice(0, state.CostData.length, ...Object.values(rawResults.bonusData.costOutput));
         state.DetailedTimeData.splice(0, state.TimeData.length, ...Object.values(rawResults.bonusData.billedDurationOutput));
-        console.log(state)
-        // return action.payload;
-      })
-      .addCase(runOptimizer.pending, (state, action) => {
-        // console.log(action.payload)
       })
       .addCase(runOptimizer.rejected, (state) => {
-
+        state.error = true;
       });
   },
 });
