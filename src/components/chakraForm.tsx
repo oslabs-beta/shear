@@ -19,6 +19,7 @@ import { runOptimizer } from "../formData/resultsSlice";
 import * as ChakraUI from "@chakra-ui/react";
 import "./style.css";
 
+
 const Form: React.FC = () => {
 	const resultsState = useSelector((state: RootState) => state.results);
 	const formState = useSelector((state: RootState) => state.info);

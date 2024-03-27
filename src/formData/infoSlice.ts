@@ -49,7 +49,7 @@ const infoSlice = createSlice({
 			state.functionPayload = parsedPayLoad;
 		},
 
-		powerValueInput(state, action: PayloadAction<string[]>) {
+		powerValueInput(state, action: PayloadAction<(string | number)[]>) {
 			state.memoryArray = getMedians(action.payload);
 		},
 

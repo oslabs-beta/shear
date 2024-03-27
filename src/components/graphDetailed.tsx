@@ -50,7 +50,7 @@ export default function GraphDetailed() {
 					}}
 				>
 					<CartesianGrid strokeDasharray="3 3" />
-					<XAxis dataKey="Memory" tick={{ fontSize: 25 }} />
+					<XAxis dataKey="Memory" tick={{ fontSize: 15 }} />
 					<YAxis
 						yAxisId="left"
 						label={{
@@ -59,9 +59,9 @@ export default function GraphDetailed() {
 							angle: -90,
 							position: "left",
 							offset: 8,
-							fontSize: 30,
+							fontSize: 20,
 						}}
-						tick={{ fontSize: 25 }}
+						tick={{ fontSize: 15 }}
 					/>
 					<YAxis
 						yAxisId="right"
@@ -72,24 +72,24 @@ export default function GraphDetailed() {
 							angle: -90,
 							position: "right",
 							offset: 0,
-							fontSize: 30,
+							fontSize: 20,
 						}}
-						tick={{ fontSize: 25 }}
+						tick={{ fontSize: 15 }}
 					/>
 					<Tooltip
-						cursor={{ strokeWidth: 4 }}
+						cursor={{ strokeWidth: 3 }}
 						wrapperStyle={{ fontSize: "25px" }}
 					/>
 					<Legend
-						wrapperStyle={{ fontSize: "25px", fontWeight: "bold" }}
-						iconSize={28}
+						wrapperStyle={{ fontSize: "15px", fontWeight: "bold" }}
+						iconSize={22}
 					/>
 					<Line
 						yAxisId="left"
 						type="monotone"
 						dataKey="Invocation time"
 						stroke="#4285F4"
-						activeDot={{ r: 15 }}
+						activeDot={{ r: 10 }}
 						strokeWidth="7px"
 					/>
 					<Line
@@ -97,7 +97,7 @@ export default function GraphDetailed() {
 						type="monotone"
 						dataKey="Runtime cost"
 						stroke="#82ca9d"
-						activeDot={{ r: 15 }}
+						activeDot={{ r: 10 }}
 						strokeWidth="7px"
 					/>
 				</LineChart>
