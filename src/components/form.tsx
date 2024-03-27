@@ -58,23 +58,6 @@ export function ShearForm() {
         }
     }, [formState])
 
-    // note: refactor these so the onChange events are embedded in the form fields
-    // const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-    //     memoryRef.current[5] = e.target.value
-    // }
-    // const onChangeMinVal = (e: ChangeEvent<HTMLInputElement>) => {
-    //     memoryRef.current[0] = e.target.value
-    // }
-    // const onChangeMaxVal = (e: ChangeEvent<HTMLInputElement>) => {
-    //     memoryRef.current[1] = e.target.value
-    // }
-    // const onChangeIncrements = (e: ChangeEvent<HTMLInputElement>) => {
-    //     memoryRef.current[2] = e.target.value
-    // }
-    // const onChangeTestVol = (e: ChangeEvent<HTMLInputElement>) => {
-    //     memoryRef.current[3] = e.target.value
-    // }
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -87,7 +70,7 @@ export function ShearForm() {
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
         console.log('submitted');
-        // setShow(true);
+        setShow(true);
         // // dispatch(nameInput(memoryRef.current[5]))
         dispatch(arnInput(values.ARN));
         dispatch(funcParamsInput(values.parameters));
@@ -109,12 +92,8 @@ export function ShearForm() {
                         <FormItem>
                             <FormLabel>ARN</FormLabel>
                             <FormControl>
-                                <Input placeholder="shadcn" {...field} />
+                                <Input placeholder="arn:aws:lambda:us-east-2:150614410391:function:TestFunc" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your Amazon resource name.
-                            </FormDescription>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
@@ -125,12 +104,8 @@ export function ShearForm() {
                         <FormItem>
                             <FormLabel>Function Parameters</FormLabel>
                             <FormControl>
-                                <Input placeholder="shadcn" {...field} />
+                                <Input {...field} />
                             </FormControl>
-                            <FormDescription>
-                                Function parameters for ARN
-                            </FormDescription>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
@@ -143,10 +118,6 @@ export function ShearForm() {
                             <FormControl>
                                 <Input placeholder="128"  {...field} />
                             </FormControl>
-                            <FormDescription>
-                                Minimum memory allocation (MB)
-                            </FormDescription>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
@@ -159,10 +130,6 @@ export function ShearForm() {
                             <FormControl>
                                 <Input placeholder="2048" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                Maximum memory allocation (MB)
-                            </FormDescription>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
@@ -175,10 +142,6 @@ export function ShearForm() {
                             <FormControl>
                                 <Input placeholder="10" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                Test intervals between min and max allocations
-                            </FormDescription>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
@@ -191,10 +154,6 @@ export function ShearForm() {
                             <FormControl>
                                 <Input placeholder="20" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                Number of tested invocations per interval. Recommend at least 20.
-                            </FormDescription>
-                            <FormMessage />
                         </FormItem>
                     )}
                 />
